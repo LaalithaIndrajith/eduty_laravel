@@ -9,7 +9,12 @@ use Illuminate\Notifications\Notifiable;
 class User extends Authenticatable
 {
     use Notifiable;
+    
+    protected $table      = 'users';
+    protected $primaryKey = 'id';
 
+    const CREATED_AT = 'user_created_at';
+    const UPDATED_AT = 'user_updated_at';
     /**
      * The attributes that are mass assignable.
      *
@@ -36,4 +41,17 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    //Relationships
+    public function designation()
+    {
+        return $this->belongsTo( Designation::class, 'designation_id', 'designation_id');
+    }
+    
+    //Relationships
+    public function department()
+    {
+        return $this->belongsTo( Department::class, 'depart_id', 'depart_id');
+    }
+ 
 }

@@ -1,6 +1,11 @@
 <?php
 
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\LogoutController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PagesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,19 +18,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', 'PagesController@index');
-
-
-// Demo routes
-Route::get('/datatables', 'PagesController@datatables');
-Route::get('/ktdatatables', 'PagesController@ktDatatables');
-Route::get('/select2', 'PagesController@select2');
-Route::get('/icons/custom-icons', 'PagesController@customIcons');
-Route::get('/icons/flaticon', 'PagesController@flaticon');
-Route::get('/icons/fontawesome', 'PagesController@fontawesome');
-Route::get('/icons/lineawesome', 'PagesController@lineawesome');
-Route::get('/icons/socicons', 'PagesController@socicons');
-Route::get('/icons/svg', 'PagesController@svg');
+// Route::get('/', 'PagesController@index');
 
 // Quick search dummy route to display html elements in search dropdown (header search)
 Route::get('/quick-search', 'PagesController@quickSearch')->name('quick-search');
+
+Route::get('/',[LoginController::class, 'index'])->name('loginView');
+Route::post('/login',[LoginController::class, 'authenticateUser'])->name('login');
+
+Route::get('/register',[RegisterController::class, 'index'])->name('userRegisterView');
+Route::post('/register',[RegisterController::class, 'registerUsers'])->name('userRegister');
+Route::post('/logout',[LogoutController::class, 'logout'])->name('logout');
+
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');

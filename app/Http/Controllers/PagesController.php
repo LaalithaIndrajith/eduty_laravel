@@ -25,6 +25,14 @@ class PagesController extends Controller
         return view('pages.dashboards.dashboard_admin', compact('page_title','page_breadcrumbs'));
     }
 
+    public function view_login(){
+        return view('pages.auth.login');
+    }
+    
+    public function dashboard(){
+        return view('pages.dashboard');
+    }
+
     /**
      * Demo methods below
      */
