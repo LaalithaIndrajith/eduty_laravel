@@ -53,5 +53,11 @@ class User extends Authenticatable
     {
         return $this->belongsTo( Department::class, 'depart_id', 'depart_id');
     }
+
+    public static function fecthUsersToDataTbl(){
+        
+        $users = User::with(['department','designation'])->get();
+        return $users;
+    }
  
 }

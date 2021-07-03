@@ -32,7 +32,7 @@ return [
                         ],
                         [
                             'title' => 'User List',
-                            'page' => ''
+                            'page' => '/userList'
                         ],
                     ]
                 ],
