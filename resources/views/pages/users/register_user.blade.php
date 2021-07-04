@@ -28,7 +28,7 @@
                             <!--end::Svg Icon-->
                         </span>Register User
                     </button>
-                    <a href="" class="btn btn-success ml-1">
+                    <a href="{{ route('viewUserList') }}" class="btn btn-success ml-1">
                         <span class="svg-icon svg-icon-md">
                             <i class="far fa-list-alt"></i>
                         </span>

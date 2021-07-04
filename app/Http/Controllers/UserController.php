@@ -29,7 +29,7 @@ class UserController extends Controller
     public function fecthUsersToDrawTbl(){
         
         $company_id = Auth::user()->comp_id;
-        $users =User::with(['department','designation'])->get();
+        $users = User::with(['department','designation'])->get();
         $data = array();
         
         foreach($users as $user){

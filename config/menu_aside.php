@@ -28,15 +28,43 @@ return [
                     'submenu' => [
                         [
                             'title' => 'User Creation',
-                            'page' => '/register',
+                            'page' => '/viewRegisterUser',
                         ],
                         [
                             'title' => 'User List',
-                            'page' => '/userList'
+                            'page' => '/viewUserList'
                         ],
                     ]
                 ],
             ]
+        ],
+        [
+            'title' => 'Configurations',
+            'icon' => 'media/svg/icons/General/Settings-1.svg',
+            'bullet' => 'dot',
+            'root' => true,
+            'submenu' => [
+                [
+                    'title' => 'Access & Permissions',
+                    'bullet' => 'dot',
+                    'submenu' => [
+                        [
+                            'title' => 'User Types',
+                            'page' => '/viewUserType',
+                        ],
+                        [
+                            'title' => 'Permissions',
+                            'page' => '/viewPermission'
+                        ],
+                    ]
+                ],
+            ]
+        ],
+        [
+            'section' => 'Jobs',
+        ],
+        [
+            'section' => 'Reports',
         ],
        
        
