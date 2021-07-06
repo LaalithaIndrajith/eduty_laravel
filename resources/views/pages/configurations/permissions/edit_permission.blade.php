@@ -6,8 +6,8 @@
         <div class="card card-custom">
             <div class="card-header flex-wrap border-0 pt-6 pb-0">
                 <div class="card-title">
-                    <h3 class="card-label"> Permission Creation
-                        <span class="d-block text-muted pt-2 font-size-sm">Permission creation for Access permissions</span>
+                    <h3 class="card-label"> Edit Permission
+                        <span class="d-block text-muted pt-2 font-size-sm">Edit Permission for Access permissions</span>
                     </h3>
                 </div>
                 <div class="card-toolbar">
@@ -17,12 +17,12 @@
             <div class="card-body">
                 <div class="row justify-content-center">
                     <div class="col-lg-4 col-12 border-right">
-                        <form method="POST" id="add-new-permission-form" action="{{ route('createPermission') }}" enctype="multipart/form-data">
+                        <form method="POST" id="edit-permission-form" action="{{ route('editPermission',$permission->id ) }}" enctype="multipart/form-data">
                             @csrf
                             <div class="row d-flex justify-content-start">
                              <div class="col-lg-8 form-group">
                                  <label class="form-label col-form-label">Permission<span class="text-danger">*</span></label>
-                                 <input id="permission_name" type="text" class="form-control @error('permission_name') is-invalid @enderror" placeholder="Enter a namer for User type" name="permission_name" />
+                                 <input id="permission_name" value="{{ $permission->name }}" type="text" class="form-control @error('permission_name') is-invalid @enderror" placeholder="Enter a namer for User type" name="permission_name" />
                                  @error('user_type_name')
                                      <span class="invalid-feedback" role="alert">
                                          <strong>{{ $message }}</strong>
@@ -35,7 +35,7 @@
                             <div class="col-lg-8 form-group">
                                 <!--begin::Button-->
                                 <label class="form-label col-form-label"></label>
-                                <button type="submit" class="btn btn-primary font-weight-bolder">
+                                <button type="submit" class="btn btn-info font-weight-bolder">
                                     <span class="svg-icon svg-icon-md">
                                         <!--begin::Svg Icon | path:assets/media/svg/icons/Design/Flatten.svg-->
                                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
@@ -46,7 +46,7 @@
                                             </g>
                                         </svg>
                                         <!--end::Svg Icon-->
-                                    </span>Create Permission
+                                    </span>Edit Permission
                                 </button>
                                 <!--end::Button-->
                              </div>
@@ -84,7 +84,7 @@
     <script src="{{ asset('plugins/custom/datatables/datatables.bundle.js') }}" defer></script>
     <script>
         FormValidation.formValidation(
-        document.getElementById('add-new-permission-form'), {
+        document.getElementById('edit-permission-form'), {
                 fields: {
                     permission_name: {
                         validators: {
@@ -114,15 +114,7 @@
             drawPermissionListTable()
         });
 
-        let permissionCreationEvent = <?php 
-            if(session()->has('permissionCreation')){
-                echo json_encode(session()->get('permissionCreation'));   
-            }else{
-                echo json_encode('');
-            } 
-            ?>;
-
-        (permissionCreationEvent != '') ? loadToaster(permissionCreationEvent) : ''
+        
 
         async function drawPermissionListTable(){
             let retrivedTblData = await $.ajax(
@@ -149,7 +141,7 @@
                 destroy: true,
                 retrieve: false,
                 order: [
-                    [3, 'asc']
+                    [1, 'desc']
                 ],
                 data: retrivedTblData.data,
                 columns: [
@@ -215,7 +207,7 @@
                         // width: '100px',
                         targets: 3,
                         render: function(data, type, full, meta) {
-                            return `<a href="/viewPermissionForEdit/${data}" class="btn btn-sm btn-clean btn-icon mr-2" title="Edit details">
+                            return `<a href="/viewPermission/${data}/edit" class="btn btn-sm btn-clean btn-icon mr-2" title="Edit details">
                                         <span class="svg-icon svg-icon-md">
                                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" 
                                             height="24px" viewBox="0 0 24 24" version="1.1">
@@ -237,22 +229,6 @@
                 ],
 
             }); 
-        }
-
-        function loadToaster(event){
-            const { msg , status, title} = event
-            if(msg != null && typeof(msg) == 'string'){
-                switch (status) {
-                case 1:
-                    toastr.success(msg,title)
-                    break;
-                case 0:
-                    toastr.error(msg,title)
-                    break;
-                default:
-                    console.error(`Something is wrong during the toaster view`)
-                }
-            }
         }
 
     </script>
