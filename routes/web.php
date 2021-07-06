@@ -1,14 +1,15 @@
 <?php
 
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Auth\LogoutController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\PagesController;
-use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\PagesController;
+use App\Http\Controllers\AccessController;
 use App\Http\Controllers\UserTypeController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\Auth\LogoutController;
+use App\Http\Controllers\Auth\RegisterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,11 +49,19 @@ Route::post('/fecthUsersToDrawTbl',[UserController::class, 'fecthUsersToDrawTbl'
 | Routes belongs to Configuration Modules
 |--------------------------------------------------------------------------
 */
-// Access Permissions
+// Access & Permissions
 Route::get('/viewUserType',[UserTypeController::class, 'index'])->name('userTypeCreationView');
-Route::post('/createUserType',[UserTypeController::class, 'createUserType'])->name('createUserType');
+Route::get('/viewUserType/{id}/edit',[UserTypeController::class, 'viewUserTypeForEdit'])->name('userTypeEditView');
+Route::post('/UserType/Create',[UserTypeController::class, 'createUserType'])->name('createUserType');
+Route::post('/UserType/{id}/edit',[UserTypeController::class, 'editUserType'])->name('editUserType');
 Route::post('/fetchUserTypesToDrawTbl',[UserTypeController::class, 'fetchUserTypesToDrawTbl'])->name('fetchUserTypesToDrawTbl');
 
 Route::get('/viewPermission',[PermissionController::class, 'index'])->name('PermissionCreationView');
-Route::post('/createPermission',[PermissionController::class, 'createPermission'])->name('createPermission');
+Route::get('/viewPermission/{id}/edit',[PermissionController::class, 'viewPermissionForEdit'])->name('PermissionEditView');
+Route::post('/Premission/Create',[PermissionController::class, 'createPermission'])->name('createPermission');
+Route::post('/Premission/{id}/edit',[PermissionController::class, 'editPermission'])->name('editPermission');
 Route::post('/fetchPermissionsToDrawTbl',[PermissionController::class, 'fetchPermissionsToDrawTbl'])->name('fetchPermissionsToDrawTbl');
+
+Route::get('/viewAccessControl',[AccessController::class, 'index'])->name('AccessControlView');
+Route::post('/createAccess',[AccessController::class, 'createAccess'])->name('createAccess');
+Route::post('/fetchAccessControlsToDrawTbl',[AccessController::class, 'fetchAccessControlsToDrawTbl'])->name('fetchAccessControlsToDrawTbl');

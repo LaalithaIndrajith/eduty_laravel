@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\UserType;
 use Exception;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -28,14 +29,32 @@ class UserTypeController extends Controller
 
         $page_title = 'Create User Type';
 
-        return view('pages.configurations.create_user_type', compact('page_title','page_breadcrumbs'));
+        return view('pages.configurations.user_types.create_user_type', compact('page_title','page_breadcrumbs'));
+    }
+    
+    public function viewUserTypeForEdit($id){
+        $userType = Role::findById($id);
+        $page_breadcrumbs = [
+            'main_module' =>  [   
+                'title' => 'Configurations',
+                'page' => '#',
+            ],
+            'sub_module' =>  [   
+                'title' => 'Access & Permissions',
+                'page' => '#',
+            ],
+        ];
+
+        $page_title = 'Create User Type';
+
+        return view('pages.configurations.user_types.edit_user_type', compact('page_title','page_breadcrumbs','userType'));
     }
 
     public function createUserType(Request $request){
         try{
             Role::create(['name' =>  Str::upper($request->user_type_name)]);
             $userTypeCreation = [
-                'msg' =>  'User Type Created Successfully',
+                'msg' =>  'User Type created successfully',
                 'title' => 'User Type Creation',
                 'status' =>  1,
             ];
@@ -52,6 +71,33 @@ class UserTypeController extends Controller
             $request->session()->flash('userTypeCreation', $userTypeCreation);
         }
 
+        return redirect()->route('userTypeCreationView');
+    }
+
+    public function editUserType(Request $request, $id){
+        try{
+            $userType = UserType::find($id);
+            $userType->name = Str::upper($request->user_type_name);
+            $userType->save();
+
+            $userTypeEdit = [
+                'msg' =>  'User Type updated successfully',
+                'title' => 'User Type Update',
+                'status' =>  1,
+            ];
+
+            $request->session()->flash('userTypeEdit', $userTypeEdit);
+
+        }catch(Exception $e){
+            $userTypeEdit = [
+                'msg' =>  $e->getMessage(),
+                'title' => 'User Type update is unsuccessful',
+                'status' =>  0,
+            ];
+
+            $request->session()->flash('userTypeEdit', $userTypeEdit);
+        }
+        
         return redirect()->route('userTypeCreationView');
     }
 
