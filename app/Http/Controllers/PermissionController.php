@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\PermissionModel;
 use Exception;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -29,7 +30,25 @@ class PermissionController extends Controller
 
         $page_title = 'Create Permission';
 
-        return view('pages.configurations.create_permission', compact('page_title','page_breadcrumbs'));
+        return view('pages.configurations.permissions.create_permission', compact('page_title','page_breadcrumbs'));
+    }
+    
+    public function viewPermissionForEdit($id){
+        $permission = Permission::findById($id);
+        $page_breadcrumbs = [
+            'main_module' =>  [   
+                'title' => 'Configurations',
+                'page' => '#',
+            ],
+            'sub_module' =>  [   
+                'title' => 'Access & Permissions',
+                'page' => '#',
+            ],
+        ];
+
+        $page_title = 'Edit Permission';
+
+        return view('pages.configurations.permissions.edit_permission', compact('page_title','page_breadcrumbs','permission'));
     }
 
     public function createPermission(Request $request){
@@ -51,6 +70,31 @@ class PermissionController extends Controller
             ];
 
             $request->session()->flash('permissionCreation', $permissionCreation);
+        }
+        return redirect()->route('PermissionCreationView');
+    }
+
+    public function editPermission(Request $request, $id){
+        try{
+            $permission = PermissionModel::find($id);
+            $permission->name = $request->permission_name;
+            $permission->save();
+            $permissionEdit = [
+                'msg' =>  'Permission updated Successfully',
+                'title' => 'Permission Creation',
+                'status' =>  1,
+            ];
+
+            $request->session()->flash('permissionEdit', $permissionEdit);
+
+        }catch(Exception $e){
+            $permissionEdit = [
+                'msg' =>  $e->getMessage(),
+                'title' => 'Permission update is unsuccessful',
+                'status' =>  0,
+            ];
+
+            $request->session()->flash('permissionEdit', $permissionEdit);
         }
         return redirect()->route('PermissionCreationView');
     }
