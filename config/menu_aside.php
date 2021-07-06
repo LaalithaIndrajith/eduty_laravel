@@ -56,6 +56,10 @@ return [
                             'title' => 'Permissions',
                             'page' => '/viewPermission'
                         ],
+                        [
+                            'title' => 'Authorization',
+                            'page' => '/viewAccessControl'
+                        ],
                     ]
                 ],
             ]
