@@ -63,5 +63,6 @@ Route::post('/Premission/{id}/edit',[PermissionController::class, 'editPermissio
 Route::post('/fetchPermissionsToDrawTbl',[PermissionController::class, 'fetchPermissionsToDrawTbl'])->name('fetchPermissionsToDrawTbl');
 
 Route::get('/viewAccessControl',[AccessController::class, 'index'])->name('AccessControlView');
-Route::post('/createAccess',[AccessController::class, 'createAccess'])->name('createAccess');
-Route::post('/fetchAccessControlsToDrawTbl',[AccessController::class, 'fetchAccessControlsToDrawTbl'])->name('fetchAccessControlsToDrawTbl');
+Route::post('/grantPermission',[AccessController::class, 'grantPermission'])->name('grantPermission');
+Route::post('/fetchRolesPermissionsToDrawTbl',[AccessController::class, 'fetchRolesPermissionsToDrawTbl'])->name('fetchRolesPermissionsToDrawTbl');
+Route::post('/revokePermission',[AccessController::class, 'revokePermission'])->name('revokePermission');
