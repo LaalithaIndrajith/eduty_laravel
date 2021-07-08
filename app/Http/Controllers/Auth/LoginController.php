@@ -26,28 +26,55 @@ class LoginController extends Controller
         ]);
 
         $user = User::where('email',  $request->email)->with(['department','designation'])->first();
+        
         if(!$user){
             return back()->withErrors(['email' => 'The provided credentials do not match our records.']);
-        }else if($user->user_is_verified == 0){
-            return back()->withErrors(['email' => 'User is not activated by the Admin.']);
+        }else{
+            //checking whether the user is Super Admin or not
+            if($user->user_is_system_admin){
+                if($this->checkSysAdminLoginAttempt($request)){
+                    $this->setSysAdminSessionData($request);
+                    return redirect()->intended('dashboard');
+                }
+                return back()->withErrors(['email' => 'The provided credentials do not match our records.',]);
+                
+            }else{
+                if($user->user_is_verified == 0){
+                    return back()->withErrors(['email' => 'Your account is not activated yet. Please contact the administrator']);
+                }else{
+                    if($this->checkLoginAttempt($request)) {
+                        $this->setSessionData($request, $user);
+                        return redirect()->intended('dashboard');
+                    }
+                    return back()->withErrors(['email' => 'The provided credentials do not match our records.',]);
+                } 
+            }
         }
+    }
 
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password, 'user_is_verified' => 1])) {
-            $designationName = $user->designation->designation_name;
-            $departmentName = $user->department->depart_name;
+    private function checkLoginAttempt(Request $request){
+        return (Auth::attempt(['email' => $request->email, 'password' => $request->password, 'user_is_verified' => 1]));
+    }
 
-            $request->session()->regenerate();
-            $request->session()->put([
-                'designation'=> $designationName,
-                'department'=> $departmentName ]);
+    private function checkSysAdminLoginAttempt(Request $request){
+        return (Auth::attempt(['email' => $request->email, 'password' => $request->password]));
+    }
 
-            return redirect()->intended('dashboard');
-        }
+    private function setSessionData(Request $request, $user){
+        $designationName = $user->designation->designation_name;
+        $departmentName = $user->department->depart_name;
 
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ]);
+        $request->session()->regenerate();
+        $request->session()->put([
+            'designation'=> $designationName,
+            'department'=> $departmentName ]);
+    }
 
+    private function setSysAdminSessionData(Request $request){
+        $request->session()->regenerate();
+        $request->session()->put([
+            'designation'=> 'SysAdmin',
+            'department'=> 'SystemDev' ]);
     }
 
 }
