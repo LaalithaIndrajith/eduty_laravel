@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\DepartmentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -66,3 +67,22 @@ Route::get('/viewAccessControl',[AccessController::class, 'index'])->name('Acces
 Route::post('/grantPermission',[AccessController::class, 'grantPermission'])->name('grantPermission');
 Route::post('/fetchRolesPermissionsToDrawTbl',[AccessController::class, 'fetchRolesPermissionsToDrawTbl'])->name('fetchRolesPermissionsToDrawTbl');
 Route::post('/revokePermission',[AccessController::class, 'revokePermission'])->name('revokePermission');
+
+
+/*
+|--------------------------------------------------------------------------
+| Routes belongs to Master Modules
+|--------------------------------------------------------------------------
+*/
+// Departments
+Route::get('/viewDepartment',[DepartmentController::class, 'index'])->name('departmentCreationView');
+Route::get('/viewDepartment/{id}/edit',[DepartmentController::class, 'viewDepartmentForEdit'])->name('departmentEditView');
+Route::post('/Department/Create',[DepartmentController::class, 'createDepartment'])->name('createDepartment');
+Route::post('/Department/{id}/edit',[DepartmentController::class, 'editDepartment'])->name('editDepartment');
+Route::get('/viewDepartmentList',[DepartmentController::class, 'viewDepartmentList'])->name('viewDepartmentList');
+Route::post('/fetchDepartmentsToDrawTbl',[DepartmentController::class, 'fetchDepartmentsToDrawTbl'])->name('fetchDepartmentsToDrawTbl');
+
+// Designations
+Route::get('/viewDesignation',[DepartmentController::class, 'index'])->name('designationCreationView');
+Route::get('/viewDesignation/{id}/edit',[DepartmentController::class, 'viewDesignationForEdit'])->name('designationEditView');
+Route::get('/viewDesignationList',[DepartmentController::class, 'viewDesignationList'])->name('viewDesignationList');

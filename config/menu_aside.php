@@ -36,6 +36,16 @@ return [
                         ],
                     ]
                 ],
+                [
+                    'title' => 'Departments',
+                    'bullet' => 'dot',
+                    'page' => '/viewDepartmentList'
+                ],
+                [
+                    'title' => 'Designations',
+                    'bullet' => 'dot',
+                    'page' => '/viewDesignationList'
+                ]
             ]
         ],
         [

@@ -2,10 +2,11 @@
 
 namespace App;
 
+use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
@@ -59,6 +60,11 @@ class User extends Authenticatable
         
         $users = User::with(['department','designation'])->get();
         return $users;
+    }
+
+    public static function getUsername($userId){
+        $username = DB::table('users')->where('id',$userId)->value('username');
+        return $username;
     }
  
 }
