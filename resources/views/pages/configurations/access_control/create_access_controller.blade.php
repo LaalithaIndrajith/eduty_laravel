@@ -121,10 +121,10 @@
             }
         ).on('core.form.valid', function(){
             let formData = new FormData();
-
-            formData.append('user_type_select', user_type_select);
-            formData.append('permission_select',permission_select );
-
+            
+            formData.append('user_type_select', $('#user_type_select').val());
+            formData.append('permission_select',$('#permission_select').val());
+            
             $.ajax(
             {
                 url:"{{ route('grantPermission')}}",
