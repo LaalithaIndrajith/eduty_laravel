@@ -11,6 +11,7 @@ use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\DesignationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -83,6 +84,9 @@ Route::get('/viewDepartmentList',[DepartmentController::class, 'viewDepartmentLi
 Route::post('/fetchDepartmentsToDrawTbl',[DepartmentController::class, 'fetchDepartmentsToDrawTbl'])->name('fetchDepartmentsToDrawTbl');
 
 // Designations
-Route::get('/viewDesignation',[DepartmentController::class, 'index'])->name('designationCreationView');
-Route::get('/viewDesignation/{id}/edit',[DepartmentController::class, 'viewDesignationForEdit'])->name('designationEditView');
-Route::get('/viewDesignationList',[DepartmentController::class, 'viewDesignationList'])->name('viewDesignationList');
+Route::get('/viewDesignation',[DesignationController::class, 'index'])->name('designationCreationView');
+Route::get('/viewDesignation/{id}/edit',[DesignationController::class, 'viewDesignationForEdit'])->name('designationEditView');
+Route::post('/Designation/Create',[DesignationController::class, 'createDesignation'])->name('createDesignation');
+Route::get('/viewDesignationList',[DesignationController::class, 'viewDesignationList'])->name('viewDesignationList');
+Route::post('/Designation/{id}/edit',[DesignationController::class, 'editDesignation'])->name('editDesignation');
+Route::post('/fetchDesignationsToDrawTbl',[DesignationController::class, 'fetchDesignationsToDrawTbl'])->name('fetchDesignationsToDrawTbl');

@@ -2,8 +2,9 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Department;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Designation extends Model
 {
@@ -20,6 +21,11 @@ class Designation extends Model
     public function user()
     {
         return $this->hasMany('App\User', 'designation_id', 'designation_id');
+    }
+    
+    public function department()
+    {
+        return $this->belongsTo( Department::class, 'depart_id', 'depart_id');
     }
 
     public static function fetchAllDesignations(){
