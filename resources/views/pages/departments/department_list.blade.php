@@ -221,8 +221,8 @@
                     render: function(data, type, full, meta) {
                         let output = '';
 
-                        output += `<div class="font-weight-light text-primary mb-0"> <i class="fas fa-phone-alt icon-sm"></i> ${data.email}</div>`;
-                        output += `<div class="font-weight-normal text-dark-50"><i class="far fa-envelope icon-sm"></i> ${data.hotline}</div>`;
+                        output += `<div class="font-weight-normal text-primary mb-0"> <i class="far fa-envelope icon-nm"></i> ${data.email}</div>`;
+                        output += `<div class="font-weight-normal text-dark-50"><i class="fas fa-phone-alt icon-nm"></i></i> ${data.hotline}</div>`;
                         
                         return output;
                     },

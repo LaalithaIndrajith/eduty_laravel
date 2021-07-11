@@ -33,11 +33,11 @@ class DepartmentController extends Controller
         $department = Department::find($departId);
         $page_breadcrumbs = [
             'main_module' =>  [   
-                'title' => 'Configurations',
+                'title' => 'Masters',
                 'page' => '#',
             ],
             'sub_module' =>  [   
-                'title' => 'Access & Permissions',
+                'title' => 'Departments',
                 'page' => '#',
             ],
         ];
@@ -59,7 +59,7 @@ class DepartmentController extends Controller
             ],
         ];
 
-        $page_title       = 'Department List';
+        $page_title       = 'Department Details';
         $page_description = 'Infromations of all the Departments';
 
         return view('pages.departments.department_list', compact('page_title','page_breadcrumbs',));
@@ -71,6 +71,7 @@ class DepartmentController extends Controller
             $department = new Department;
             $this->storeDepartmentDetails($request, $department);
             $department->department_created_by = auth()->user()->id;
+            $department->department_updated_by = auth()->user()->id;
             $department->save();
             $departmentCreation = [
                 'msg' =>  'Department Created Successfully',
