@@ -163,4 +163,21 @@ class DesignationController extends Controller
         $designation->designation_name   = Str::upper($request->desig_name);
         $designation->designation_status = isset($request->desig_status) ? 1 : 0;
     }
+
+    public function fetchDesignationsOfDep(){
+        $departmentId = $_POST['departmentId'];
+        $designations = Designation::fetchDesignations($departmentId);
+        $data = array();
+        if($designations->isEmpty()){
+            $data = [
+                'exsits' => false,
+            ];
+        }else{
+            $data = [
+                'exsits' => true,
+                'designations' => $designations,
+            ];
+        }
+        return $data;
+    }
 }

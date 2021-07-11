@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use Exception;
 use App\Department;
 use App\Designation;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
-use Exception;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class RegisterController extends Controller
@@ -36,25 +39,44 @@ class RegisterController extends Controller
         $data = [ 
             'departments' => Department::fetchAllDepartments(),
             'designations' => Designation::fetchAllDesignations(),
+            'userTypes' => Role::where('name','!=', 'SYSTEM ADMIN')->get(),
         ];
 
         return view('pages.users.register_user', compact('page_title','page_breadcrumbs', 'data'));
     }
 
     public function registerUsers(Request $request){
-
+        DB::beginTransaction();
         try{
             $this->validateRegisterUserForm($request);
             $user = new User;
             $this->saveUserDetailWithoutImg($user, $request);
             $this->userProfileImgSave($user, $request);
+            $user->user_created_by = auth()->user()->id;
+            $user->user_updated_by = auth()->user()->id;
             $user->save();
-            
-            return redirect()->route('userRegisterView');
+            $this->assignUserType($request,$user);
+            DB::commit();  
+
+            $userRegistration = [
+                'msg' =>  'User Registered Successfully',
+                'title' => 'User Registration',
+                'status' =>  1,
+            ];
+
+            $request->session()->flash('userRegistration', $userRegistration);              
             
         }catch(Exception $e){
+            DB::rollback();
+            $userRegistration = [
+                'msg' =>  'User Registration is unsuccessful',
+                'title' => 'User Registration',
+                'status' =>  0,
+            ];
 
+            $request->session()->flash('userRegistration', $userRegistration);  
         }
+        return redirect()->route('userRegisterView');
     }
 
     private function validateRegisterUserForm(Request $request){
@@ -66,7 +88,6 @@ class RegisterController extends Controller
             'user_first_name'    => 'required|max:100',
             'user_last_name'     => 'required|max:100',
             'user_telephone'     => 'required',
-            'user_telephone'     => 'required|regex:/(0)[0-9]/|not_regex:/[a-z]/|min:10|max:10',
             'user_address'       => 'required',
             'user_nic'           => 'required',
             'user_profile_image' => 'image|nullable',
@@ -111,5 +132,14 @@ class RegisterController extends Controller
         }
 
         $user->user_profile_image = $imageFileName;
+    }
+
+    // Assign User Types to the Users
+    private function assignUserType(Request $request,$user){
+        $userTypeId = $request->user_type_select;
+        $userType = Role::findById($userTypeId);
+
+        $user->assignRole($userType);
+
     }
 }

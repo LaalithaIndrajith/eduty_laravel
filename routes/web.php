@@ -36,18 +36,6 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard
 
 /*
 |--------------------------------------------------------------------------
-| Routes belongs to Master Modules
-|--------------------------------------------------------------------------
-*/
-
-// Users
-Route::get('/viewRegisterUser',[RegisterController::class, 'index'])->name('userRegisterView');
-Route::post('/register',[RegisterController::class, 'registerUsers'])->name('userRegister');
-Route::get('/viewUserList',[UserController::class, 'index'])->name('viewUserList');
-Route::post('/fecthUsersToDrawTbl',[UserController::class, 'fecthUsersToDrawTbl'])->name('fecthUsersToDrawTbl');
-
-/*
-|--------------------------------------------------------------------------
 | Routes belongs to Configuration Modules
 |--------------------------------------------------------------------------
 */
@@ -90,3 +78,10 @@ Route::post('/Designation/Create',[DesignationController::class, 'createDesignat
 Route::get('/viewDesignationList',[DesignationController::class, 'viewDesignationList'])->name('viewDesignationList');
 Route::post('/Designation/{id}/edit',[DesignationController::class, 'editDesignation'])->name('editDesignation');
 Route::post('/fetchDesignationsToDrawTbl',[DesignationController::class, 'fetchDesignationsToDrawTbl'])->name('fetchDesignationsToDrawTbl');
+
+// Users
+Route::get('/viewRegisterUser',[RegisterController::class, 'index'])->name('userRegisterView');
+Route::post('/register',[RegisterController::class, 'registerUsers'])->name('userRegister');
+Route::get('/viewUserList',[UserController::class, 'index'])->name('viewUserList');
+Route::post('/fecthUsersToDrawTbl',[UserController::class, 'fecthUsersToDrawTbl'])->name('fecthUsersToDrawTbl');
+Route::post('/fetchDesignationsOfDep',[DesignationController::class, 'fetchDesignationsOfDep'])->name('fetchDesignationsOfDep');

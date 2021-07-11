@@ -49,7 +49,7 @@
                         <div class="col-lg-7 col-md-6 col-sm-12 border-right">
                             <h5 class="font-weight-bold text-center">Basic Information</h5><br>
                             <div class="row">
-                                <div class="col-lg-6 col-sm-12 form-group">
+                                <div class="col-lg-4 col-sm-12 form-group">
                                     <label class="form-label col-form-label">Department <span class="text-danger">*</span></label>
                                     <select class="form-control form-control-lg dynamic mt-2 selectpicker @error('department_select') is-invalid @enderror" name="department_select" id="department_select" data-dependent="department_select" data-size="7" data-live-search="true">
                                         <option value="">Select a Department</option>
@@ -64,15 +64,30 @@
                                     @enderror
                                 </div>
 
-                                <div class="col-lg-6 col-sm-12 form-group">
+                                <div class="col-lg-4 col-sm-12 form-group">
                                     <label class="form-label col-form-label">Designation <span class="text-danger">*</span></label>
                                     <select class="form-control form-control-lg dynamic mt-2 selectpicker @error('designation_select') is-invalid @enderror" name="designation_select" id="designation_select" data-size="7" data-live-search="true">
                                         <option value="">Select a Designation</option>
-                                        @foreach ($data['designations'] as $designation )
+                                        {{-- @foreach ($data['designations'] as $designation )
                                         <option value="{{ $designation->designation_id }}">{{ $designation->designation_code }} | {{ $designation->designation_name }}</option>   
-                                        @endforeach
+                                        @endforeach --}}
                                     </select>
                                     @error('designation_select')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>  
+                                
+                                <div class="col-lg-4 col-sm-12 form-group">
+                                    <label class="form-label col-form-label">User Type <span class="text-danger">*</span></label>
+                                    <select class="form-control form-control-lg dynamic mt-2 selectpicker @error('user_type_select') is-invalid @enderror" name="user_type_select" id="user_type_select" data-size="7" data-live-search="true">
+                                        <option value="">Select a User Type</option>
+                                        @foreach ($data['userTypes'] as $userType )
+                                        <option value="{{ $userType->id }}">{{ $userType->name }}</option>   
+                                        @endforeach
+                                    </select>
+                                    @error('user_type_select')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
@@ -96,7 +111,7 @@
                                 </div> 
                                 <div class="col-lg-5 col-sm-6 form-group">
                                     <label class="form-label col-form-label">First Name <span class="text-danger">*</span></label>
-                                    <input id="user_first_name" type="text" class="form-control form-control-lg @error('user_first_name') is-invalid @enderror" placeholder="Enter First Name" name="user_first_name" />
+                                    <input id="user_first_name" type="text" class="form-control @error('user_first_name') is-invalid @enderror" placeholder="Enter First Name" name="user_first_name" />
                                     @error('user_first_name')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -105,7 +120,7 @@
                                 </div> 
                                 <div class="col-lg-5 col-sm-6 form-group">
                                     <label class="form-label col-form-label">Last Name <span class="text-danger">*</span></label>
-                                    <input id="user_last_name" type="text" class="form-control form-control-lg @error('user_last_name') is-invalid @enderror" placeholder="Enter Last Name" name="user_last_name" />
+                                    <input id="user_last_name" type="text" class="form-control @error('user_last_name') is-invalid @enderror" placeholder="Enter Last Name" name="user_last_name" />
                                     @error('user_last_name')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -116,7 +131,7 @@
                             <div class="row d-flex justify-content-start">
                                 <div class="col-lg-6 form-group">
                                     <label class="form-label col-form-label">NIC<span class="text-danger">*</span></label>
-                                    <input id="user_nic" type="text" class="form-control form-control-lg @error('user_nic') is-invalid @enderror" placeholder="Enter NIC" name="user_nic" />
+                                    <input id="user_nic" type="text" class="form-control @error('user_nic') is-invalid @enderror" placeholder="Enter NIC" name="user_nic" />
                                     @error('user_nic')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -136,7 +151,7 @@
                                 </div>
                                 <div class="col-lg-6 form-group">
                                     <label class="form-label col-form-label">Telephone Number <span class="text-danger">*</span></label>
-                                    <input id="user_telephone" type="text" class="form-control form-control-lg form-control @error('user_telephone') is-invalid @enderror" placeholder="Enter Telephone Number" name="user_telephone" />
+                                    <input id="user_telephone" type="text" class="form-control form-control @error('user_telephone') is-invalid @enderror" placeholder="Enter Telephone Number" name="user_telephone" />
                                     @error('user_telephone')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -145,7 +160,7 @@
                                 </div>
 
                                 <div class="col-lg-6 form-group">
-                                    <label class="form-label col-form-label">Status </label>
+                                    <label class="form-label col-form-label">Activate User </label>
                                     <br>
                                     <span class="switch">
                                         <label>
@@ -190,7 +205,7 @@
                             <div class="row d-flex justify-content-center mt-3">
                                 <div class="col-lg-8 col-sm-10 form-group">
                                     <label class="form-label col-form-label">User Name</label>
-                                    <input id="user_name" type="text" class="form-control form-control-lg @error('user_name') is-invalid @enderror" placeholder="Enter User Name" name="user_name" />
+                                    <input id="user_name" type="text" class="form-control @error('user_name') is-invalid @enderror" placeholder="Enter User Name" name="user_name" />
                                     @error('user_name')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -202,7 +217,7 @@
                             <div class="row d-flex justify-content-center">
                                 <div class="col-lg-8 col-sm-10 form-group">
                                     <label class="form-label col-form-label">Email</label>
-                                    <input id="email" type="email" class="form-control form-control-lg @error('email') is-invalid @enderror" placeholder="Enter Email Address" name="email" />
+                                    <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" placeholder="Enter Email Address" name="email" />
                                     @error('email')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -214,7 +229,7 @@
                             <div class="row d-flex justify-content-center">
                                 <div class="col-lg-8 col-sm-10 form-group">
                                     <label class="form-label col-form-label">Password</label>
-                                    <input id="password" type="password" class="form-control form-control-lg @error('password') is-invalid @enderror" placeholder="Enter Password" name="password" />
+                                    <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" placeholder="Enter Password" name="password" />
                                     @error('password')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -266,6 +281,14 @@
                         validators: {
                             notEmpty: {
                                 message: 'Designation is required'
+                            },
+
+                        }
+                    },
+                    user_type_select: {
+                        validators: {
+                            notEmpty: {
+                                message: 'Please select a User type'
                             },
 
                         }
@@ -374,5 +397,65 @@
                 }
             }
         );
+
+        let userRegistrationEvent = <?php 
+            if(session()->has('userRegistration')){
+                echo json_encode(session()->get('userRegistration'));   
+            }else{
+                echo json_encode('');
+            } 
+            ?>;
+
+        (userRegistrationEvent != '') ? loadToaster(userRegistrationEvent) : '' ;
+
+        document.querySelector('#department_select').addEventListener('change', function() {
+            let departmentId = this.value;
+            fetchDesignationsOfDep(departmentId);
+        });
+
+        async function fetchDesignationsOfDep(departmentId){
+            $.ajax({
+            url: "{{ route('fetchDesignationsOfDep')}}",
+            method: "POST",
+            data: {
+                "_token": "{{ csrf_token() }}",
+                "departmentId": departmentId,
+            },
+            dataType: 'json',
+            success: function(data) {
+                console.log(data)
+                $('#designation_select').empty();
+                $('#designation_select').append('<option value="">Select a Designation</option>');
+                if(data.exsits){
+                    let newOptions = '';
+                    for(let designation of data.designations){
+                        newOptions += `<option value="${designation.designation_id}"> ${designation.designation_code} | ${designation.designation_name}</option>`
+                    }
+                    $('#designation_select').append(newOptions); 
+                }
+                else{
+                    toastr.error('Please go to Designations Master to create designations for departments', 'No Designations Found')
+                }
+                $('#designation_select').selectpicker('refresh');
+
+            }
+        });
+        }
+
+        function loadToaster(event){
+            const { msg , status, title} = event
+            if(msg != null && typeof(msg) == 'string'){
+                switch (status) {
+                case 1:
+                    toastr.success(msg,title)
+                    break;
+                case 0:
+                    toastr.error(msg,title)
+                    break;
+                default:
+                    console.error(`Something is wrong during the toaster view`)
+                }
+            }
+        }
     </script>
 @endsection

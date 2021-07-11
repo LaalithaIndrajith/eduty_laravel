@@ -33,4 +33,9 @@ class Designation extends Model
 
         return $departments;
     }
+
+    public static function fetchDesignations($departmentId){
+        $designations = Designation::where('depart_id',$departmentId)->where('designation_status',1)->get();
+        return $designations;
+    }
 }
