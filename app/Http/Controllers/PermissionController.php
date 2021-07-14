@@ -2,18 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\PermissionModel;
 use Exception;
+use App\PermissionModel;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Permission;
 
 class PermissionController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['auth']);
+        $isadmin = Auth::user()->user_is_system_admin;
+
+        if($isadmin == 1)
+        {
+            $this->middleware(['auth', 'isSystemAdmin']);
+        }else{
+            $this->middleware(['auth', 'routeClearance']);
+        }
     }
     
     public function index(){

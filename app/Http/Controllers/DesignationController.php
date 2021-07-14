@@ -9,9 +9,22 @@ use App\Designation;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class DesignationController extends Controller
 {
+    public function __construct()
+    {
+        $isadmin = Auth::user()->user_is_system_admin;
+
+        if($isadmin == 1)
+        {
+            $this->middleware(['auth', 'isSystemAdmin']);
+        }else{
+            $this->middleware(['auth', 'routeClearance']);
+        }
+    }
+
     public function index(){
         $departments = Department::fetchAllDepartments();
         $page_breadcrumbs = [

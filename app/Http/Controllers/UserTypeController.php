@@ -2,17 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\UserType;
 use Exception;
+use App\UserType;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Auth;
 
 class UserTypeController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['auth']);
+        $isadmin = Auth::user()->user_is_system_admin;
+
+        if($isadmin == 1)
+        {
+            $this->middleware(['auth', 'isSystemAdmin']);
+        }else{
+            $this->middleware(['auth', 'routeClearance']);
+        }
     }
     
     public function index(){

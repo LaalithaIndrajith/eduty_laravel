@@ -8,9 +8,22 @@ use App\Department;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class DepartmentController extends Controller
 {
+    public function __construct()
+    {
+        $isadmin = Auth::user()->user_is_system_admin;
+
+        if($isadmin == 1)
+        {
+            $this->middleware(['auth', 'isSystemAdmin']);
+        }else{
+            $this->middleware(['auth', 'routeClearance']);
+        }
+    }
+    
     public function index(){
         $page_breadcrumbs = [
             'main_module' =>  [   
