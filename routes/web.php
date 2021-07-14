@@ -1,5 +1,6 @@
 <?php
 
+use App\Events\userDetailsUpdatedEvent;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PagesController;
@@ -12,6 +13,9 @@ use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DesignationController;
+use App\Http\Controllers\MailController;
+use App\Mail\userEdited;
+use App\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -87,3 +91,10 @@ Route::post('/User/{id}/edit',[RegisterController::class, 'editUser'])->name('ed
 Route::get('/viewUserList',[UserController::class, 'index'])->name('viewUserList');
 Route::post('/fecthUsersToDrawTbl',[UserController::class, 'fecthUsersToDrawTbl'])->name('fecthUsersToDrawTbl');
 Route::post('/fetchDesignationsOfDep',[DesignationController::class, 'fetchDesignationsOfDep'])->name('fetchDesignationsOfDep');
+
+
+Route::get('/mailable', function () {
+    $user = User::find(1);
+
+    return new userEdited($user,'my self');
+});

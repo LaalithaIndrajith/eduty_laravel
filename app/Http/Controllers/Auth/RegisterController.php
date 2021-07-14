@@ -6,13 +6,16 @@ use App\User;
 use Exception;
 use App\Department;
 use App\Designation;
+use App\Events\userDetailsUpdatedEvent;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
+use App\Mail\userEdited;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 class RegisterController extends Controller
 {
@@ -88,11 +91,10 @@ class RegisterController extends Controller
     }
 
     public function editUser(Request $request,$userId){
-        // dd($request->hasFile('user_profile_image'));
+        
         DB::beginTransaction();
         try{
             $this->validateEditUserForm($request,$userId);
-            // dd($request);
             $user = User::find($userId);
             $this->saveEditUserDetailsWithoutImg($user, $request);
             $this->userProfileImgEdit($user, $request);
@@ -101,6 +103,9 @@ class RegisterController extends Controller
             $this->removeCurrentUserType($user);
             $this->assignUserType($request,$user);
             DB::commit();  
+            
+            //send mail using event & listeners    
+            event(new userDetailsUpdatedEvent($user));
 
             $userEdit = [
                 'msg' =>  'User Details Updated Successfully',
@@ -108,7 +113,7 @@ class RegisterController extends Controller
                 'status' =>  1,
             ];
 
-            $request->session()->flash('userEdit', $userEdit);              
+            $request->session()->flash('userEdit', $userEdit);
             
         }catch(Exception $e){
             DB::rollback();
