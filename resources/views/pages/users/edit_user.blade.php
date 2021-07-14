@@ -5,17 +5,17 @@
 @section('content')
 
     {{-- Register User Accounts--}}
-    <form method="POST" id="register-new-user-form" action="{{ route('userRegister') }}" enctype="multipart/form-data">
+    <form method="POST" id="edit-user-form" action="{{ route('editUser', $user->id) }}" enctype="multipart/form-data">
         @csrf
         <div id="kt_page_sticky_card" class="card card-custom card-sticky">
             <div class="card-header flex-wrap py-3">
                 <div class="card-title">
-                    <h3 class="card-label">User Creation
-                    <span class="d-block text-muted pt-2 font-size-sm">User Creation to Sign in to the System</span></h3>
+                    <h3 class="card-label">Edit User Details
+                    <span class="d-block text-muted pt-2 font-size-sm">Edit Details of the Selected user</span></h3>
                 </div> 
                 <div class="card-toolbar">
                     <!-- <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i>Save</button> -->
-                    <button type="submit" class="btn btn-primary">
+                    <button type="submit" class="btn btn-info">
                         <span class="svg-icon svg-icon-md">
                             <!--begin::Svg Icon | path:assets/media/svg/icons/Design/Flatten.svg-->
                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
@@ -26,17 +26,15 @@
                                 </g>
                             </svg>
                             <!--end::Svg Icon-->
-                        </span>Register User
+                        </span>Update User
                     </button>
-                    @if (auth()->user()->hasRole('ADMIN'))
                     <a href="{{ route('viewUserList') }}" class="btn btn-success ml-1">
                         <span class="svg-icon svg-icon-md">
                             <i class="far fa-list-alt"></i>
                         </span>
                         User List
                     </a>
-                    @endif
-                    <a href="{{ route('userRegisterView') }}" class="btn btn-light-danger ml-1"">
+                    <a href="{{ route('userEditView', $user->id) }}" class="btn btn-light-danger ml-1"">
                         <span class="svg-icon svg-icon-md">
                             <i class="fas fa-sync-alt"></i>
                         </span>
@@ -56,7 +54,7 @@
                                     <select class="form-control form-control-lg dynamic mt-2 selectpicker @error('department_select') is-invalid @enderror" name="department_select" id="department_select" data-dependent="department_select" data-size="7" data-live-search="true">
                                         <option value="">Select a Department</option>
                                         @foreach ($data['departments'] as $department )
-                                        <option value="{{ $department->depart_id }}">{{ $department->depart_code }} | {{ $department->depart_name }}</option>   
+                                        <option value="{{ $department->depart_id }}"  {{ ($user->depart_id == $department->depart_id) ? 'selected' : '' }}>{{ $department->depart_code }} | {{ $department->depart_name }}</option>   
                                         @endforeach
                                     </select>
                                     @error('department_select')
@@ -70,9 +68,9 @@
                                     <label class="form-label col-form-label">Designation <span class="text-danger">*</span></label>
                                     <select class="form-control form-control-lg dynamic mt-2 selectpicker @error('designation_select') is-invalid @enderror" name="designation_select" id="designation_select" data-size="7" data-live-search="true">
                                         <option value="">Select a Designation</option>
-                                        {{-- @foreach ($data['designations'] as $designation )
-                                        <option value="{{ $designation->designation_id }}">{{ $designation->designation_code }} | {{ $designation->designation_name }}</option>   
-                                        @endforeach --}}
+                                        @foreach ($data['designations'] as $designation )
+                                        <option value="{{ $designation->designation_id }}" {{ ($user->designation_id == $designation->designation_id) ? 'selected' : '' }}>{{ $designation->designation_code }} | {{ $designation->designation_name }}</option>   
+                                        @endforeach
                                     </select>
                                     @error('designation_select')
                                         <span class="invalid-feedback" role="alert">
@@ -86,7 +84,7 @@
                                     <select class="form-control form-control-lg dynamic mt-2 selectpicker @error('user_type_select') is-invalid @enderror" name="user_type_select" id="user_type_select" data-size="7" data-live-search="true">
                                         <option value="">Select a User Type</option>
                                         @foreach ($data['userTypes'] as $userType )
-                                        <option value="{{ $userType->id }}">{{ $userType->name }}</option>   
+                                        <option value="{{ $userType->id }}" {{ ($userType->id == $data['userTypeId']) ? 'selected' : '' }}>{{ $userType->name }}</option>   
                                         @endforeach
                                     </select>
                                     @error('user_type_select')
@@ -101,9 +99,9 @@
                                     <label class="form-label col-form-label">Title <span class="text-danger">*</span></label>
                                     <select class="form-control form-control-lg dynamic selectpicker @error('user_title_select') is-invalid @enderror" name="user_title_select" id="user_title_select" data-dependent="user_title_select" data-size="7">
                                         <option value="">Title</option>
-                                        <option value="Mr">Mr</option>
-                                        <option value="Miss">Miss</option>
-                                        <option value="Mrs">Mrs</option>
+                                        <option value="Mr" {{ ($user->user_title == 'Mr') ? 'selected' : '' }}>Mr</option>
+                                        <option value="Miss" {{ ($user->user_title == 'Miss') ? 'selected' : '' }}>Miss</option>
+                                        <option value="Mrs" {{ ($user->user_title == 'Mrs') ? 'selected' : '' }}>Mrs</option>
                                     </select>
                                     @error('user_title_select')
                                         <span class="invalid-feedback" role="alert">
@@ -113,7 +111,7 @@
                                 </div> 
                                 <div class="col-lg-5 col-sm-6 form-group">
                                     <label class="form-label col-form-label">First Name <span class="text-danger">*</span></label>
-                                    <input id="user_first_name" type="text" class="form-control @error('user_first_name') is-invalid @enderror" placeholder="Enter First Name" name="user_first_name" />
+                                    <input id="user_first_name" type="text" class="form-control @error('user_first_name') is-invalid @enderror" placeholder="Enter First Name" name="user_first_name" value="{{ $user->user_fname }}"/>
                                     @error('user_first_name')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -122,7 +120,7 @@
                                 </div> 
                                 <div class="col-lg-5 col-sm-6 form-group">
                                     <label class="form-label col-form-label">Last Name <span class="text-danger">*</span></label>
-                                    <input id="user_last_name" type="text" class="form-control @error('user_last_name') is-invalid @enderror" placeholder="Enter Last Name" name="user_last_name" />
+                                    <input id="user_last_name" type="text" class="form-control @error('user_last_name') is-invalid @enderror" placeholder="Enter Last Name" name="user_last_name" value="{{ $user->user_lname }}"/>
                                     @error('user_last_name')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -133,7 +131,7 @@
                             <div class="row d-flex justify-content-start">
                                 <div class="col-lg-6 form-group">
                                     <label class="form-label col-form-label">NIC<span class="text-danger">*</span></label>
-                                    <input id="user_nic" type="text" class="form-control @error('user_nic') is-invalid @enderror" placeholder="Enter NIC" name="user_nic" />
+                                    <input id="user_nic" type="text" class="form-control @error('user_nic') is-invalid @enderror" placeholder="Enter NIC" name="user_nic" value="{{ $user->user_nic }}" />
                                     @error('user_nic')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -144,7 +142,8 @@
                             <div class="row">
                                 <div class="col-lg-6 form-group">
                                     <label class="col-xl-12 col-lg-12 col-form-label">Address <span class="text-danger">*</span></label>
-                                    <textarea class="form-control @error('user_address') is-invalid @enderror " type="text" name="user_address" rows="5"></textarea>
+                                    <textarea class="form-control @error('user_address') is-invalid @enderror " type="text" name="user_address" rows="5">
+                                        {{ $user->user_address }}</textarea>
                                     @error('user_address')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -153,7 +152,7 @@
                                 </div>
                                 <div class="col-lg-6 form-group">
                                     <label class="form-label col-form-label">Telephone Number <span class="text-danger">*</span></label>
-                                    <input id="user_telephone" type="text" class="form-control form-control @error('user_telephone') is-invalid @enderror" placeholder="Enter Telephone Number" name="user_telephone" />
+                                    <input id="user_telephone" type="text" class="form-control form-control @error('user_telephone') is-invalid @enderror" placeholder="Enter Telephone Number" name="user_telephone" value="{{ $user->user_telephone }}" />
                                     @error('user_telephone')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -166,7 +165,7 @@
                                     <br>
                                     <span class="switch">
                                         <label>
-                                            <input type="checkbox" checked="checked" name="user_status" id="user_status" value="1" />
+                                            <input type="checkbox" name="user_status" id="user_status" value="1" {{ ($user->user_is_verified == 0) ? '' : "checked = 'checked'" }} />
                                             <span></span>
                                         </label>
                                     </span>
@@ -180,7 +179,7 @@
                                 <div class="col-lg-6 col-sm-10">
                                     <div class="image-input image-input-outline" id="kt_profile_avatar" style="background-image: url(); 
                                     width:300px; height:300px;">
-                                        <div class="image-input-wrapper" style="background-image: url(); width:300px !important; height:300px 
+                                        <div class="image-input-wrapper" style="background-image: url({{asset('storage/images/user_porfile_images/'.$user->user_profile_image)}}); width:300px !important; height:300px 
                                         !important;"></div>
                                         <label class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow" data-action="change" 
                                         data-toggle="tooltip" title="" data-original-title="Add User Profile Picture">
@@ -207,7 +206,7 @@
                             <div class="row d-flex justify-content-center mt-3">
                                 <div class="col-lg-8 col-sm-10 form-group">
                                     <label class="form-label col-form-label">User Name</label>
-                                    <input id="user_name" type="text" class="form-control @error('user_name') is-invalid @enderror" placeholder="Enter User Name" name="user_name" />
+                                    <input id="user_name" type="text" class="form-control @error('user_name') is-invalid @enderror" placeholder="Enter User Name" name="user_name" value="{{ $user->username }}"/>
                                     @error('user_name')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -219,7 +218,7 @@
                             <div class="row d-flex justify-content-center">
                                 <div class="col-lg-8 col-sm-10 form-group">
                                     <label class="form-label col-form-label">Email</label>
-                                    <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" placeholder="Enter Email Address" name="email" />
+                                    <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" placeholder="Enter Email Address" name="email" value="{{ $user->email }}" />
                                     @error('email')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -227,31 +226,6 @@
                                     @enderror
 
                                 </div>
-                            </div>
-                            <div class="row d-flex justify-content-center">
-                                <div class="col-lg-8 col-sm-10 form-group">
-                                    <label class="form-label col-form-label">Password</label>
-                                    <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" placeholder="Enter Password" name="password" />
-                                    @error('password')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-
-                                </div>
-                            </div>
-                            <div class="row d-flex justify-content-center">
-                                <div class="col-lg-8 col-sm-10 form-group">
-                                    <label class="form-label col-form-label">Confirm Password</label>
-                                    <input id="password_confirmation" type="password" class="form-control form-control-lg @error('password_confirmation') is-invalid @enderror" placeholder="Enter Confirm Password" name="password_confirmation" />
-                                    @error('password_confirmation')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-
-                                </div> 
-                                
                             </div>
                         </div>  
                             
@@ -367,22 +341,6 @@
                             }
                         }
                     },
-                    password: {
-                        validators: {
-                            notEmpty: {
-                                message: 'Please enter the Password'
-                            },
-
-                        }
-                    },
-                    password_confirmation: {
-                        validators: {
-                            notEmpty: {
-                                message: 'Please enter the Password Confirmation'
-                            },
-
-                        }
-                    },
 
                 },
 
@@ -400,15 +358,14 @@
             }
         );
 
-        let userRegistrationEvent = <?php 
-            if(session()->has('userRegistration')){
-                echo json_encode(session()->get('userRegistration'));   
+        let userEditEvent = <?php if(session()->has('userEdit')){
+                echo json_encode(session()->get('userEdit'));   
             }else{
                 echo json_encode('');
             } 
             ?>;
 
-        (userRegistrationEvent != '') ? loadToaster(userRegistrationEvent) : '' ;
+        (userEditEvent != '') ? loadToaster(userEditEvent) : '' ;
 
         document.querySelector('#department_select').addEventListener('change', function() {
             let departmentId = this.value;

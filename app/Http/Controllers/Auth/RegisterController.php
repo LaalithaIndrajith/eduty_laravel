@@ -18,10 +18,18 @@ class RegisterController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['auth']);
+        $isadmin = Auth::user()->user_is_system_admin;
+        if($isadmin == 1)
+        {
+            $this->middleware(['auth', 'isSystemAdmin']);
+        }else{
+            $this->middleware(['auth', 'routeClearance']);
+        }
+        
     }
 
     public function index(){
+       
         $page_breadcrumbs = [
             'main_module' =>  [   
                 'title' => 'Masters',
@@ -79,6 +87,42 @@ class RegisterController extends Controller
         return redirect()->route('userRegisterView');
     }
 
+    public function editUser(Request $request,$userId){
+        // dd($request->hasFile('user_profile_image'));
+        DB::beginTransaction();
+        try{
+            $this->validateEditUserForm($request,$userId);
+            // dd($request);
+            $user = User::find($userId);
+            $this->saveEditUserDetailsWithoutImg($user, $request);
+            $this->userProfileImgEdit($user, $request);
+            $user->user_updated_by = auth()->user()->id;
+            $user->save();
+            $this->removeCurrentUserType($user);
+            $this->assignUserType($request,$user);
+            DB::commit();  
+
+            $userEdit = [
+                'msg' =>  'User Details Updated Successfully',
+                'title' => 'User Details',
+                'status' =>  1,
+            ];
+
+            $request->session()->flash('userEdit', $userEdit);              
+            
+        }catch(Exception $e){
+            DB::rollback();
+            $userEdit = [
+                'msg' =>  'User Registration is unsuccessful',
+                'title' => 'User Details',
+                'status' =>  0,
+            ];
+
+            $request->session()->flash('userEdit', $userEdit);  
+        }
+        return redirect()->route('userEditView',$userId);
+    }
+
     private function validateRegisterUserForm(Request $request){
         
         $request->validate([
@@ -96,6 +140,23 @@ class RegisterController extends Controller
             'password'           => 'required|min:6|confirmed',
         ]);
     }
+    
+    private function validateEditUserForm(Request $request,$userId){
+        
+        $request->validate([
+            'department_select'  => 'required',
+            'designation_select' => 'required',
+            'user_title_select'  => 'required',
+            'user_first_name'    => 'required|max:100',
+            'user_last_name'     => 'required|max:100',
+            'user_telephone'     => 'required',
+            'user_address'       => 'required',
+            'user_nic'           => 'required',
+            'user_profile_image' => 'image|nullable',
+            'user_name'          => 'required|max:100',
+            'email'              => 'required|email',
+        ]);
+    }
 
     private function saveUserDetailWithoutImg(User $user, Request $request)
     {
@@ -110,6 +171,22 @@ class RegisterController extends Controller
         $user->username             = Str::upper($request->user_name);
         $user->email                = Str::lower($request->email);
         $user->password             = Hash::make($request->password);
+        $user->user_is_verified     = isset($request->user_status) ? 1 : 0;
+        $user->user_is_system_admin = 0;
+    }
+    
+    private function saveEditUserDetailsWithoutImg(User $user, Request $request)
+    {
+        $user->depart_id            = $request->department_select;
+        $user->designation_id       = $request->designation_select;
+        $user->user_title           = $request->user_title_select;
+        $user->user_fname           = Str::upper($request->user_first_name);
+        $user->user_lname           = Str::upper($request->user_last_name);
+        $user->user_telephone       = $request->user_telephone;
+        $user->user_address         = Str::upper($request->user_address);
+        $user->user_nic             = Str::upper($request->user_nic);
+        $user->username             = Str::upper($request->user_name);
+        $user->email                = Str::lower($request->email);
         $user->user_is_verified     = isset($request->user_status) ? 1 : 0;
         $user->user_is_system_admin = 0;
     }
@@ -134,12 +211,35 @@ class RegisterController extends Controller
         $user->user_profile_image = $imageFileName;
     }
 
+    private function userProfileImgEdit(User $user, Request $request){
+        if ($request->hasFile('user_profile_image')) {
+            // Get filename with the extension
+            $imagefilenameWithExt = $request->file('user_profile_image')->getClientOriginalName();
+            // Get just filename
+            $filename = pathinfo($imagefilenameWithExt, PATHINFO_FILENAME);
+            // Get just ext
+            $extension = $request->file('user_profile_image')->getClientOriginalExtension();
+            // Filename to store
+            $imageFileName = $filename . '_' . time() . '.' . $extension;
+            // Upload Image
+            $path = $request->file('user_profile_image')->storeAs('public/images/user_porfile_images', $imageFileName);
+            
+            $user->user_profile_image = $imageFileName;
+        } 
+    }
+
     // Assign User Types to the Users
     private function assignUserType(Request $request,$user){
         $userTypeId = $request->user_type_select;
         $userType = Role::findById($userTypeId);
 
         $user->assignRole($userType);
+
+    }
+    
+    private function removeCurrentUserType($user){
+        $currentUserType = $user->getRoleNames()[0];
+        $user->removeRole($currentUserType);
 
     }
 }

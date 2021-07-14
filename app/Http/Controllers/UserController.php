@@ -3,13 +3,30 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\Department;
+use App\Designation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        $isadmin = Auth::user()->user_is_system_admin;
+
+        if($isadmin == 1)
+        {
+            $this->middleware(['auth', 'isSystemAdmin']);
+        }else{
+            $this->middleware(['auth', 'routeClearance']);
+        }
+    }
+
     public function index(){
+        
         $page_breadcrumbs = [
             'main_module' =>  [   
                 'title' => 'Masters',
@@ -24,6 +41,33 @@ class UserController extends Controller
         $page_title = 'User List';
 
         return view('pages.users.user_list', compact('page_title','page_breadcrumbs'));
+    }
+
+    public function viewUserForEdit($userId){
+        $user = User::find($userId);
+        $userTypeId = $this->findUserTypeId($user);
+        $page_breadcrumbs = [
+            'main_module' =>  [   
+                'title' => 'Masters',
+                'page' => '#',
+            ],
+            'sub_module' =>  [   
+                'title' => 'Users',
+                'page' => '#',
+            ],
+        ];
+
+        $page_title = 'Edit User';
+        $page_description = 'Edit a User Account';
+
+        $data = [ 
+            'departments' => Department::fetchAllDepartments(),
+            'designations' => Designation::fetchAllDesignations(),
+            'userTypeId' => $userTypeId,
+            'userTypes' => Role::where('name','!=', 'SYSTEM ADMIN')->get(),
+        ];
+
+        return view('pages.users.edit_user', compact('page_title','page_breadcrumbs', 'data', 'user'));
     }
 
     public function fecthUsersToDrawTbl(){
@@ -52,8 +96,8 @@ class UserController extends Controller
                 'updatedAt'=> $user->user_updated_at,
                 'updatedBy'=> $this->getUsername($user->user_updated_by),
             );
-            $d['userType'] = 'System Admin';
-            $d['status'] = $user->user_status;
+            $d['userType'] = $user->getRoleNames();
+            $d['status'] = $user->user_is_verified;
             $d['userId'] = $user->id;
             array_push($data, $d);
         }
@@ -71,4 +115,12 @@ class UserController extends Controller
         return $username;
 
     }
+
+    private function findUserTypeId($user){
+        $currentUserType = $user->getRoleNames()[0];
+        $userTypeId = DB::table('roles')->where('name',$currentUserType)->value('id');
+        return $userTypeId;
+    }
+
+    
 }

@@ -210,7 +210,7 @@
 
                             output = `<div class="d-flex align-items-center">
 								<div class="symbol symbol-40 symbol-light-${state} flex-shrink-0">
-									<span class="symbol-label font-size-h4 font-weight-bold">'${data.name.substring(0, 1)}</span>
+									<span class="symbol-label font-size-h4 font-weight-bold">${data.name.substring(0, 1)}</span>
 								</div>
 								<div class="ml-4">
 									<div class="text-dark-75 font-weight-bolder font-size-lg mb-0">${data.name}</div>
@@ -313,7 +313,7 @@
                     // width: '100px',
                     targets: 7,
                     render: function(data, type, full, meta) {
-                        return `<a href="/viewUserForEdit/${data}" class="btn btn-sm btn-clean btn-icon mr-2" title="Edit details">
+                        return `<a href="/viewUser/${data}/edit" class="btn btn-sm btn-clean btn-icon mr-2" title="Edit details">
                                     <span class="svg-icon svg-icon-md">
                                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" 
                                         height="24px" viewBox="0 0 24 24" version="1.1">

@@ -81,7 +81,9 @@ Route::post('/fetchDesignationsToDrawTbl',[DesignationController::class, 'fetchD
 
 // Users
 Route::get('/viewRegisterUser',[RegisterController::class, 'index'])->name('userRegisterView');
+Route::get('/viewUser/{id}/edit',[UserController::class, 'viewUserForEdit'])->name('userEditView');
 Route::post('/register',[RegisterController::class, 'registerUsers'])->name('userRegister');
+Route::post('/User/{id}/edit',[RegisterController::class, 'editUser'])->name('editUser');
 Route::get('/viewUserList',[UserController::class, 'index'])->name('viewUserList');
 Route::post('/fecthUsersToDrawTbl',[UserController::class, 'fecthUsersToDrawTbl'])->name('fecthUsersToDrawTbl');
 Route::post('/fetchDesignationsOfDep',[DesignationController::class, 'fetchDesignationsOfDep'])->name('fetchDesignationsOfDep');
