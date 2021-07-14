@@ -177,6 +177,8 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         Spatie\Permission\PermissionServiceProvider::class,
+        Mailjet\LaravelMailjet\MailjetServiceProvider::class,
+        Mailjet\LaravelMailjet\MailjetMailServiceProvider::class,
 
     ],
 
@@ -233,6 +235,8 @@ return [
         // Metronic Aliases
         'Metronic' => App\Classes\Theme\Metronic::class,
         'Menu' => App\Classes\Theme\Menu::class,
+
+        'Mailjet' => Mailjet\LaravelMailjet\Facades\Mailjet::class,
 
     ],
 
