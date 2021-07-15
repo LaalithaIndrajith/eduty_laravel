@@ -14,6 +14,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DesignationController;
 use App\Http\Controllers\MailController;
+use App\Http\Controllers\TaskFlowController;
 use App\Mail\userEdited;
 use App\User;
 
@@ -90,6 +91,13 @@ Route::post('/register',[RegisterController::class, 'registerUsers'])->name('use
 Route::post('/User/{id}/edit',[RegisterController::class, 'editUser'])->name('editUser');
 Route::get('/viewUserList',[UserController::class, 'index'])->name('viewUserList');
 Route::post('/fecthUsersToDrawTbl',[UserController::class, 'fecthUsersToDrawTbl'])->name('fecthUsersToDrawTbl');
+Route::post('/fetchDesignationsOfDep',[DesignationController::class, 'fetchDesignationsOfDep'])->name('fetchDesignationsOfDep');
+
+// TaskFlows
+Route::get('/viewCreateTaskFlow',[TaskFlowController::class, 'index'])->name('taskflowCreationView');
+Route::post('/Taskflow/Create',[TaskFlowController::class, 'createTaskFlow'])->name('createTaskFlow');
+Route::get('/viewTaskFlowList',[TaskFlowController::class, 'viewTaskFlowList'])->name('viewTaskFlowList');
+Route::post('/fecthTaskFlowsToDrawTbl',[TaskFlowController::class, 'fecthTaskFlowsToDrawTbl'])->name('fecthTaskFlowsToDrawTbl');
 Route::post('/fetchDesignationsOfDep',[DesignationController::class, 'fetchDesignationsOfDep'])->name('fetchDesignationsOfDep');
 
 

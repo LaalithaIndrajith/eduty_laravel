@@ -75,11 +75,13 @@ return [
             ]
         ],
         [
-            'section' => 'Jobs',
+            'title' => 'TaskFlows',
+            'icon' => 'media/svg/icons/Code/Git4.svg',
+            'bullet' => 'dot',
+            'page' => '/viewTaskFlowList'
+            
         ],
-        [
-            'section' => 'Reports',
-        ],
+        
        
        
     ]
