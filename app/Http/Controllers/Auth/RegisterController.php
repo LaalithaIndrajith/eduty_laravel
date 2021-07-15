@@ -6,6 +6,7 @@ use App\User;
 use Exception;
 use App\Department;
 use App\Designation;
+use App\Events\userCreatedEvent;
 use App\Events\userDetailsUpdatedEvent;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -67,7 +68,10 @@ class RegisterController extends Controller
             $user->user_updated_by = auth()->user()->id;
             $user->save();
             $this->assignUserType($request,$user);
-            DB::commit();  
+            DB::commit(); 
+            
+            //send mail using event & listeners    
+            event(new userCreatedEvent($user));
 
             $userRegistration = [
                 'msg' =>  'User Registered Successfully',

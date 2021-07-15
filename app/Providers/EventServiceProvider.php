@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Events\userCreatedEvent;
 use App\Events\userDetailsUpdatedEvent;
+use App\Listeners\sendUserCreatedMailListener;
 use App\Listeners\sendUserDeatilsUpdatedMailListener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -19,6 +21,9 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         userDetailsUpdatedEvent::class => [
             sendUserDeatilsUpdatedMailListener::class,
+        ],
+        userCreatedEvent::class => [
+            sendUserCreatedMailListener::class,
         ],
     ];
 
