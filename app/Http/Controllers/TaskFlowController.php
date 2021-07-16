@@ -50,12 +50,12 @@ class TaskFlowController extends Controller
         DB::beginTransaction();
         try{
             $taskFlow = new TaskFlow;
-            $taskFlow->depart_id = $request->department_select;
-            $taskFlow->task_flow_code = $request->taskflow_code;
-            $taskFlow->task_flow_name = $request->taskflow_name;
-            $taskFlow->taskflow_status = $request->taskflow_status;
-            $taskFlow->task_created_by = auth()->user()->id;
-            $taskFlow->task_updated_by = auth()->user()->id;
+            $taskFlow->depart_id           = $request->department_select;
+            $taskFlow->task_flow_code      = $request->taskflow_code;
+            $taskFlow->task_flow_name      = $request->taskflow_name;
+            $taskFlow->taskflow_status     = $request->taskflow_status;
+            $taskFlow->taskflow_cretaed_by = auth()->user()->id;
+            $taskFlow->taskflow_updated_by = auth()->user()->id;
             $taskFlow->save();
             $this->storeTaskData($request,$taskFlow->taskflow_id);
             DB::commit(); 
