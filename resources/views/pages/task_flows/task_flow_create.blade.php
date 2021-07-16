@@ -261,7 +261,7 @@
             let milestoneVal      = document.getElementById('milestone_time_value');
 
             let newTblrow = `
-                <tr id="${taskName.value}" class="apendedRows">
+                <tr id="${rowNumber}" class="apendedRows">
                     <td colspan="2" style="width:20%;">
                         <div class="d-flex align-items-center">
                             <div class="symbol symbol-40 symbol-light-${state} flex-shrink-0">
@@ -316,7 +316,7 @@
                         <input class="form-control" type="text" id="milestone_time_type_select" readonly="readonly" name="milestone_time_type_select[]" value="${milestoneType.value}" />
                     </td>
                     <td>
-                        <button class="btn btn-danger btn-block mr-2 form-control dltTaskEntryRow" value="${taskName.value}" onclick="deleteRow(${taskName.value})">Remove</button>
+                        <button class="btn btn-danger btn-block mr-2 form-control dltTaskEntryRow" value="${rowNumber}" onclick="deleteRow(${rowNumber})">Remove</button>
                     </td>
                 </tr>`;
 
