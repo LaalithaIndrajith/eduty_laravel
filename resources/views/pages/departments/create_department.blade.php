@@ -50,7 +50,7 @@
                             <div class="row d-flex justify-content-start">
                                 <div class="col-lg-6 form-group">
                                     <label class="form-label col-form-label">Department Code<span class="text-danger">*</span></label>
-                                    <input id="dep_code" type="text" class="form-control @error('dep_code') is-invalid @enderror" placeholder="Enter NIC" name="dep_code" />
+                                    <input id="dep_code" type="text" class="form-control @error('dep_code') is-invalid @enderror" placeholder="Enter Department Code" name="dep_code" />
                                     @error('dep_code')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -59,7 +59,7 @@
                                 </div>
                                 <div class="col-lg-6 form-group">
                                     <label class="form-label col-form-label">Department Name<span class="text-danger">*</span></label>
-                                    <input id="dep_name" type="text" class="form-control @error('dep_name') is-invalid @enderror" placeholder="Enter NIC" name="dep_name" />
+                                    <input id="dep_name" type="text" class="form-control @error('dep_name') is-invalid @enderror" placeholder="Enter Department Name" name="dep_name" />
                                     @error('dep_name')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -119,7 +119,7 @@
                             <div class="row d-flex justify-content-center mt-3">
                                 <div class="col-lg-8 col-sm-10 form-group">
                                     <label class="form-label col-form-label">Fax</label>
-                                    <input id="dep_fax" type="text" class="form-control form-control @error('dep_fax') is-invalid @enderror" placeholder="Enter Telephone Number" name="dep_fax" />
+                                    <input id="dep_fax" type="text" class="form-control form-control @error('dep_fax') is-invalid @enderror" placeholder="Enter Fax Number" name="dep_fax" />
                                     @error('dep_fax')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>

@@ -51,6 +51,10 @@
                                         </span>
                                     @enderror
                                 </div>
+                                @if(Session::has('departmentEdit'))
+                                    <p class="alert
+                                    {{ Session::get('alert-class', 'alert-info') }}">{{Session::get('departmentEdit') }}</p>
+                                @endif
                                 <div class="col-lg-6 form-group">
                                     <label class="form-label col-form-label">Department Name<span class="text-danger">*</span></label>
                                     <input id="dep_name" type="text" class="form-control @error('dep_name') is-invalid @enderror" name="dep_name" value="{{ $department->depart_name }}" />
@@ -216,7 +220,7 @@
                 echo json_encode('');
             } 
             ?>;
-
+        
         (departmentEditEvent != '') ? loadToaster(departmentEditEvent) : ''
 
         function loadToaster(event){
