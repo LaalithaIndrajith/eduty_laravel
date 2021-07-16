@@ -21,4 +21,9 @@ class TaskFlow extends Model
     {
         return $this->hasMany(Task::class, 'taskflow_id', 'taskflow_id');
     }
+    
+    public function department()
+    {
+        return $this->belongsTo( Department::class, 'depart_id', 'depart_id');
+    }
 }

@@ -19,6 +19,11 @@ class Task extends Model
     //Relationships
     public function taskFlow()
     {
-    return $this->belongsTo( TaskFlow::class, 'taskflow_id', 'taskflow_id');
+        return $this->belongsTo( TaskFlow::class, 'taskflow_id', 'taskflow_id');
+    }
+    
+    public function designation()
+    {
+        return $this->belongsTo( Designation::class, 'designation_id', 'designation_id');
     }
 }

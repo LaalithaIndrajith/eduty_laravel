@@ -98,6 +98,7 @@ Route::get('/viewCreateTaskFlow',[TaskFlowController::class, 'index'])->name('ta
 Route::post('/Taskflow/Create',[TaskFlowController::class, 'createTaskFlow'])->name('createTaskFlow');
 Route::get('/viewTaskFlowList',[TaskFlowController::class, 'viewTaskFlowList'])->name('viewTaskFlowList');
 Route::post('/fecthTaskFlowsToDrawTbl',[TaskFlowController::class, 'fecthTaskFlowsToDrawTbl'])->name('fecthTaskFlowsToDrawTbl');
+Route::post('/fetchTasksOfTaskFlow',[TaskFlowController::class, 'fetchTasksOfTaskFlow'])->name('fetchTasksOfTaskFlow');
 Route::post('/fetchDesignationsOfDep',[DesignationController::class, 'fetchDesignationsOfDep'])->name('fetchDesignationsOfDep');
 
 
