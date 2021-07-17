@@ -164,7 +164,7 @@
                                             <button type="button" class="btn btn-light-primary btn-pill mx-2" onclick="showEditTaskModal({{ $task->task_id }})">
                                                 <i class="far fa-edit"></i> Edit 
                                             </button>
-                                            <button type="button" class="btn btn-light-danger btn-pill" onclick="deleteTaskModal({{ $task->task_id }})">
+                                            <button type="button" class="btn btn-light-danger btn-pill" onclick="deleteTask({{ $task->task_id }})">
                                                 <i class="far fa-trash-alt"></i> Delete 
                                             </button>
                                         </div>
@@ -294,6 +294,7 @@
     <script src="{{ asset('js/pages/widgets.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/pages/custom/profile/profile.js') }}" type="text/javascript"></script>
     <script>
+        let editTaskId = 0;
         
         $(document).ready(function(){
             $('#designation_select').selectpicker();
@@ -304,7 +305,6 @@
             $('#editTaskFlowModal').modal('show');
         }
 
-        let editTaskId = 0;
         async function showEditTaskModal(taskId){
             editTaskId = 0;
             let details = await $.ajax(
@@ -475,6 +475,44 @@
             let editedTime = `${taskObj.task_milestone_time} ${taskObj.task_milestone_time_type}`
             $('#edit_milestone_time_'+ editedTaskId).html(editedTime)
             
+        }
+
+        function deleteTask(taskId){
+            var formData = new FormData();
+            formData.append('taskId', taskId);
+            Swal.fire({
+                    title: "Do you want to delete this task from the Taskflow?",
+                    text: "This action will delete the selected task permanantly from the system",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes, Delete Task!"
+                }).then(function(result) {
+                    
+                    if (result.value) {
+                        $.ajax(
+                        {
+                            url:"{{ route('deleteTask')}}", 
+                            method:"POST",
+                            headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}', },
+                            data:formData,
+                            cache : false,
+                            processData: false,
+                            contentType: false,
+                            dataType:'json',
+                            success:async function(data)
+                            {
+                                if(data.status ){
+                                    await toastr.success(data.msg,data.title);
+                                    location.reload();
+                                }
+                                else{
+                                    toastr.error(data.msg,data.title);
+                                }
+                            }
+                        }); 
+                    
+                    }
+                });
         }
         
     </script>

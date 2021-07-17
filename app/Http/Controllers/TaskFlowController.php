@@ -174,6 +174,33 @@ class TaskFlowController extends Controller
         }
     }
 
+    public function deleteTask(Request $request){
+        try{
+            $taskId = $request->taskId;
+            $task   = Task::find($taskId);
+            $task->task_status     = 0;
+            $task->task_updated_at = auth()->user()->id;
+            $task->save();
+
+            $taskFlowEdit = [
+                'msg' =>  'Task deleted from the Taskflow successfully',
+                'title' => 'Task Deletion',
+                'status' =>  true,
+            ];
+
+            return $taskFlowEdit;
+
+        }catch(Exception $e){
+            $taskFlowEdit = [
+                'msg' =>  'Task deletion is unsuccessful',
+                'title' => 'Task Deletion',
+                'status' =>  true,
+            ];
+
+            return $taskFlowEdit;
+        }
+    }
+
     private function storeTaskData(Request $request, $taskFlowId){
         $taskNames = $request->task_name;
         $designations = $request->designation_select;

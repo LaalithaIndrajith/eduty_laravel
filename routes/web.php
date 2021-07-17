@@ -99,6 +99,7 @@ Route::post('/Taskflow/Create',[TaskFlowController::class, 'createTaskFlow'])->n
 Route::get('/viewTaskFlow/{id}/edit',[TaskFlowController::class, 'viewTaskFlowForEdit'])->name('taskflowEditView');
 Route::post('/Taskflow/edit',[TaskFlowController::class, 'editTaskFlow'])->name('editTaskFlow');
 Route::post('/Task/edit',[TaskFlowController::class, 'editTask'])->name('editTask');
+Route::post('/Task/delete',[TaskFlowController::class, 'deleteTask'])->name('deleteTask');
 Route::get('/viewTaskFlowList',[TaskFlowController::class, 'viewTaskFlowList'])->name('viewTaskFlowList');
 Route::post('/fecthTaskFlowsToDrawTbl',[TaskFlowController::class, 'fecthTaskFlowsToDrawTbl'])->name('fecthTaskFlowsToDrawTbl');
 Route::post('/fetchTasksOfTaskFlow',[TaskFlowController::class, 'fetchTasksOfTaskFlow'])->name('fetchTasksOfTaskFlow');
