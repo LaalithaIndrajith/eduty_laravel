@@ -46,7 +46,15 @@
             {{ Metronic::printAttrs('aside_menu') }}>
 
             <ul class="menu-nav {{ Metronic::printClasses('aside_menu_nav', false) }}">
-                {{ Menu::renderVerMenu(config('menu_aside.items')) }}
+                @if(request()->session()->get('userType') == 'SYSTEM-ADMIN')
+                    {{ Menu::renderVerMenu(config('menu_aside.systemAdmin')) }}
+                @elseif(request()->session()->get('userType') == 'ADMIN')
+                    {{ Menu::renderVerMenu(config('menu_aside.admin')) }}
+                @elseif(request()->session()->get('userType') == 'FRONT DESK')
+                    {{ Menu::renderVerMenu(config('menu_aside.frontDesk')) }}
+                @else
+                    {{ Menu::renderVerMenu(config('menu_aside.other')) }}
+                @endif
             </ul>
         </div>
     </div>

@@ -4,8 +4,8 @@
     {{-- Header --}}
     <div class="card-header border-0 pt-5">
         <h3 class="card-title align-items-start flex-column">
-            <span class="card-label font-weight-bolder text-dark">Tasks Overview</span>
-            <span class="text-muted mt-3 font-weight-bold font-size-sm">Pending 10 tasks</span>
+            <span class="card-label font-weight-bolder text-dark">Task Flow Overview</span>
+            <span class="text-muted mt-3 font-weight-bold font-size-sm">All the taskflows belongs to Departments</span>
         </h3>
         <div class="card-toolbar">
             <div class="dropdown dropdown-inline" data-toggle="tooltip" title="Quick actions" data-placement="left">

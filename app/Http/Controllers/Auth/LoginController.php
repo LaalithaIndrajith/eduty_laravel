@@ -63,10 +63,12 @@ class LoginController extends Controller
     private function setSessionData(Request $request, $user){
         $designationName = $user->designation->designation_name;
         $departmentName = $user->department->depart_name;
+        $userType = $user->getRoleNames()[0];
 
         $request->session()->regenerate();
         $request->session()->put([
             'designation'=> $designationName,
+            'userType'=> $userType,
             'department'=> $departmentName ]);
     }
 
@@ -74,6 +76,7 @@ class LoginController extends Controller
         $request->session()->regenerate();
         $request->session()->put([
             'designation'=> 'SysAdmin',
+            'userType'=> 'SYSTEM-ADMIN',
             'department'=> 'SystemDev' ]);
     }
 

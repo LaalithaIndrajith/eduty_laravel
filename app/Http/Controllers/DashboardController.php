@@ -14,20 +14,41 @@ class DashboardController extends Controller
     
     public function index()
     {
-        $page_breadcrumbs = [
-            'main_module' =>  [   
-                'title' => 'Overview',
-                'page' => '#',
-            ],
-            'sub_module' =>  [   
-                'title' => 'Admin',
-                'page' => '#',
-            ],
-        ];
+        $userType = request()->session()->get('userType');
+        if($userType == 'SYSTEM-ADMIN'){
 
-        $page_title = 'Dashboard';
-        $page_description = 'Some description for the page';
+            $page_breadcrumbs = [
+                'main_module' =>  [   
+                    'title' => 'Overview',
+                    'page' => '#',
+                ],
+                'sub_module' =>  [   
+                    'title' => 'Admin',
+                    'page' => '#',
+                ],
+            ];
+            $page_title = 'Dashboard';
+            $page_description = 'Some description for the page';
+    
+            return view('pages.dashboards.dashboard_sys_admin', compact('page_title','page_breadcrumbs'));
+        }else{
+            $page_breadcrumbs = [
+                'main_module' =>  [   
+                    'title' => 'Overview',
+                    'page' => '#',
+                ],
+                'sub_module' =>  [   
+                    'title' => 'Normal User',
+                    'page' => '#',
+                ],
+            ];
 
-        return view('pages.dashboards.dashboard_admin', compact('page_title','page_breadcrumbs'));
+            $page_title = 'Dashboard';
+            $page_description = 'Some description for the page';
+    
+            return view('pages.dashboard', compact('page_title','page_breadcrumbs'));
+            
+        }
+    
     }
 }

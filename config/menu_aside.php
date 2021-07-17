@@ -2,7 +2,7 @@
 // Aside menu
 return [
 
-    'items' => [
+    'systemAdmin' => [
         // Dashboard
         [
             'title' => 'Dashboard',
@@ -84,6 +84,24 @@ return [
         
        
        
-    ]
+    ],
+    'admin' =>[
+        // Custom
+        [
+            'section' => 'Admin',
+        ],
+    ],
+    'frontDesk' =>[
+        // Custom
+        [
+            'section' => 'Front Desk',
+        ],
+    ],
+    'other' =>[
+        // Custom
+        [
+            'section' => 'Normal User',
+        ],
+    ],
 
 ];
