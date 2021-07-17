@@ -96,6 +96,8 @@ Route::post('/fetchDesignationsOfDep',[DesignationController::class, 'fetchDesig
 // TaskFlows
 Route::get('/viewCreateTaskFlow',[TaskFlowController::class, 'index'])->name('taskflowCreationView');
 Route::post('/Taskflow/Create',[TaskFlowController::class, 'createTaskFlow'])->name('createTaskFlow');
+Route::get('/viewTaskFlow/{id}/edit',[TaskFlowController::class, 'viewTaskFlowForEdit'])->name('taskflowEditView');
+Route::post('/Taskflow/edit',[TaskFlowController::class, 'editTaskFlow'])->name('editTaskFlow');
 Route::get('/viewTaskFlowList',[TaskFlowController::class, 'viewTaskFlowList'])->name('viewTaskFlowList');
 Route::post('/fecthTaskFlowsToDrawTbl',[TaskFlowController::class, 'fecthTaskFlowsToDrawTbl'])->name('fecthTaskFlowsToDrawTbl');
 Route::post('/fetchTasksOfTaskFlow',[TaskFlowController::class, 'fetchTasksOfTaskFlow'])->name('fetchTasksOfTaskFlow');

@@ -46,6 +46,28 @@ class TaskFlowController extends Controller
         return view('pages.task_flows.task_flow_list', compact('page_title','page_breadcrumbs',));
     }
 
+    public function viewTaskFlowForEdit($taskflowId){
+        $taskflow = TaskFlow::with(['department'])->where('taskflow_id',$taskflowId)->get();
+        $tasks = Task::with(['designation'])->where('taskflow_id',$taskflowId)->where('task_status','1')->orderBy('task_step_no', 'asc')->get();
+        $departments = Department::fetchAllDepartments();
+        $timeTypes = array( 'mins','hours','days');
+        $page_breadcrumbs = [
+            'main_module' =>  [   
+                'title' => 'TaskFlows',
+                'page' => '#',
+            ],
+            'sub_module' =>  [   
+                'title' => 'Users',
+                'page' => '#',
+            ],
+        ];
+
+        $page_title = 'Edit TaskFlow';
+        $page_description = 'Edit a Task Flow';
+
+        return view('pages.task_flows.task_flow_edit', compact('page_title','page_breadcrumbs', 'tasks','taskflow','departments','timeTypes'));
+    }
+
     public function createTaskFlow(Request $request){
         DB::beginTransaction();
         try{
@@ -78,6 +100,38 @@ class TaskFlowController extends Controller
         }
 
         return redirect()->route('taskflowCreationView');
+    }
+
+    public function editTaskFlow(Request $request){
+        try{
+            $taskflowId     = $request->taskflowId;
+
+            $taskFlow = TaskFlow::find($taskflowId);
+            $taskFlow->task_flow_code      = $request->taskflowCode;
+            $taskFlow->task_flow_name      = $request->taskflowName;
+            $taskFlow->taskflow_status     = $request->taskflowStatus;
+            $taskFlow->taskflow_updated_by = auth()->user()->id;
+            $taskFlow->save();
+
+            $taskFlowEdit = [
+                'msg' =>  'TaskFlow details updated successfully',
+                'title' => 'TaskFlow Details',
+                'status' =>  true,
+                'taskflow' => $taskFlow
+            ];
+
+            return $taskFlowEdit;
+
+        }catch(Exception $e){
+            
+            $taskFlowEdit = [
+                'msg' =>  'TaskFlow details update is unsuccessful',
+                'title' => 'TaskFlow Details',
+                'status' =>  true,
+            ];
+
+            return $taskFlowEdit;
+        }
     }
 
     private function storeTaskData(Request $request, $taskFlowId){
@@ -138,7 +192,7 @@ class TaskFlowController extends Controller
     public function fetchTasksOfTaskFlow(){
         $taskflowId   = $_POST['taskflowId'];
         $taskflow = TaskFlow::with(['department'])->where('taskflow_id',$taskflowId)->get();
-        $tasks = Task::with(['designation'])->where('taskflow_id',$taskflowId)->get();
+        $tasks = Task::with(['designation'])->where('taskflow_id',$taskflowId)->where('task_status','1')->orderBy('task_step_no', 'asc')->get();
         return array(
             'taskflow' => $taskflow,
             'tasks' => $tasks,

@@ -432,6 +432,11 @@
                                 'state': 'success',
                                
                             },
+                            2: {
+                                'title': 'Deleted',
+                                'state': 'danger',
+                               
+                            },
                         };
                         if (typeof status[data] === 'undefined') {
                             return data;
@@ -445,7 +450,7 @@
                     targets: 5,
                     render: function(data, type, full, meta) {
                         return `
-                                <a href="/viewDepartment/${data}/edit" class="btn btn-sm btn-default btn-text-info btn-hover-info btn-icon mr-2" title="Edit details">
+                                <a href="/viewTaskFlow/${data}/edit" class="btn btn-sm btn-default btn-text-info btn-hover-info btn-icon mr-2" title="Edit details">
                                     <span class="svg-icon svg-icon-info svg-icon-2x"><!--begin::Svg Icon | path:C:\wamp64\www\keenthemes\themes\metronic\theme\html\demo1\dist/../src/media/svg/icons\Design\Edit.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                         <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                                             <rect x="0" y="0" width="24" height="24"/>
