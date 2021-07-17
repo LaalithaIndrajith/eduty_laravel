@@ -134,7 +134,7 @@
                                     <div class="card-body ribbon ribbon-top ribbon-ver pb-3">
                                         <div class="ribbon-target bg-danger font-weight-bolder h2" style="top: -2px; right: 20px;">{{ $i++ }}</div>
                                         <h4 class="card-title text-muted font-weight-light">
-                                            Task name - <span class="font-weight-bolder text-dark-65"> &nbsp; {{ $task->task_name }}</span> 
+                                            Task name - <span class="font-weight-bolder text-dark-65" id="edit_task_name_{{$task->task_id  }}"> &nbsp; {{ $task->task_name }}</span> 
                                         </h4>
                                         <div class="row d-flex justify-content-around">
                                             <div class="col-6">
@@ -143,7 +143,7 @@
                                                         <span class="symbol-label font-size-h4 font-weight-bold"><i class="fas fa-user-alt icon-md"></i></span>
                                                     </div>
                                                     <div class="ml-4">
-                                                        <div class="text-dark-75 font-weight-bolder font-size-lg mb-0">{{ $task->designation->designation_name }}</div>
+                                                        <h2 class="text-dark-75 font-weight-bolder font-size-lg mb-0" id="edit_task_responsible_{{$task->task_id  }}">{{ $task->designation->designation_name }}</h2>
                                                         <a href="#" class="text-muted font-weight-bold text-hover-primary">Responsible Designation</a>
                                                     </div>
                                                 </div>
@@ -154,7 +154,7 @@
                                                         <span class="symbol-label font-size-h4 font-weight-bold"><i class="fas fa-hourglass-end icon-md"></i></span>
                                                     </div>
                                                     <div class="ml-4">
-                                                        <div class="text-dark-75 font-weight-bolder font-size-lg mb-0"> {{ $task->task_milestone_time }} {{ $task->task_milestone_time_type }}</div>
+                                                        <div class="text-dark-75 font-weight-bolder font-size-lg mb-0" id="edit_milestone_time_{{$task->task_id  }}"> {{ $task->task_milestone_time }} {{ $task->task_milestone_time_type }}</div>
                                                         <a href="#" class="text-muted font-weight-bold text-hover-primary">Milestone Time</a>
                                                     </div>
                                                 </div>
@@ -178,7 +178,7 @@
         </div>
     </div>
   
-    {{-- End Trip Modal --}}
+    {{-- Edit TAskflow Details Modal --}}
     <div class="modal inmodal fade" id="editTaskFlowModal">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
@@ -231,6 +231,62 @@
         </div>
     </div>
 
+    {{-- Edit Task Modal --}}
+    <div class="modal inmodal fade" id="editTaskModal">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <h5 class="modal-title text-center">Edit Task</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i aria-hidden="true" class="ki ki-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class ="form-horizontal" id ="edit_task_modal_form" name="edit_task_modal_form" method="post" 
+                    enctype="multipart/form-data">
+                        <div class="row d-flex justify-content-around mb-4">
+                            <div class="col-lg-6">
+                                <label>Task Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control font-weight-bold" name="taskName"
+                                id="taskName"/>
+                            </div>
+                            <div class="col-lg-6">
+                                <label>Responsible designation <span class="text-danger">*</span></label>
+                                <select class="form-control form-control-lg dynamic selectpicker @error('department_select') is-invalid @enderror" name="designation_select" id="designation_select" data-dependent="designation_select" data-size="7" data-live-search="true">
+                                    <option value="">Select Designation</option>
+                                    @foreach ($designations as $designation )
+                                    <option value="{{ $designation->designation_id }}">{{ $designation->designation_code }} | {{ $designation->designation_name }}</option>   
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row d-flex justify-content-start">
+                            <div class="col-lg-3">
+                                <label>Milestone Time Type <span class="text-danger">*</span></label>
+                                <select class="form-control form-control-lg  @error('milestone_time_type_select') is-invalid @enderror" name="milestone_time_type_select" id="milestone_time_type_select">
+                                @foreach ($timeTypes as $timeType )
+                                <option value="{{ $timeType }}">{{ $timeType}}</option>   
+                                @endforeach
+                                </select>
+                            </div>
+                            <div class="col-lg-3">
+                                <label>Milestone Time Value <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control font-weight-bold" name="milestone_time_value" 
+                                id="milestone_time_value"/>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-info" id="edit_task_btn" onclick="editTaskChanges()"><i class ="far fa-save"></i> Save Changes </button>
+                    <button type="button" class="btn btn-light btn_close" data-dismiss="modal">
+                        <i class="fa fa-times-circle"></i> Close 
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @endsection
 
 {{-- Scripts Section --}}
@@ -240,13 +296,43 @@
     <script>
         
         $(document).ready(function(){
-            $('#department_select').selectpicker();
             $('#designation_select').selectpicker();
             $('#milestone_time_type_select').selectpicker();
         });
         
         function showEditTaskflow(){
             $('#editTaskFlowModal').modal('show');
+        }
+
+        let editTaskId = 0;
+        async function showEditTaskModal(taskId){
+            editTaskId = 0;
+            let details = await $.ajax(
+            {
+                url:'{{ route('fetchTaskDetailsOfTask')}}',
+                method:"POST",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "taskId" : taskId,
+                },
+                dataType:'json',
+                success:function(data)
+                {
+                    return data;
+                }
+            });
+            editTaskId = details.task_id;
+            arrangeTaskEditModal(details);
+            $('#editTaskModal').modal('show');
+        }
+
+        function arrangeTaskEditModal(taskObj){
+            $('#taskName').val(taskObj.task_name);
+            $('#designation_select').val(taskObj.designation_id);
+            $('#designation_select').selectpicker('refresh');
+            $('#milestone_time_type_select').val(taskObj.task_milestone_time_type);
+            $('#milestone_time_type_select').selectpicker('refresh');
+            $('#milestone_time_value').val(taskObj.task_milestone_time);
         }
 
         function editTaskflowChanges(taskflowId){
@@ -302,6 +388,63 @@
             }
         }
 
+        function editTaskChanges(){
+            var formData = new FormData();
+
+            let taskName        = $('#taskName').val();
+            let taskResponsible = $('#designation_select').val();
+            let taskTimeSelect  = $('#milestone_time_type_select').val();
+            let taskTimeVal     = $('#milestone_time_value').val();
+
+            formData.append('taskId', editTaskId);
+            formData.append('taskName', taskName);
+            formData.append('taskResponsible', taskResponsible);
+            formData.append('taskTimeSelect', taskTimeSelect);
+            formData.append('taskTimeVal', taskTimeVal);
+
+            if(taskName != '' && taskResponsible != '' && taskTimeVal != ''){
+                Swal.fire({
+                    title: "Do you want to save the changes?",
+                    text: "This will update the Task details",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes!"
+                }).then(function(result) {
+                    
+                    if (result.value) {
+                        $.ajax(
+                        {
+                            url:"{{ route('editTask')}}", 
+                            method:"POST",
+                            headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'},
+                            data: formData,
+                            cache : false,
+                            processData: false,
+                            contentType: false,
+                            dataType:'json',
+                            success:function(data)
+                            {
+                                if(data.status ){
+                                    toastr.success(data.msg,data.title);
+                                    let desigName = data.designationName[0].designation_name;
+                                    renderEditedTaskDetails(data.task,desigName,editTaskId)
+                                    $('#editTaskModal').modal('hide');
+                                }
+                                else{
+                                    toastr.error(data.msg,data.title);
+                                }
+                            }
+                        }); 
+                    
+                    }
+                });
+            }else{
+                
+            }
+            
+
+        }
+
         function renderEditedTaskflowDetails(taskflowObj){
             document.querySelector('#edit-taskflow-code').innerHTML = taskflowObj.task_flow_code
             document.querySelector('#edit-taskflow-name').innerHTML = taskflowObj.task_flow_name
@@ -322,6 +465,15 @@
                 break;
             default:
             }
+            
+        }
+
+        async function renderEditedTaskDetails(taskObj,designationName,editedTaskId){
+            $('#edit_task_name_'+ editedTaskId).html(taskObj.task_name)
+            $('#edit_task_responsible_'+ editedTaskId).html(designationName)
+            console.log(taskObj.designationName)
+            let editedTime = `${taskObj.task_milestone_time} ${taskObj.task_milestone_time_type}`
+            $('#edit_milestone_time_'+ editedTaskId).html(editedTime)
             
         }
         

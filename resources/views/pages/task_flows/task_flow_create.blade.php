@@ -32,7 +32,7 @@
                         <span class="svg-icon svg-icon-md">
                             <i class="far fa-list-alt"></i>
                         </span>
-                        Designation List
+                        Taskflow List
                     </a>
                     <a href="{{ route('taskflowCreationView') }}" class="btn btn-light-danger ml-1"">
                         <span class="svg-icon svg-icon-md">
