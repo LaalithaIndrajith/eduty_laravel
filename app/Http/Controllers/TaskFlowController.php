@@ -136,6 +136,33 @@ class TaskFlowController extends Controller
         }
     }
 
+    public function deleteTaskFlow(Request $request){
+        try{
+            $taskflowId = $request->taskflowId;
+            $taskflow   = TaskFlow::find($taskflowId);
+            $taskflow->taskflow_status     = 2;
+            $taskflow->taskflow_updated_by = auth()->user()->id;
+            $taskflow->save();
+
+            $taskflowDelete = [
+                'msg' =>  'Taskflow permenantly deleted from system',
+                'title' => 'Taskflow Deletion',
+                'status' =>  true,
+            ];
+
+            return $taskflowDelete;
+
+        }catch(Exception $e){
+            $taskflowDelete = [
+                'msg' =>  'Taskflow deletion is unsuccessful',
+                'title' => 'Task Deletion',
+                'status' =>  false,
+            ];
+
+            return $taskflowDelete;
+        }
+    }
+
     public function editTask(Request $request){
         try{
             $taskId     = $request->taskId;
