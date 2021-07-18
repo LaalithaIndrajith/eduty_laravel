@@ -48,7 +48,7 @@
                         <div class="col-lg-12">
                             <div class="card card-custom mb-5">
                                 <div class="card-header ribbon ribbon-top ribbon-ver">
-                                    <div class="ribbon-target bg-success h4" style="top: -2px; right: 20px;" id="edit-taskflow-department"><span class="font-weight-light">Taskflow belongs to - </span> &nbsp;IT Department</div>
+                                    <div class="ribbon-target bg-success h4" style="top: -2px; right: 20px;" id="edit-taskflow-department"><span class="font-weight-light">Taskflow belongs to - </span> &nbsp;{{ $taskflow[0]->department->depart_name }}</div>
                                 </div>
                                 <div class="card-body">
                                     <div class="row d-flex justify-content-around">
@@ -114,9 +114,9 @@
                                                 </h3>
                                             </div>
                                             <div class="card-toolbar">
-                                                <a href="#" class="btn btn-sm btn-white">
+                                                <button type="button" class="btn btn-sm btn-white" onclick="showAddNewTaskModal({{ $taskflow[0]->taskflow_id }})">
                                                     <i class="flaticon2-add-1"></i> Add
-                                                </a>
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -125,7 +125,7 @@
                         </div>
                     </div>
                 </div> 
-                <div class="col-lg-5">
+                <div class="col-lg-5" id="task-container">
                     @php $i = 1; @endphp
                     @foreach ($tasks as $task)
                         <div class="row">
@@ -287,6 +287,62 @@
         </div>
     </div>
 
+    {{-- Add new Task Modal --}}
+    <div class="modal inmodal fade" id="addNewTaskModal">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <h5 class="modal-title text-center">Edit Task</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i aria-hidden="true" class="ki ki-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class ="form-horizontal" id ="add_new_task_modal_form" name="add_new_task_modal_form" method="post" 
+                    enctype="multipart/form-data">
+                        <div class="row d-flex justify-content-around mb-4">
+                            <div class="col-lg-6">
+                                <label>Task Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control font-weight-bold" name="addNewTaskName"
+                                id="addNewTaskName"/>
+                            </div>
+                            <div class="col-lg-6">
+                                <label>Responsible designation <span class="text-danger">*</span></label>
+                                <select class="form-control form-control-lg dynamic selectpicker @error('add_new_designation_select') is-invalid @enderror" name="add_new_designation_select" id="add_new_designation_select" data-dependent="add_new_designation_select" data-size="7" data-live-search="true">
+                                    <option value="">Select Designation</option>
+                                    @foreach ($designations as $designation )
+                                    <option value="{{ $designation->designation_id }}">{{ $designation->designation_code }} | {{ $designation->designation_name }}</option>   
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row d-flex justify-content-start">
+                            <div class="col-lg-3">
+                                <label>Milestone Time Type <span class="text-danger">*</span></label>
+                                <select class="form-control form-control-lg dynamic selectpicker @error('add_new_milestone_time_type_select') is-invalid @enderror" name="add_new_milestone_time_type_select" id="add_new_milestone_time_type_select">
+                                @foreach ($timeTypes as $timeType )
+                                <option value="{{ $timeType }}">{{ $timeType}}</option>   
+                                @endforeach
+                                </select>
+                            </div>
+                            <div class="col-lg-3">
+                                <label>Milestone Time Value <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control font-weight-bold" name="add_new_milestone_time_value" 
+                                id="add_new_milestone_time_value"/>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-info" id="add_task_btn" onclick="addTask({{ $taskflow[0]->taskflow_id }})"><i class="flaticon2-add-1"></i> Add Task </button>
+                    <button type="button" class="btn btn-light btn_close" data-dismiss="modal">
+                        <i class="fa fa-times-circle"></i> Close 
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @endsection
 
 {{-- Scripts Section --}}
@@ -294,7 +350,8 @@
     <script src="{{ asset('js/pages/widgets.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/pages/custom/profile/profile.js') }}" type="text/javascript"></script>
     <script>
-        let editTaskId = 0;
+        let editTaskId  = 0;
+        let newStepNum = 0;
         
         $(document).ready(function(){
             $('#designation_select').selectpicker();
@@ -303,6 +360,26 @@
         
         function showEditTaskflow(){
             $('#editTaskFlowModal').modal('show');
+        }
+
+        async function showAddNewTaskModal(taskFlowId){
+
+            let result = await $.ajax(
+            {
+                url:'{{ route('getNewStepNum')}}',
+                method:"POST",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "taskFlowId" : taskFlowId,
+                },
+                dataType:'json',
+                success:function(data)
+                {
+                    return data;
+                }
+            });
+            newStepNum = result;
+            $('#addNewTaskModal').modal('show');
         }
 
         async function showEditTaskModal(taskId){
@@ -439,10 +516,66 @@
                     }
                 });
             }else{
-                
+                toastr.warning('Please fill all the required fields to complete the proceedings', 'Attention')
             }
             
 
+        }
+
+        function addTask(taskfId){
+            var formData = new FormData();
+
+            let setpNum         = newStepNum;
+            let taskName        = $('#addNewTaskName').val();
+            let taskResponsible = $('#add_new_designation_select').val();
+            let taskTimeSelect  = $('#add_new_milestone_time_type_select').val();
+            let taskTimeVal     = $('#add_new_milestone_time_value').val();
+
+            formData.append('taskflowId', taskfId);
+            formData.append('setpNum', setpNum);
+            formData.append('taskName', taskName);
+            formData.append('taskResponsible', taskResponsible);
+            formData.append('taskTimeSelect', taskTimeSelect);
+            formData.append('taskTimeVal', taskTimeVal);
+
+            if(taskName != '' && taskResponsible != '' && taskTimeVal != ''){
+                Swal.fire({
+                    title: "Do you want to add a new task to the taskflow?",
+                    text: "This action will add a new task to the taskflow",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes!"
+                }).then(function(result) {
+                    
+                    if (result.value) {
+                        $.ajax(
+                        {
+                            url:"{{ route('addNewTask')}}", 
+                            method:"POST",
+                            headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'},
+                            data: formData,
+                            cache : false,
+                            processData: false,
+                            contentType: false,
+                            dataType:'json',
+                            success:function(data)
+                            {
+                                if(data.status ){
+                                    toastr.success(data.msg,data.title);
+                                    renderNewlyAddedTask(data.task,data.viewingCount)
+                                    $('#addNewTaskModal').modal('hide');
+                                }
+                                else{
+                                    toastr.error(data.msg,data.title);
+                                }
+                            }
+                        }); 
+                    
+                    }
+                });
+            }else{
+                toastr.warning('Please fill all the required fields to complete the proceedings', 'Attention')
+            }
         }
 
         function renderEditedTaskflowDetails(taskflowObj){
@@ -513,6 +646,61 @@
                     
                     }
                 });
+        }
+
+        function renderNewlyAddedTask(taskObj, viewingCount){
+            let output = '';
+
+            output += `
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card card-custom mb-5">
+                        <div class="card-body ribbon ribbon-top ribbon-ver pb-3">
+                            <div class="ribbon-target bg-danger font-weight-bolder h2" style="top: -2px; right: 20px;">${viewingCount}</div>
+                            <h4 class="card-title text-muted font-weight-light">
+                                Task name - <span class="font-weight-bolder text-dark-65" id="edit_task_name_${taskObj.task_id}"> &nbsp; ${taskObj.task_name}</span> 
+                            </h4>
+                            <div class="row d-flex justify-content-around">
+                                <div class="col-6">
+                                    <div class="d-flex align-items-center">
+                                        <div class="symbol symbol-40 symbol-light-warning flex-shrink-0">
+                                            <span class="symbol-label font-size-h4 font-weight-bold"><i class="fas fa-user-alt icon-md"></i></span>
+                                        </div>
+                                        <div class="ml-4">
+                                            <h2 class="text-dark-75 font-weight-bolder font-size-lg mb-0" id="edit_task_responsible_${taskObj.task_id}">${taskObj.designation.designation_name}</h2>
+                                            <a href="#" class="text-muted font-weight-bold text-hover-primary">Responsible Designation</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="d-flex align-items-center">
+                                        <div class="symbol symbol-40 symbol-light-success flex-shrink-0">
+                                            <span class="symbol-label font-size-h4 font-weight-bold"><i class="fas fa-hourglass-end icon-md"></i></span>
+                                        </div>
+                                        <div class="ml-4">
+                                            <div class="text-dark-75 font-weight-bolder font-size-lg mb-0" id="edit_milestone_time_${taskObj.task_id}"> ${taskObj.task_milestone_time} ${taskObj.task_milestone_time_type}</div>
+                                            <a href="#" class="text-muted font-weight-bold text-hover-primary">Milestone Time</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row d-flex mt-5 border-top pt-3">
+                                <button type="button" class="btn btn-light-primary btn-pill mx-2" onclick="showEditTaskModal(${taskObj.task_id})">
+                                    <i class="far fa-edit"></i> Edit 
+                                </button>
+                                <button type="button" class="btn btn-light-danger btn-pill" onclick="deleteTask(${taskObj.task_id})">
+                                    <i class="far fa-trash-alt"></i> Delete 
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            `;
+
+            $('#task-container').append(output);
+
         }
         
     </script>

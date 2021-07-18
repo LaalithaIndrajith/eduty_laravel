@@ -105,7 +105,8 @@ Route::post('/fecthTaskFlowsToDrawTbl',[TaskFlowController::class, 'fecthTaskFlo
 Route::post('/fetchTasksOfTaskFlow',[TaskFlowController::class, 'fetchTasksOfTaskFlow'])->name('fetchTasksOfTaskFlow');
 Route::post('/fetchTaskDetailsOfTask',[TaskFlowController::class, 'fetchTaskDetailsOfTask'])->name('fetchTaskDetailsOfTask');
 Route::post('/fetchDesignationsOfDep',[DesignationController::class, 'fetchDesignationsOfDep'])->name('fetchDesignationsOfDep');
-
+Route::post('/getNewStepNum',[TaskFlowController::class, 'getNewStepNum'])->name('getNewStepNum');
+Route::post('/addNewTask',[TaskFlowController::class, 'addNewTask'])->name('addNewTask');
 
 Route::get('/mailable', function () {
     $user = User::find(1);

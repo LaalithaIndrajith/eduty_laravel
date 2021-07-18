@@ -129,7 +129,7 @@ class TaskFlowController extends Controller
             $taskFlowEdit = [
                 'msg' =>  'TaskFlow details update is unsuccessful',
                 'title' => 'TaskFlow Details',
-                'status' =>  true,
+                'status' =>  false,
             ];
 
             return $taskFlowEdit;
@@ -145,7 +145,7 @@ class TaskFlowController extends Controller
             $task->designation_id           = $request->taskResponsible;
             $task->task_milestone_time_type = $request->taskTimeSelect;
             $task->task_milestone_time      = $request->taskTimeVal;
-            $task->task_updated_at          = auth()->user()->id;
+            $task->task_updated_by          = auth()->user()->id;
             $task->save();
 
             
@@ -167,7 +167,7 @@ class TaskFlowController extends Controller
             $taskFlowEdit = [
                 'msg' =>  'Task details update is unsuccessful',
                 'title' => 'Task Details',
-                'status' =>  true,
+                'status' =>  false,
             ];
 
             return $taskFlowEdit;
@@ -179,7 +179,7 @@ class TaskFlowController extends Controller
             $taskId = $request->taskId;
             $task   = Task::find($taskId);
             $task->task_status     = 0;
-            $task->task_updated_at = auth()->user()->id;
+            $task->task_updated_by = auth()->user()->id;
             $task->save();
 
             $taskFlowEdit = [
@@ -194,13 +194,57 @@ class TaskFlowController extends Controller
             $taskFlowEdit = [
                 'msg' =>  'Task deletion is unsuccessful',
                 'title' => 'Task Deletion',
-                'status' =>  true,
+                'status' =>  false,
             ];
 
             return $taskFlowEdit;
         }
     }
 
+    public function addNewTask(Request $request){
+        try{
+            $task = new Task;
+            $task->task_name                = $request->taskName;
+            $task->taskflow_id              = $request->taskflowId;
+            $task->task_step_no             = $request->setpNum;
+            $task->designation_id           = $request->taskResponsible;
+            $task->task_milestone_time_type = $request->taskTimeSelect;
+            $task->task_milestone_time      = $request->taskTimeVal;
+            $task->task_status              = 1;
+            $task->task_created_by          = auth()->user()->id;
+            $task->task_updated_by          = auth()->user()->id;
+            $task->save();
+            
+            $viewingCount = $this->countViewingTaskStepNumber($task->taskflow_id);
+            $newlyAddedTask = Task::find($task->task_id);
+            $newlyAddedTask->load('designation');
+
+            $newTaskAdd = [
+                'msg' =>  'New task added to the taskflow succesfully ',
+                'title' => 'New Task',
+                'task' => $newlyAddedTask,
+                'viewingCount' => $viewingCount,
+                'status' =>  true,
+            ];
+
+            return $newTaskAdd;
+
+        }catch(Exception $e){
+            $newTaskAdd = [
+                'msg' =>  'New task is not added to the taskflow',
+                'title' => 'New Task',
+                'status' =>  false,
+            ];
+
+            return $newTaskAdd;
+        }
+    }
+
+    private function countViewingTaskStepNumber($taskflowId){
+        $countNum = Task::where('taskflow_id',$taskflowId)->where('task_status','1')->count();
+        return $countNum;
+    }
+    
     private function storeTaskData(Request $request, $taskFlowId){
         $taskNames = $request->task_name;
         $designations = $request->designation_select;
@@ -275,6 +319,13 @@ class TaskFlowController extends Controller
     private function getDesignations($departmentId){
         $designations = Designation::where('depart_id',$departmentId)->get();
         return $designations;
+    }
+
+    public function getNewStepNum(){
+        $taskFlowId = $_POST['taskFlowId'];
+        $lastStepNum = DB::table('tasks')->where('taskflow_id',$taskFlowId)->max('task_step_no');
+        $lastStepNum++;
+        return $lastStepNum;
     }
 
 }
