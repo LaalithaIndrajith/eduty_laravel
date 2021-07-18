@@ -134,9 +134,41 @@ class ClientController extends Controller
         return redirect()->route('clientEditView', $clientId);
     }
 
+    public function deleteClient(Request $request){
+        try{
+            $clientId = $request->clientId;
+            $client   = Client::find($clientId);
+            $client->client_status     = 0;
+            $client->client_updated_by = auth()->user()->id;
+            $client->save();
+
+            $clientDelete = [
+                'msg' =>  'Client permenantly deleted from system',
+                'title' => 'Client Deletion',
+                'status' =>  true,
+            ];
+
+            return $clientDelete;
+
+        }catch(Exception $e){
+            $clientDelete = [
+                'msg' =>  'Client deletion is unsuccessful',
+                'title' => 'Client Deletion',
+                'status' =>  false,
+            ];
+
+            return $clientDelete;
+        }
+    }
+
     public function fetchClientsToDrawTbl(){
-         
-        $clients = Client::where('client_status',1)->get();
+        $userType = request()->session()->get('userType');
+        if($userType == 'SYSTEM-ADMIN'){
+            $clients = Client::all();
+        }
+        else{
+            $clients = Client::where('client_status',1)->get();
+        }
         $data = array();
         
         foreach($clients as $client){

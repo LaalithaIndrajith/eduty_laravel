@@ -117,6 +117,7 @@ Route::get('/viewClientList',[ClientController::class, 'viewClientList'])->name(
 Route::get('/viewClient/{id}/edit',[ClientController::class, 'viewClientForEdit'])->name('clientEditView');
 Route::post('/Client/Register',[ClientController::class, 'registerClient'])->name('clientRegister');
 Route::post('/Client/{id}/edit',[ClientController::class, 'editClient'])->name('editClient');
+Route::post('/Client/delete',[ClientController::class, 'deleteClient'])->name('deleteClient');
 Route::post('/fetchClientsToDrawTbl',[ClientController::class, 'fetchClientsToDrawTbl'])->name('fetchClientsToDrawTbl');
 
 //Jobs

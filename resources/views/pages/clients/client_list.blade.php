@@ -281,7 +281,7 @@
                     targets: 5,
                     render: function(data, type, full, meta) {
 
-                        if(full.status == '2'){
+                        if(full.status == '0'){
                           return `
                                 <a class="btn btn-sm btn-light-danger" disabled="disabled">
                                     Deleted form the System
@@ -324,6 +324,44 @@
             ],
 
         });
+    }
+
+    async function deleteClient(clientId){
+        var formData = new FormData();
+        formData.append('clientId', clientId);
+        Swal.fire({
+                title: "Do you want to delete this Client?",
+                text: "This action will delete the selected client permanantly from the system",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes, Delete!"
+            }).then(function(result) {
+                
+                if (result.value) {
+                    $.ajax(
+                    {
+                        url:"{{ route('deleteClient')}}", 
+                        method:"POST",
+                        headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}', },
+                        data:formData,
+                        cache : false,
+                        processData: false,
+                        contentType: false,
+                        dataType:'json',
+                        success:async function(data)
+                        {
+                            if(data.status ){
+                                await toastr.success(data.msg,data.title);
+                                drawClientListTable();
+                            }
+                            else{
+                                toastr.error(data.msg,data.title);
+                            }
+                        }
+                    }); 
+                
+                }
+            });
     }
 </script>
 @endsection
