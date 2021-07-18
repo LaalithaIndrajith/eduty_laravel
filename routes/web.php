@@ -121,8 +121,11 @@ Route::post('/Client/delete',[ClientController::class, 'deleteClient'])->name('d
 Route::post('/fetchClientsToDrawTbl',[ClientController::class, 'fetchClientsToDrawTbl'])->name('fetchClientsToDrawTbl');
 
 //Jobs
-Route::get('/viewCreateJob',[JobController::class, 'index'])->name('jobCreationView');
+Route::get('/viewCreateJobTicket',[JobController::class, 'index'])->name('jobTicketCreationView');
 Route::get('/viewJobTicketList',[JobController::class, 'viewJobTicketList'])->name('viewJobTicketList');
+Route::post('/JobTicket/Create',[JobController::class, 'issueJobTicket'])->name('issueJobTicket');
+Route::post('/getCustomerDetails',[JobController::class, 'getCustomerDetails'])->name('getCustomerDetails');
+Route::post('/getTaskflowDetails',[JobController::class, 'getTaskflowDetails'])->name('getTaskflowDetails');
 
 
 Route::get('/mailable', function () {

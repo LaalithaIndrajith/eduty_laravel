@@ -26,4 +26,15 @@ class TaskFlow extends Model
     {
         return $this->belongsTo( Department::class, 'depart_id', 'depart_id');
     }
+
+    //many to many relationship with client
+    public function client()
+    {
+        return $this->belongsToMany(Client::class, 'clients_has_taskflows', 'taskflow_id', 'client_id')->using('App\Clients_Has_Taskflows');
+    }
+
+    public static function getAllTaskflows(){
+        $taskflows = TaskFlow::with(['department','tasks'])->where('taskflow_status', 1)->get();
+        return $taskflows;
+    }
 }
