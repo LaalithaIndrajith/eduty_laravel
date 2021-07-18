@@ -10,8 +10,8 @@
         <div class="card card-custom">
             <div class="card-header flex-wrap border-0 pt-6 pb-0">
                 <div class="card-title">
-                    <h3 class="card-label">Client List
-                        <span class="d-block text-muted pt-2 font-size-sm">Details of Clients</span>
+                    <h3 class="card-label">Customers List
+                        <span class="d-block text-muted pt-2 font-size-sm">Details of Customers</span>
                     </h3>
                 </div>
                 <div class="card-toolbar">
@@ -92,7 +92,7 @@
                                 </g>
                             </svg>
                             <!--end::Svg Icon-->
-                        </span>Register Client</a>
+                        </span>Register Customer</a>
                     <!--end::Button-->
                 </div>
             </div>
@@ -101,7 +101,7 @@
                 <table class="table table-separate table-head-custom collapsed" id="department_list_table">
                     <thead>
                         <tr>
-                            <th class="text-center">Client</th>
+                            <th class="text-center">Customer</th>
                             <th class="text-center">Contact</th>
                             <th class="text-center">Created At</th>
                             <th class="text-center">Last Modified</th>
@@ -330,8 +330,8 @@
         var formData = new FormData();
         formData.append('clientId', clientId);
         Swal.fire({
-                title: "Do you want to delete this Client?",
-                text: "This action will delete the selected client permanantly from the system",
+                title: "Do you want to delete this Customer?",
+                text: "This action will delete the selected Customer permanantly from the system",
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonText: "Yes, Delete!"

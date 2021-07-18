@@ -85,7 +85,7 @@ return [
             'section' => 'Jobs',
         ],
         [
-            'title' => 'Clients',
+            'title' => 'Customers',
             'icon' => 'media/svg/icons/Communication/Contact1.svg',
             'bullet' => 'dot',
             'root' => true,
@@ -162,7 +162,7 @@ return [
             'section' => 'Front Desk',
         ],
         [
-            'title' => 'Clients',
+            'title' => 'Customers',
             'icon' => 'media/svg/icons/Communication/Contact1.svg',
             'bullet' => 'dot',
             'root' => true,

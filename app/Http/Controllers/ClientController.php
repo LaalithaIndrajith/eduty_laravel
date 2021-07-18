@@ -31,13 +31,13 @@ class ClientController extends Controller
                 'page' => '#',
             ],
             'sub_module' =>  [   
-                'title' => 'Clients',
+                'title' => 'Customers',
                 'page' => '#',
             ],
         ];
 
-        $page_title = 'Register Client';
-        $page_description = 'Register a Client';
+        $page_title = 'Register Customer';
+        $page_description = 'Register a Customer';
 
         return view('pages.clients.register_client', compact('page_title','page_breadcrumbs',));
     }
@@ -50,12 +50,12 @@ class ClientController extends Controller
                 'page' => '#',
             ],
             'sub_module' =>  [   
-                'title' => 'Clients',
+                'title' => 'Customers',
                 'page' => '#',
             ],
         ];
 
-        $page_title = 'Edit Client';
+        $page_title = 'Edit Customer';
 
         return view('pages.clients.edit_client', compact('page_title','page_breadcrumbs','client'));
     }
@@ -67,13 +67,13 @@ class ClientController extends Controller
                 'page' => '#',
             ],
             'sub_module' =>  [   
-                'title' => 'Clients',
+                'title' => 'Customers',
                 'page' => '#',
             ],
         ];
 
-        $page_title       = 'Client List';
-        $page_description = 'Information of all the Clients';
+        $page_title       = 'Customer List';
+        $page_description = 'Information of all the Customers';
 
         return view('pages.clients.client_list', compact('page_title','page_breadcrumbs',));
     }
@@ -88,16 +88,16 @@ class ClientController extends Controller
             $client->save();
            
             $clientRegistration = [
-                'msg' =>  'Client Registered Successfully',
-                'title' => 'Client Registration',
+                'msg' =>  'Customer Registered Successfully',
+                'title' => 'Customer Registration',
                 'status' =>  1,
             ];
 
             $request->session()->flash('clientRegistration', $clientRegistration);
         }catch(Exception $e){
             $clientRegistration = [
-                'msg' =>  'Client Registration is unsuccessful',
-                'title' => 'Client Registration',
+                'msg' =>  'Customer Registration is unsuccessful',
+                'title' => 'Customer Registration',
                 'status' =>  0,
             ];
 
@@ -115,8 +115,8 @@ class ClientController extends Controller
             $client->save();
            
             $clientEdit = [
-                'msg' =>  'Client Details edited successfully',
-                'title' => 'Update Client Details',
+                'msg' =>  'Customer Details edited successfully',
+                'title' => 'Update Customer Details',
                 'status' =>  1,
             ];
 
@@ -124,8 +124,8 @@ class ClientController extends Controller
 
         }catch(Exception $e){
             $clientEdit = [
-                'msg' =>  'Client Details update is unsuccessful',
-                'title' => 'Update Client Details',
+                'msg' =>  'Customer Details update is unsuccessful',
+                'title' => 'Update Customer Details',
                 'status' =>  0,
             ];
 
@@ -143,8 +143,8 @@ class ClientController extends Controller
             $client->save();
 
             $clientDelete = [
-                'msg' =>  'Client permenantly deleted from system',
-                'title' => 'Client Deletion',
+                'msg' =>  'Customer permenantly deleted from system',
+                'title' => 'Customer Deletion',
                 'status' =>  true,
             ];
 
@@ -152,8 +152,8 @@ class ClientController extends Controller
 
         }catch(Exception $e){
             $clientDelete = [
-                'msg' =>  'Client deletion is unsuccessful',
-                'title' => 'Client Deletion',
+                'msg' =>  'Customer deletion is unsuccessful',
+                'title' => 'Customer Deletion',
                 'status' =>  false,
             ];
 

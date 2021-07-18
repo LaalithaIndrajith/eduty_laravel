@@ -10,8 +10,8 @@
         <div id="kt_page_sticky_card" class="card card-custom card-sticky">
             <div class="card-header flex-wrap py-3">
                 <div class="card-title">
-                    <h3 class="card-label">Update Client Details 
-                    <span class="d-block text-muted pt-2 font-size-sm">Update client details to issue job tickets</span></h3>
+                    <h3 class="card-label">Update Customer Details 
+                    <span class="d-block text-muted pt-2 font-size-sm">Update Customer details to issue job tickets</span></h3>
                 </div> 
                 <div class="card-toolbar">
                     <!-- <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i>Save</button> -->
@@ -32,7 +32,7 @@
                         <span class="svg-icon svg-icon-md">
                             <i class="far fa-list-alt"></i>
                         </span>
-                        Client List
+                        Customer List
                     </a>
                     <a href="{{ route('clientRegisterView') }}" class="btn btn-light-danger ml-1"">
                         <span class="svg-icon svg-icon-md">
