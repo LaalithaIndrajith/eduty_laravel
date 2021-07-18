@@ -14,6 +14,19 @@ use Illuminate\Support\Facades\Auth;
 
 class TaskFlowController extends Controller
 {
+
+    public function __construct()
+    {
+        $isadmin = Auth::user()->user_is_system_admin;
+
+        if($isadmin == 1)
+        {
+            $this->middleware(['auth', 'isSystemAdmin']);
+        }else{
+            $this->middleware(['auth', 'routeClearance']);
+        }
+    }
+    
     public function index(){
         $departments = Department::fetchAllDepartments();
         $timeTypes = array( 'mins','hours','days');
