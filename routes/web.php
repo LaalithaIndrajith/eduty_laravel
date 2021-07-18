@@ -11,8 +11,10 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\ClientController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DesignationController;
+use App\Http\Controllers\JobController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\TaskFlowController;
 use App\Mail\userEdited;
@@ -108,6 +110,19 @@ Route::post('/fetchTaskDetailsOfTask',[TaskFlowController::class, 'fetchTaskDeta
 Route::post('/fetchDesignationsOfDep',[DesignationController::class, 'fetchDesignationsOfDep'])->name('fetchDesignationsOfDep');
 Route::post('/getNewStepNum',[TaskFlowController::class, 'getNewStepNum'])->name('getNewStepNum');
 Route::post('/addNewTask',[TaskFlowController::class, 'addNewTask'])->name('addNewTask');
+
+//Clients
+Route::get('/viewRegisterClient',[ClientController::class, 'index'])->name('clientRegisterView');
+Route::get('/viewClientList',[ClientController::class, 'viewClientList'])->name('viewClientList');
+Route::get('/viewClient/{id}/edit',[ClientController::class, 'viewClientForEdit'])->name('clientEditView');
+Route::post('/Client/Register',[ClientController::class, 'registerClient'])->name('clientRegister');
+Route::post('/Client/{id}/edit',[ClientController::class, 'editClient'])->name('editClient');
+Route::post('/fetchClientsToDrawTbl',[ClientController::class, 'fetchClientsToDrawTbl'])->name('fetchClientsToDrawTbl');
+
+//Jobs
+Route::get('/viewCreateJob',[JobController::class, 'index'])->name('jobCreationView');
+Route::get('/viewJobTicketList',[JobController::class, 'viewJobTicketList'])->name('viewJobTicketList');
+
 
 Route::get('/mailable', function () {
     $user = User::find(1);
