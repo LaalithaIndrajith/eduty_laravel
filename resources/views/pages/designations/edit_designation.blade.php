@@ -77,7 +77,7 @@
                             <br>
                             <span class="switch">
                                 <label>
-                                    <input type="checkbox" checked="checked" name="desig_status" id="desig_status" value="1" {{ ($designation->designation_status == 0) ? '' : "checked = 'checked'" }}/>
+                                    <input type="checkbox" name="desig_status" id="desig_status" value="1" {{ ($designation->designation_status == 0) ? '' : "checked = 'checked'" }}/>
                                     <span></span>
                                 </label>
                             </span>
