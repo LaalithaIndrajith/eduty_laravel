@@ -121,7 +121,7 @@
 
         {{-- Task List Modal --}}
         <div class="modal inmodal fade" id="taskListModal">
-            <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header text-center ribbon ribbon-top mb-5">
                         <div class="ribbon-target bg-success h4" style="top: -2px; right: 20px;" id="modal-taskflow-department">IT Department</div>
@@ -173,8 +173,8 @@
                                 <span class="symbol-label font-size-h4 font-weight-bold"><i class="fas fa-hourglass-end icon-md"></i></span>
                             </div>
                             <div class="ml-4">
-                                <div class="text-dark-75 font-weight-bolder font-size-lg mb-0">2 Days</div>
-                                <a href="#" class="text-muted font-weight-bold text-hover-primary">Total Milestone Time</a>
+                                <div class="text-dark-75 font-weight-bolder font-size-lg mb-0" id="totalTaskfTime">2 Days</div>
+                                <a href="#" class="text-muted font-weight-bold text-hover-primary">Approximate Total Milestone Time</a>
                             </div>
                         </div>
                     </div>
@@ -232,9 +232,20 @@
         
         document.querySelector('#modal-taskflow-department').innerHTML = details.taskflow[0].department['depart_name']
         document.querySelector('#modal-taskflow-name').innerHTML = details.taskflow[0].task_flow_name
+        renderTotalTaskfTime(details.totalTaskTime);
         let outputToRender = renderTaskRows( details.tasks);
         $('#task-modal-body').append(outputToRender);
         $('#taskListModal').modal('show');
+    }
+
+    function renderTotalTaskfTime(totalTaskTimeObj){
+        let output = '';
+        output += (totalTaskTimeObj.days != 0) ? `${totalTaskTimeObj.days} days` : '';
+        output += (totalTaskTimeObj.hours != 0) ? ` ${totalTaskTimeObj.hours} hours` : '';
+        output += (totalTaskTimeObj.mins != 0) ? ` ${totalTaskTimeObj.mins} mins` : '';
+
+        document.querySelector('#totalTaskfTime').innerHTML = output ;
+
     }
 
     function renderTaskRows(taskDetails){

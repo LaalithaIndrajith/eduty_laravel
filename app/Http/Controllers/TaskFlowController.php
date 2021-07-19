@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
 use App\Task;
+use App\User;
 use Exception;
 use App\TaskFlow;
+use Carbon\Carbon;
 use App\Department;
 use App\Designation;
 use Illuminate\Http\Request;
@@ -344,9 +345,12 @@ class TaskFlowController extends Controller
         $taskflowId   = $_POST['taskflowId'];
         $taskflow = TaskFlow::with(['department'])->where('taskflow_id',$taskflowId)->get();
         $tasks = Task::with(['designation'])->where('taskflow_id',$taskflowId)->where('task_status','1')->orderBy('task_step_no', 'asc')->get();
+        $totalTaskTime = $this->calTotalTaskflowTime($tasks);
         return array(
             'taskflow' => $taskflow,
             'tasks' => $tasks,
+            'totalTaskTime' => $totalTaskTime,
+
         );
     }
     
@@ -366,6 +370,41 @@ class TaskFlowController extends Controller
         $lastStepNum = DB::table('tasks')->where('taskflow_id',$taskFlowId)->max('task_step_no');
         $lastStepNum++;
         return $lastStepNum;
+    }
+
+    private function calTotalTaskflowTime($tasks){
+        $now = Carbon::now();
+        $dt = Carbon::now();
+        foreach($tasks as $task){
+            $type = $task->task_milestone_time_type;
+            $value = $task->task_milestone_time;
+
+            if($type == 'mins'){
+                $dt->addMinutes($value);
+            }else if($type == 'hours'){
+                $dt->addHours($value);
+            }else if($type == 'days'){
+                $dt->addDays($value);
+            }
+            
+        }
+
+        $diffrence = $dt->diff($now);
+        return array(
+            'days' => $diffrence->d,
+            'hours' => $diffrence->h,
+            'mins' => $diffrence->i,
+        );
+    }
+
+    private function calculate($carbonDate,$type,$value){
+        if($type = 'mins'){
+
+        }else if($type = 'hours'){
+
+        }else if($type = 'days'){
+
+        }
     }
 
 }
