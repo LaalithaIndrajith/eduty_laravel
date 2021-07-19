@@ -399,8 +399,11 @@
                 {
                     targets: 2,
                     render: function(data, type, full, meta) {
-                        let createdDate = moment(data.createdAt,'YYYY-MM-DDTHH:mm:ss').format('YYYY-MM-DD')
-                        let createdTime = moment(data.createdAt,'YYYY-MM-DDTHH:mm:ss').format('hh:mm A')
+                        let updated = moment(data.createdAt).zone("+05:30");
+                        let createdDate = updated.format('YYYY-MM-DD')
+                        let createdTime = updated.format('hh:mm A')
+                        // let createdDate = moment(data.createdAt,'YYYY-MM-DDTHH:mm:ss').format('YYYY-MM-DD')
+                        // let createdTime = moment(data.createdAt,'YYYY-MM-DDTHH:mm:ss').format('hh:mm A')
                         let output = '';
                         output += '<div class="font-weight-bolder text-primary mb-0">' + createdDate +' @ ' + createdTime + '</div>';
                         output += '<div class="text-muted"> Created by - ' + data.createdBy + '</div>';
@@ -411,8 +414,11 @@
                 {
                     targets: 3,
                     render: function(data, type, full, meta) {
-                        let updatedDate = moment(data.updatedAt,'YYYY-MM-DDTHH:mm:ss').format('YYYY-MM-DD')
-                        let updatedTime = moment(data.updatedAt,'YYYY-MM-DDTHH:mm:ss').format('hh:mm A')
+                        let updated = moment(data.updatedAt).zone("+05:30");
+                        let updatedDate = updated.format('YYYY-MM-DD')
+                        let updatedTime = updated.format('hh:mm A')
+                        // let updatedDate = moment(data.updatedAt,'YYYY-MM-DDTHH:mm:ss').format('YYYY-MM-DD')
+                        // let updatedTime = moment(data.updatedAt,'YYYY-MM-DDTHH:mm:ss').format('hh:mm A')
                         let output = '';
                         output += '<div class="font-weight-bolder text-info mb-0">' + updatedDate +' @ ' + updatedTime + '</div>';
                         output += '<div class="text-muted"> Updated by - ' + data.updatedBy + '</div>';
