@@ -14,14 +14,14 @@ class DepartmentController extends Controller
 {
     public function __construct()
     {
-        $isadmin = Auth::user()->user_is_system_admin;
+        // $isadmin = Auth::user()->user_is_system_admin;
 
-        if($isadmin == 1)
-        {
-            $this->middleware(['auth', 'isSystemAdmin']);
-        }else{
+        // if($isadmin == 1)
+        // {
+        //     $this->middleware(['auth', 'isSystemAdmin']);
+        // }else{
             $this->middleware(['auth', 'routeClearance']);
-        }
+        // }
     }
     
     public function index(){
@@ -128,7 +128,9 @@ class DepartmentController extends Controller
 
             $request->session()->flash('departmentEdit', $departmentEdit); 
         }
-        return redirect()->route('departmentEditView', $departId);
+        // dd('hrere');
+        return redirect('/viewDepartment/' . $departId.'/edit');
+        // return redirect()->route('departmentEditView', $departId);
     }
 
     private function validateDepartmentForm(Request $request){
