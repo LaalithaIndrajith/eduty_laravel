@@ -15,14 +15,14 @@ class UserController extends Controller
 {
     public function __construct()
     {
-        $isadmin = Auth::user()->user_is_system_admin;
+        // $isadmin = Auth::user()->user_is_system_admin;
 
-        if($isadmin == 1)
-        {
-            $this->middleware(['auth', 'isSystemAdmin']);
-        }else{
+        // if($isadmin == 1)
+        // {
+        //     $this->middleware(['auth', 'isSystemAdmin']);
+        // }else{
             $this->middleware(['auth', 'routeClearance']);
-        }
+        // }
     }
 
     public function index(){
@@ -104,7 +104,6 @@ class UserController extends Controller
         $result = array(
 			'data' => $data
 		);
-        
         return $result;
     }
 

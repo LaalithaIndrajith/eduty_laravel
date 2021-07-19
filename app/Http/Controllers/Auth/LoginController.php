@@ -33,7 +33,8 @@ class LoginController extends Controller
             //checking whether the user is Super Admin or not
             if($user->user_is_system_admin){
                 if($this->checkSysAdminLoginAttempt($request)){
-                    $this->setSysAdminSessionData($request);
+                    $this->setSessionData($request,$user);
+                    // $this->setSysAdminSessionData($request);
                     return redirect()->intended('dashboard');
                 }
                 return back()->withErrors(['email' => 'The provided credentials do not match our records.',]);
@@ -75,7 +76,7 @@ class LoginController extends Controller
     private function setSysAdminSessionData(Request $request){
         $request->session()->regenerate();
         $request->session()->put([
-            'designation'=> 'SysAdmin',
+            'designation'=> 'System Admin',
             'userType'=> 'SYSTEM-ADMIN',
             'department'=> 'SystemDev' ]);
     }

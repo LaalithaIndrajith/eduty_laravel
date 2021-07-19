@@ -22,13 +22,13 @@ class RegisterController extends Controller
 {
     public function __construct()
     {
-        $isadmin = Auth::user()->user_is_system_admin;
-        if($isadmin == 1)
-        {
-            $this->middleware(['auth', 'isSystemAdmin']);
-        }else{
+        // $isadmin = Auth::user()->user_is_system_admin;
+        // if($isadmin == 1)
+        // {
+        //     $this->middleware(['auth', 'isSystemAdmin']);
+        // }else{
             $this->middleware(['auth', 'routeClearance']);
-        }
+        // }
         
     }
 
