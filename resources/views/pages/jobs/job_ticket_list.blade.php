@@ -98,15 +98,15 @@
             </div>
             <div class="card-body">
                 <!--begin: Datatable-->
-                <table class="table table-separate table-head-custom collapsed" id="department_list_table">
+                <table class="table table-separate table-head-custom collapsed" id="job_ticket_list_table">
                     <thead>
                         <tr>
-                            <th class="text-center">Department Name</th>
-                            <th class="text-center">Contact</th>
-                            <th class="text-center">Created At</th>
-                            <th class="text-center">Last Modified</th>
+                            <th class="text-center">Job Number</th>
+                            <th class="text-center">Customer</th>
+                            <th class="text-center">Taskflow</th>
+                            <th class="text-center">Progress</th>
+                            <th class="text-center">Issued Details</th>
                             <th class="text-center">Status</th>
-                            <th class="text-center">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -135,7 +135,7 @@
     async function drawDepartmentListTable(){
         let retrivedTblData = await $.ajax(
         {
-            url:'{{ route('fetchDepartmentsToDrawTbl')}}',
+            url:'{{ route('fetchJobTicketsToDrawTbl')}}',
             method:"POST",
             data: {
                 "_token": "{{ csrf_token() }}",
@@ -151,7 +151,7 @@
     }
 
     function initializeDepartmentsTbl(retrivedTblData){
-        $('#department_list_table').DataTable({
+        $('#job_ticket_list_table').DataTable({
             pageLength: 10,
             destroy: true,
             retrieve: false,
@@ -160,12 +160,12 @@
             ],
             data: retrivedTblData.data,
             columns: [
-				{data: 'depDetails',className: 'text-center'},
-				{data: 'contactDetails',className: 'text-center'},
-				{data: 'createdDetails',className: 'text-center'},
-				{data: 'lastModifiesDetails',className: 'text-center'},
+				{data: 'jobNumDetails',className: 'text-center'},
+				{data: 'customerDetails',className: 'text-center'},
+				{data: 'taskflowDetails',className: 'text-center'},
+				{data: 'progress',className: 'text-center'},
+				{data: 'issuedDetails',className: 'text-center'},
 				{data: 'status',className: 'text-center'},
-				{data: 'departId',className: 'text-center'},
 			],
             responsive: true,
             buttons: [
@@ -185,8 +185,31 @@
                     }
                 }
             ],
-            columnDefs: [{
+            columnDefs: [
+                
+                {
                     targets: 0,
+                    render: function(data, type, full, meta) {
+                        let output = '';
+
+                        output += `<div class="font-weight-bold font-size-lg text-dark-65 mb-0"> ${data.num}</div>`;
+                        
+                        return output;
+                    },
+                },
+                {
+                    targets: 1,
+                    render: function(data, type, full, meta) {
+                        let output = '';
+
+                        output += `<div class="font-weight-bold font-size-lg text-primary mb-0"> ${data.name}</div>`;
+                        output += `<div class="font-weight-normal text-dark-50"><i class="fas fa-phone-alt icon-nm"></i></i> ${data.contact}</div>`;
+                        
+                        return output;
+                    },
+                },
+                {
+                    targets: 2,
                     render: function(data, type, full, meta) {
                         let output = '';
                         
@@ -204,28 +227,17 @@
 
                         output = `<div class="d-flex align-items-center">
                             <div class="symbol symbol-40 symbol-light-${state} flex-shrink-0">
-                                <span class="symbol-label font-size-h4 font-weight-bold">${data.depName.substring(0, 1)}</span>
+                                <span class="symbol-label font-size-h4 font-weight-bold">${data.name.substring(0, 1)}</span>
                             </div>
                             <div class="ml-4">
-                                <div class="text-dark-75 font-weight-bolder font-size-lg mb-0">${data.depName}</div>
-                                <a href="#" class="text-muted font-weight-bold text-hover-primary">${data.depCode}</a>
+                                <div class="text-dark-75 font-weight-bolder font-size-lg mb-0">${data.name}</div>
+                                <a href="#" class="text-muted font-weight-bold text-hover-primary">${data.code}</a>
                             </div>
                         </div>`;
                        
                         return output;
                     },
                     
-                },
-                {
-                    targets: 1,
-                    render: function(data, type, full, meta) {
-                        let output = '';
-
-                        output += `<div class="font-weight-normal text-primary mb-0"> <i class="far fa-envelope icon-nm"></i> ${data.email}</div>`;
-                        output += `<div class="font-weight-normal text-dark-50"><i class="fas fa-phone-alt icon-nm"></i></i> ${data.hotline}</div>`;
-                        
-                        return output;
-                    },
                 },
                 {
                     targets: 2,
@@ -242,11 +254,17 @@
                 {
                     targets: 3,
                     render: function(data, type, full, meta) {
-                        let updatedDate = moment(data.updatedAt,'YYYY-MM-DDTHH:mm:ss').format('YYYY-MM-DD')
-                        let updatedTime = moment(data.updatedAt,'YYYY-MM-DDTHH:mm:ss').format('hh:mm A')
                         let output = '';
-                        output += '<div class="font-weight-bolder text-info mb-0">' + updatedDate +' @ ' + updatedTime + '</div>';
-                        output += '<div class="text-muted"> Updated by - ' + data.updatedBy + '</div>';
+
+                        let progress = Number.parseFloat(data.progress).toFixed(0);
+                        let state = getProgressColor(progress);
+                        output += `
+                        <div class="h6">${data.completed}/${data.total}</div>
+                        <div class="progress" style="height: 20px;">
+                            <div class="progress-bar  bg-${state}" role="progressbar" style="width: ${progress}%;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
+                                ${progress}%
+                            </div>
+                        </div>`;
                         
                         return output;
                     },
@@ -254,15 +272,28 @@
                 {
                     targets: 4,
                     render: function(data, type, full, meta) {
+                        let updated = moment(data.issuedAt).zone("+05:30");
+                        let issuedDate = updated.format('YYYY-MM-DD')
+                        let issuedTime = updated.format('hh:mm A')
+                        let output = '';
+                        output += '<div class="font-weight-bolder text-info mb-0">' + issuedDate +' @ ' + issuedTime + '</div>';
+                        output += '<div class="text-muted"> Updated by - ' + data.issuedBy + '</div>';
+                        
+                        return output;
+                    },
+                },
+                {
+                    targets: 5,
+                    render: function(data, type, full, meta) {
                         var status = {
-                            0: {
-                                'title': 'Inactive',
+                            'ISSUED': {
+                                'title': 'Issued',
                                 'state': 'warning',
                                 
                             },
-                            1: {
-                                'title': 'Active',
-                                'state': 'success',
+                            'ONG': {
+                                'title': 'Ongoing',
+                                'state': 'primary',
                                
                             },
                         };
@@ -273,32 +304,23 @@
                             '<span class="font-weight-bold text-' + status[data].state + '">' + status[data].title + '</span>';
                     },
                 },
-                {
-                    // width: '100px',
-                    targets: 5,
-                    render: function(data, type, full, meta) {
-                        return `<a href="/viewDepartment/${data}/edit" class="btn btn-sm btn-clean btn-icon mr-2" title="Edit details">
-                                    <span class="svg-icon svg-icon-md">
-                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" 
-                                        height="24px" viewBox="0 0 24 24" version="1.1">
-                                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                <rect x="0" y="0" width="24" height="24" />
-                                                <path d="M8,17.9148182 L8,5.96685884 C8,5.56391781 8.16211443,5.17792052 8.44982609,4.89581508 
-                                                L10.965708,2.42895648 C11.5426798,1.86322723 12.4640974,1.85620921 13.0496196,2.41308426 L15.5337377,
-                                                4.77566479 C15.8314604,5.0588212 16,5.45170806 16,5.86258077 L16,17.9148182 C16,18.7432453 15.3284271,
-                                                19.4148182 14.5,19.4148182 L9.5,19.4148182 C8.67157288,19.4148182 8,18.7432453 8,17.9148182 Z" 
-                                                fill="#000000" fill-rule="nonzero" \ transform="translate(12.000000, 10.707409) rotate(-135.000000) 
-                                                translate(-12.000000, -10.707409) " />
-                                                <rect fill="#000000" opacity="0.3" x="5" y="20" width="15" height="2" rx="1" />
-                                            </g>
-                                        </svg>
-                                    </span>
-                                </a>`;
-                    },
-                },
+                
             ],
 
         });
     }
+
+    function getProgressColor(progressValue){
+        if(progressValue <= 30){
+            return 'danger'
+        }else if(progressValue < 50){
+            return 'warning'
+        }else if(progressValue < 85){
+            return 'primary'
+        }else{
+            return 'success'
+        }
+    }
+
 </script>
 @endsection

@@ -98,7 +98,7 @@
             </div>
             <div class="card-body">
                 <!--begin: Datatable-->
-                <table class="table table-separate table-head-custom collapsed" id="department_list_table">
+                <table class="table table-separate table-head-custom collapsed" id="client_list_table">
                     <thead>
                         <tr>
                             <th class="text-center">Customer</th>
@@ -151,7 +151,7 @@
     }
 
     function initializeClientsTbl(retrivedTblData){
-        $('#department_list_table').DataTable({
+        $('#client_list_table').DataTable({
             pageLength: 10,
             destroy: true,
             retrieve: false,

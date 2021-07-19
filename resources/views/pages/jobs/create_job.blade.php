@@ -180,40 +180,40 @@
             formData.append('customer_select', customerId);
 
             Swal.fire({
-                    title: "Do you want to issue the Job ticket?",
-                    text: "This action will issue job ticket for the system",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonText: "Issue Job Ticket!"
-                }).then(function(result) {
-                    
-                    if (result.value) {
-                        $.ajax(
+                title: "Do you want to issue the Job ticket?",
+                text: "This action will issue job ticket for the system",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Issue Job Ticket!"
+            }).then(function(result) {
+                
+                if (result.value) {
+                    $.ajax(
+                    {
+                        url:"{{ route('issueJobTicket')}}", 
+                        method:"POST",
+                        headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}', },
+                        data:formData,
+                        cache : false,
+                        processData: false,
+                        contentType: false,
+                        dataType:'json',
+                        success:async function(data)
                         {
-                            url:"{{ route('issueJobTicket')}}", 
-                            method:"POST",
-                            headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}', },
-                            data:formData,
-                            cache : false,
-                            processData: false,
-                            contentType: false,
-                            dataType:'json',
-                            success:async function(data)
-                            {
-                                if(data.status ){
-                                    await toastr.success(data.msg,data.title);
-                                    resetCustInfo();
-                                    location.reload();
-                                }
-                                else{
-                                    await toastr.error(data.msg,data.title);
-                                    location.reload();
-                                }
+                            if(data.status ){
+                                await toastr.success(data.msg,data.title);
+                                resetCustInfo();
+                                location.reload();
                             }
-                        }); 
-                    
-                    }
-                });
+                            else{
+                                await toastr.error(data.msg,data.title);
+                                location.reload();
+                            }
+                        }
+                    }); 
+                
+                }
+            });
         }
 
         async function showCustomerDetails(custId){

@@ -125,6 +125,7 @@ Route::get('/viewJobTicketList',[JobController::class, 'viewJobTicketList'])->na
 Route::post('/JobTicket/Create',[JobController::class, 'issueJobTicket'])->name('issueJobTicket');
 Route::post('/getCustomerDetails',[JobController::class, 'getCustomerDetails'])->name('getCustomerDetails');
 Route::post('/getTaskflowDetails',[JobController::class, 'getTaskflowDetails'])->name('getTaskflowDetails');
+Route::post('/fetchJobTicketsToDrawTbl',[JobController::class, 'fetchJobTicketsToDrawTbl'])->name('fetchJobTicketsToDrawTbl');
 
 
 Route::get('/mailable', function () {
