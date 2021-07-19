@@ -239,14 +239,16 @@
 
     function renderTaskRows(taskDetails){
         let output = '';
+        let i = 1;
         for(let task of taskDetails){
-            output += renderSingleRow(task);
+            output += renderSingleRow(task,i);
+            i++;
         }
 
         return output;
     }
 
-    function renderSingleRow(taskObj){
+    function renderSingleRow(taskObj,index){
         let output = '';
         let stateNo = KTUtil.getRandomInt(0, 7);
         let states = [
@@ -265,7 +267,7 @@
             <div class="col-9">
                 <div class="card card-custom mb-5">
                     <div class="card-header ribbon ribbon-top ribbon-ver">
-                        <div class="ribbon-target bg-${state} font-weight-bolder h2" style="top: -2px; right: 20px;">${taskObj.task_step_no}</div>
+                        <div class="ribbon-target bg-${state} font-weight-bolder h2" style="top: -2px; right: 20px;">${index}</div>
                         <h3 class="card-title text-muted font-weight-light">
                             Task name - <span class="font-weight-bolder text-dark-65"> &nbsp; ${taskObj.task_name}</span> 
                         </h3>
