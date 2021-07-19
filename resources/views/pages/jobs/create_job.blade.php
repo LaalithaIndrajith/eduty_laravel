@@ -2,7 +2,7 @@
 @extends('layout.default')
 
 @section('content')
-<form method="POST" id="new-job-ticket-form" action="{{ route('issueJobTicket') }}" enctype="multipart/form-data">
+<form method="POST" id="new-job-ticket-form" enctype="multipart/form-data">
     @csrf
     <div class="card card-custom">
         <div class="card-header flex-wrap border-0 pt-6 pb-0">
@@ -12,7 +12,7 @@
                 </h3>
             </div>
             <div class="card-toolbar">
-                <button type="submit" class="btn btn-primary font-weight-bolder">
+                <button type="button" class="btn btn-primary font-weight-bolder" onclick="issueJobTicket()">
                     <span class="svg-icon svg-icon-md">
                         <!--begin::Svg Icon | path:assets/media/svg/icons/Design/Flatten.svg-->
                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
@@ -30,7 +30,13 @@
         <div class="card-body">
             <div class="row d-flex justify-content-start">
                 <div class="col-lg-6 border-right pr-10">
-                   <div class="row d-flex justify-content-around">
+                    <div class="row d-flex justify-content-start">
+                        <div class="col-lg-6 form-group">
+                            <label class="form-label col-form-label">Job Ticket Number</span></label>
+                            <input id="job_allocation_no" type="text" class="form-control form-control-solid @error('client_nic') is-invalid @enderror" readonly name="job_allocation_no" value="{{ $jobNum }}" />
+                        </div>
+                    </div>
+                    <div class="row d-flex justify-content-around">
                         <div class="col-lg-6 form-group">
                            <label class="form-label col-form-label">Customer<span class="text-danger">*</span></label>
                            <select class="form-control form-control-lg dynamic mt-2 selectpicker @error('customer_select') is-invalid @enderror" name="customer_select" id="customer_select" data-dependent="customer_select" data-size="7" data-live-search="true">
@@ -44,21 +50,21 @@
                                    <strong>{{ $message }}</strong>
                                </span>
                            @enderror
-                       </div>
-                       <div class="col-lg-6 form-group">
-                           <label class="form-label col-form-label">Taskflow<span class="text-danger">*</span></label>
-                           <select class="form-control form-control-lg dynamic mt-2 selectpicker @error('user_type_select') is-invalid @enderror" name="taskflow_select" id="taskflow_select" data-dependent="taskflow_select" data-size="7" data-live-search="true">
+                        </div>
+                        <div class="col-lg-6 form-group">
+                            <label class="form-label col-form-label">Taskflow<span class="text-danger">*</span></label>
+                            <select class="form-control form-control-lg dynamic mt-2 selectpicker @error('user_type_select') is-invalid @enderror" name="taskflow_select" id="taskflow_select" data-dependent="taskflow_select" data-size="7" data-live-search="true">
                                <option value="">Select a Taskflow</option>
                                @foreach ($data['taskflows'] as $taskflow)
                                <option value="{{ $taskflow->taskflow_id }}">{{ $taskflow->task_flow_name }}</option>   
                                @endforeach
-                           </select>
-                           @error('taskflow_select')
-                               <span class="invalid-feedback" role="alert">
+                            </select>
+                            @error('taskflow_select')
+                                <span class="invalid-feedback" role="alert">
                                    <strong>{{ $message }}</strong>
-                               </span>
-                           @enderror
-                       </div>
+                                </span>
+                            @enderror
+                        </div>
                     </div>
                     <div class="row bg-gray-300" id="taskflowDetails">
                         
@@ -162,6 +168,54 @@
             
         });
 
+        function issueJobTicket(){
+            var formData = new FormData();
+
+            let jobAllocationNo = $('#job_allocation_no').val()
+            let taskflowId      = $('#taskflow_select').val()
+            let customerId      = $('#customer_select').val()
+
+            formData.append('job_allocation_no', jobAllocationNo);
+            formData.append('taskflow_select', taskflowId);
+            formData.append('customer_select', customerId);
+
+            Swal.fire({
+                    title: "Do you want to issue the Job ticket?",
+                    text: "This action will issue job ticket for the system",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Issue Job Ticket!"
+                }).then(function(result) {
+                    
+                    if (result.value) {
+                        $.ajax(
+                        {
+                            url:"{{ route('issueJobTicket')}}", 
+                            method:"POST",
+                            headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}', },
+                            data:formData,
+                            cache : false,
+                            processData: false,
+                            contentType: false,
+                            dataType:'json',
+                            success:async function(data)
+                            {
+                                if(data.status ){
+                                    await toastr.success(data.msg,data.title);
+                                    resetCustInfo();
+                                    location.reload();
+                                }
+                                else{
+                                    await toastr.error(data.msg,data.title);
+                                    location.reload();
+                                }
+                            }
+                        }); 
+                    
+                    }
+                });
+        }
+
         async function showCustomerDetails(custId){
 
             let result = await $.ajax(
@@ -195,6 +249,13 @@
             $('#customerTelephone').val('')
             $('#customerEmail').val('')
             $('#customerAddress').val('')
+        }
+
+        function resetForm(){
+            $('#taskflow_select').val('')
+            $('#taskflow_select').selectpicker('refresh')
+            $('#customer_select').val('')
+            $('#customer_select').selectpicker('refresh')
         }
 
         async function showTaskflowDetails(taskflowId){
@@ -251,6 +312,24 @@
 
             $('#taskflowDetails').append(output)
         }
+
+        toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "1500",
+            "hideDuration": "800",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
 
             
 

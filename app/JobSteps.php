@@ -11,8 +11,8 @@ class JobSteps extends Model
 
     protected $table = 'job_task_steps';
     protected $primaryKey = 'job_task_step_id';
-    const CREATED_AT  = 'email_entry_created_at';
-    const UPDATED_AT = 'email_entry_updated_at';
+    const CREATED_AT  = 'job_task_steps_created_at';
+    const UPDATED_AT = 'job_task_steps_updated_at';
 
     //Relationships
     public function job()
