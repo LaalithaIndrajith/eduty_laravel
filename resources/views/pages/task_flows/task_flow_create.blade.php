@@ -51,7 +51,11 @@
                             <select class="form-control form-control-lg dynamic mt-2 selectpicker @error('department_select') is-invalid @enderror" name="department_select" id="department_select" data-dependent="department_select" data-size="7" data-live-search="true">
                                 <option value="">Select Department</option>
                                 @foreach ($departments as $department )
+                                @if(request()->session()->get('userType') == 'SYSTEM-ADMIN')
                                 <option value="{{ $department->depart_id }}">{{ $department->depart_code }} | {{ $department->depart_name }}</option>   
+                                @else
+                                <option value="{{ $department->depart_id }}" {{ (auth()->user()->depart_id == $department->depart_id) ? '' : 'disabled' }}>{{ $department->depart_code }} | {{ $department->depart_name }}</option>   
+                                @endif
                                 @endforeach
                             </select>
                             @error('department_select')

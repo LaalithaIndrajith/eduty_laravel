@@ -28,14 +28,12 @@
                             <!--end::Svg Icon-->
                         </span>Register User
                     </button>
-                    @if (auth()->user()->hasRole('ADMIN'))
                     <a href="{{ route('viewUserList') }}" class="btn btn-success ml-1">
                         <span class="svg-icon svg-icon-md">
                             <i class="far fa-list-alt"></i>
                         </span>
                         User List
                     </a>
-                    @endif
                     <a href="{{ route('userRegisterView') }}" class="btn btn-light-danger ml-1"">
                         <span class="svg-icon svg-icon-md">
                             <i class="fas fa-sync-alt"></i>

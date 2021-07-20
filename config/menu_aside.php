@@ -100,6 +100,14 @@ return [
             'page' => '/viewJobTicketList'
             
         ],
+        [
+            'title' => 'Allocated Jobs',
+            'icon' => 'media/svg/icons/Design/Position.svg',
+            'bullet' => 'dot',
+            'root' => true,
+            'page' => '/viewAllocatedJobList'
+            
+        ],
         
        
        
@@ -153,6 +161,25 @@ return [
             'icon' => 'media/svg/icons/Code/Git4.svg',
             'bullet' => 'dot',
             'page' => '/viewTaskFlowList'
+            
+        ],
+        [
+            'section' => 'Jobs',
+        ],
+        [
+            'title' => 'Job Tickets',
+            'icon' => 'media/svg/icons/Communication/Clipboard-list.svg',
+            'bullet' => 'dot',
+            'root' => true,
+            'page' => '/viewJobTicketList'
+            
+        ],
+        [
+            'title' => 'Allocated Jobs',
+            'icon' => 'media/svg/icons/Design/Position.svg',
+            'bullet' => 'dot',
+            'root' => true,
+            'page' => '/viewAllocatedJobList'
             
         ],
     ],

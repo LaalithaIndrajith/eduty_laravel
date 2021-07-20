@@ -310,8 +310,12 @@ class TaskFlowController extends Controller
     }
 
     public function fecthTaskFlowsToDrawTbl(){
-        
-        $taskFlows = TaskFlow::with(['department'])->get();
+        if(request()->session()->get('userType') == 'ADMIN'){
+            $departId = auth()->user()->depart_id;
+            $taskFlows = TaskFlow::with(['department'])->where('depart_id',$departId)->get();
+        }else{
+            $taskFlows = TaskFlow::with(['department'])->get();
+        }
         $data = array();
         
         foreach($taskFlows as $taskFlow){
