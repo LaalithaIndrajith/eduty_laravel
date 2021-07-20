@@ -25,6 +25,12 @@
                         <!--end::Svg Icon-->
                     </span>Issue Job Ticket
                 </button>
+                <a href="{{ route('viewJobTicketList') }}" class="btn btn-success ml-1">
+                    <span class="svg-icon svg-icon-md">
+                        <i class="far fa-list-alt"></i>
+                    </span>
+                    Job Ticket List
+                </a>
             </div>
         </div>
         <div class="card-body">

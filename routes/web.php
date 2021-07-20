@@ -122,10 +122,13 @@ Route::post('/fetchClientsToDrawTbl',[ClientController::class, 'fetchClientsToDr
 //Jobs
 Route::get('/viewCreateJobTicket',[JobController::class, 'index'])->name('jobTicketCreationView');
 Route::get('/viewJobTicketList',[JobController::class, 'viewJobTicketList'])->name('viewJobTicketList');
+Route::get('/viewAllocatedJobList',[JobController::class, 'viewAllocatedJobList'])->name('viewAllocatedJobList');
+Route::get('/allocatedJob/{id}/edit',[JobController::class, 'viewAllocatedJobForEdit'])->name('allocatedJobEditView');
 Route::post('/JobTicket/Create',[JobController::class, 'issueJobTicket'])->name('issueJobTicket');
 Route::post('/getCustomerDetails',[JobController::class, 'getCustomerDetails'])->name('getCustomerDetails');
 Route::post('/getTaskflowDetails',[JobController::class, 'getTaskflowDetails'])->name('getTaskflowDetails');
 Route::post('/fetchJobTicketsToDrawTbl',[JobController::class, 'fetchJobTicketsToDrawTbl'])->name('fetchJobTicketsToDrawTbl');
+Route::post('/fetchAllocatedJobsToDrawTbl',[JobController::class, 'fetchAllocatedJobsToDrawTbl'])->name('fetchAllocatedJobsToDrawTbl');
 
 
 Route::get('/mailable', function () {
