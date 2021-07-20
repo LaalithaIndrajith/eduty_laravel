@@ -98,7 +98,7 @@
             </div>
             <div class="card-body">
                 <!--begin: Datatable-->
-                <table class="table table-separate table-head-custom collapsed" id="job_ticket_list_table">
+                <table class="table table-separate table-head-custom collapsed" id="allocated_job_list_table">
                     <thead>
                         <tr>
                             <th class="text-center">Job Number</th>
@@ -119,6 +119,39 @@
             </div>
         </div>
         <!--end::Card-->
+
+        {{-- Task Reject Modal --}}
+        <div class="modal inmodal fade" id="rejectTaskModal">
+            <div class="modal-dialog modal-sm modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header text-center">
+                        <h5 class="modal-title text-center">Reject Task</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <i aria-hidden="true" class="ki ki-close"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form class ="form-horizontal" id ="reject_task_modal_form" name="reject_task_modal_form" method="post" 
+                        enctype="multipart/form-data">
+                            <div class="row d-flex justify-content-around mb-4">
+                                <div class="col-lg-12">
+                                    <label>Reason to Reject</label>
+                                    <textarea class="form-control " type="text" name="reject_reason" id="reject_reason" rows="5"></textarea>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" id="reject_task_btn" onclick="rejectTask()">
+                            <i class="fas fa-external-link-alt"></i> Reject Task 
+                        </button>
+                        <button type="button" class="btn btn-light btn_close" data-dismiss="modal">
+                            <i class="fa fa-times-circle"></i> Close 
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
  
 @endsection
 
@@ -130,10 +163,10 @@
 <script src="{{ asset('plugins/custom/datatables/datatables.bundle.js') }}" defer></script>
 <script>
     $(document).ready(function(){
-        drawDepartmentListTable()
+        drawallocatedJobListTable()
     });
 
-    async function drawDepartmentListTable(){
+    async function drawallocatedJobListTable(){
         let retrivedTblData = await $.ajax(
         {
             url:'{{ route('fetchAllocatedJobsToDrawTbl')}}',
@@ -147,12 +180,12 @@
                 return data;
             }
         });
-        initializeDepartmentsTbl(retrivedTblData);
+        initializeAllocateJobListTbl(retrivedTblData);
 
     }
 
-    function initializeDepartmentsTbl(retrivedTblData){
-        $('#job_ticket_list_table').DataTable({
+    function initializeAllocateJobListTbl(retrivedTblData){
+        $('#allocated_job_list_table').DataTable({
             pageLength: 10,
             destroy: true,
             retrieve: false,
@@ -292,23 +325,51 @@
                 {
                     targets: 6,
                     render: function(data, type, full, meta) {
-                        return `<a href="/viewDesignation/${data}/edit" class="btn btn-sm btn-clean btn-icon mr-2" title="Edit details">
-                                    <span class="svg-icon svg-icon-md">
-                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" 
-                                        height="24px" viewBox="0 0 24 24" version="1.1">
-                                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                <rect x="0" y="0" width="24" height="24" />
-                                                <path d="M8,17.9148182 L8,5.96685884 C8,5.56391781 8.16211443,5.17792052 8.44982609,4.89581508 
-                                                L10.965708,2.42895648 C11.5426798,1.86322723 12.4640974,1.85620921 13.0496196,2.41308426 L15.5337377,
-                                                4.77566479 C15.8314604,5.0588212 16,5.45170806 16,5.86258077 L16,17.9148182 C16,18.7432453 15.3284271,
-                                                19.4148182 14.5,19.4148182 L9.5,19.4148182 C8.67157288,19.4148182 8,18.7432453 8,17.9148182 Z" 
-                                                fill="#000000" fill-rule="nonzero" \ transform="translate(12.000000, 10.707409) rotate(-135.000000) 
-                                                translate(-12.000000, -10.707409) " />
-                                                <rect fill="#000000" opacity="0.3" x="5" y="20" width="15" height="2" rx="1" />
-                                            </g>
-                                        </svg>
-                                    </span>
+                        switch (full.status) {
+                            case 'AVAI':
+                                return `
+                                <a type="button" onclick="takeTask(${data})"class="btn btn-primary btn-sm btn-pill" >
+                                    Take Task 
                                 </a>`;
+                                
+                            break;
+                            case 'ONG':
+                                return `
+                                <a type="button mb-3" onclick="completeTask(${data})"class="btn btn-success btn-sm btn-pill" >
+                                    Complete Task 
+                                </a>
+                                <a type="button" onclick="showRejectTaskModal(${data})"class="btn btn-danger btn-sm btn-pill" >
+                                    Reject Task 
+                                </a>
+                                `;
+                                
+                            break;
+                            case 'COMP':
+                                return `
+                                <a type="button mb-3" onclick="completedTaskModal(${data})"class="btn btn-light-success btn-sm btn-pill" >
+                                    Task Completed 
+                                </a>`;
+                                
+                            break;
+                            case 'REJECT':
+                                return `
+                                <a type="button mb-3" onclick="completedTaskModal(${data})"class="btn btn-light-danger btn-sm btn-pill" >
+                                    Task Rejected 
+                                </a>`;
+                                
+                            break;
+                            case 'ABN':
+                                return `
+                                <a type="button mb-3" onclick="completedTaskModal(${data})"class="btn btn-light-success btn-sm btn-pill" >
+                                    Task Completed 
+                                </a>`;
+                                
+                            break;
+                        
+                            default:
+                                break;
+                        }
+                        
                     },
                 },
                 {
@@ -363,6 +424,138 @@
             return 'primary'
         }else{
             return 'success'
+        }
+    }
+
+    //Take Task Action
+    function takeTask(jobTaskId){
+        var formData = new FormData();
+        formData.append('jobTaskId', jobTaskId);
+
+        Swal.fire({
+            title: "Do you want to take this task?",
+            text: "This will update this task as a Ongoing task",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes! I take this task"
+        }).then(function(result) {
+            
+            if (result.value) {
+                $.ajax(
+                {
+                    url:"{{ route('takeTask')}}", 
+                    method:"POST",
+                    headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'},
+                    data: formData,
+                    cache : false,
+                    processData: false,
+                    contentType: false,
+                    dataType:'json',
+                    success:function(data)
+                    {
+                        if(data.status ){
+                            toastr.success(data.msg,data.title);
+                            drawallocatedJobListTable()
+                        }
+                        else{
+                            toastr.error(data.msg,data.title);
+                        }
+                    }
+                }); 
+            }
+        });
+    }
+
+    //Complte Task Action 
+    function completeTask(jobTaskId){
+        var formData = new FormData();
+        formData.append('jobTaskId', jobTaskId);
+
+        Swal.fire({
+            title: "Do you need to mark this task as a completed one?",
+            text: "This will update this task as a Completed task",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes!"
+        }).then(function(result) {
+            
+            if (result.value) {
+                $.ajax(
+                {
+                    url:"{{ route('completeTask')}}", 
+                    method:"POST",
+                    headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'},
+                    data: formData,
+                    cache : false,
+                    processData: false,
+                    contentType: false,
+                    dataType:'json',
+                    success:function(data)
+                    {
+                        if(data.status ){
+                            toastr.success(data.msg,data.title);
+                            drawallocatedJobListTable()
+                        }
+                        else{
+                            toastr.error(data.msg,data.title);
+                        }
+                    }
+                }); 
+            }
+        });
+    }
+
+    let rejectJobTaskId = 0 ;
+    function showRejectTaskModal(jobTaskId){
+        rejectJobTaskId = jobTaskId;
+        $('#rejectTaskModal').modal('show');
+    }
+
+    //reject task
+    function rejectTask(){
+        var formData = new FormData();
+
+        formData.append('jobTaskId', rejectJobTaskId);
+        formData.append('rejectedReason', $('#reject_reason').val());
+
+        if( $('#reject_reason').val() == ''){
+            toastr.error("Please enter the reason for the rejection","Reason for the Rejection is required");
+        }else{
+
+            console.log(rejectJobTaskId);
+            Swal.fire({
+                title: "Do you need to reject this task?",
+                text: "This will update this task as a Rejected task and the Job ticket which is included this task is also update as rejected",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes! Reject Task!"
+            }).then(function(result) {
+                
+                if (result.value) {
+                    $.ajax(
+                    {
+                        url:"{{ route('rejectTask')}}", 
+                        method:"POST",
+                        headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'},
+                        data: formData,
+                        cache : false,
+                        processData: false,
+                        contentType: false,
+                        dataType:'json',
+                        success:function(data)
+                        {
+                            if(data.status ){
+                                toastr.success(data.msg,data.title);
+                                $('#rejectTaskModal').modal('hide');
+                                drawallocatedJobListTable()
+                            }
+                            else{
+                                toastr.error(data.msg,data.title);
+                            }
+                        }
+                    }); 
+                }
+            });
         }
     }
 

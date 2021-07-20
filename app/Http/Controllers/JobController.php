@@ -287,7 +287,8 @@ class JobController extends Controller
         ->join('tasks', 'job_task_steps.job_task_step_number', '=', 'tasks.task_id')
         ->select('clients_has_taskflows.*', 'job_task_steps.*', 'designations.*','tasks.*')
         ->where('job_task_step_assignee',$designationId)
-        ->where('job_task_step_status', '!=','PND')
+        ->where('job_task_step_status','AVAI')
+        ->orWhere('job_task_step_taken_by', auth()->user()->id)
         ->get();
 
         $data = array();
@@ -342,4 +343,191 @@ class JobController extends Controller
         return $dtNow->lessThanOrEqualTo($dtAvai);
 
     }
+
+    /** 
+    ---------------------------------------------
+      Task Actions
+    ---------------------------------------------
+    */
+
+    //Take Task
+    public function takeTask(Request $request){
+        DB::beginTransaction();
+        try{
+            $allocatedJob = JobSteps::find($request->jobTaskId);
+            $allocatedJob->job_task_step_taken_by = auth()->user()->id;
+            $allocatedJob->job_task_step_taken_at = date('Y-m-d H:i:s');
+            $allocatedJob->job_task_step_status = 'ONG';
+            $allocatedJob->save();
+
+            if($allocatedJob->step_iteration_num == 1){
+                $this->makeJobTicketOngoing($allocatedJob->job_allocation_id);
+            }
+            DB::commit(); 
+            $tasktaken = [
+                'msg' =>  'Task is taken successfully',
+                'title' => 'Task taken',
+                'status' =>  true,
+            ]; 
+
+
+            return $tasktaken;
+
+        }catch(Exception $e){
+            DB::rollback();
+            $tasktaken = [
+                'msg' =>  'Task is not taken, Try again',
+                'title' => 'Problem Occurred',
+                'status' =>  false,
+            ]; 
+            return $tasktaken;
+        }
+       
+    }
+
+    public function makeJobTicketOngoing($jobAllocationId){
+        DB::table('clients_has_taskflows')
+        ->where('job_allocation_id', $jobAllocationId)
+        ->update([
+            'job_ticket_status' => 'ONG',
+        ]);
+    }
+    
+    //Complete Task
+    public function completeTask(Request $request){
+        DB::beginTransaction();
+        try{
+            $allocatedJob = JobSteps::find($request->jobTaskId);
+            $allocatedJob->job_task_step_status       = 'COMP';
+            $allocatedJob->job_task_step_completed_by = auth()->user()->id;
+            $allocatedJob->job_task_step_completed_at = date('Y-m-d H:i:s');
+            $allocatedJob->save();
+
+            $nextStep = $this->findNextIterativeStep($allocatedJob->job_allocation_id,$allocatedJob->step_iteration_num);
+            if($nextStep == 0){
+                $this->makeJobTicketCompleted($allocatedJob->job_allocation_id);
+            }else{
+                //available next job step for the system
+                $nextJobStep = JobSteps::where('job_allocation_id',$allocatedJob->job_allocation_id)
+                ->where('step_iteration_num',$nextStep)
+                ->get();
+                $this->makeAvailableNextStep($nextJobStep[0]);
+                $nextJobStep[0]->save();
+
+            }
+
+            DB::commit(); 
+            $taskComplete = [
+                'msg' =>  'Task completed successfully',
+                'title' => 'Task Completion',
+                'status' =>  true,
+            ]; 
+
+            return $taskComplete;
+
+        }catch(Exception $e){
+            DB::rollback();
+            $taskComplete = [
+                'msg' =>  'Task is not completed, Try again',
+                'title' => 'Problem Occurred',
+                'status' =>  false,
+            ]; 
+            return $taskComplete;
+        }
+    }
+
+    public function makeJobTicketCompleted($jobAllocationId){
+        DB::table('clients_has_taskflows')
+        ->where('job_allocation_id', $jobAllocationId)
+        ->update([
+            'job_ticket_status' => 'COMP',
+            'job_ticket_completed_at' => date('Y-m-d H:i:s'),
+        ]);
+    }
+
+    //Reject Task
+    public function rejectTask(Request $request){
+        DB::beginTransaction();
+        try{
+            $allocatedJob = JobSteps::find($request->jobTaskId);
+            $allocatedJob->job_task_step_status      = 'REJECT';
+            $allocatedJob->job_task_step_rejected_by = auth()->user()->id;
+            $allocatedJob->step_rejected_at          = date('Y-m-d H:i:s');
+            $allocatedJob->job_rejected_reason       = $request->rejectedReason;
+            $allocatedJob->save();
+
+            $this->makeJobTicketRejected($allocatedJob->job_allocation_id);
+
+            $jobsToAbandoned = JobSteps::where('job_allocation_id',$allocatedJob->job_allocation_id)
+            ->where('step_iteration_num','>',$allocatedJob->step_iteration_num)
+            ->get();
+
+            foreach($jobsToAbandoned as $job){
+                $job->job_task_step_status = 'ABN';
+                $job->step_rejected_at = date('Y-m-d H:i:s');
+                $job->save();
+            }
+
+            DB::commit(); 
+            $taskComplete = [
+                'msg' =>  'Task rejected successfully',
+                'title' => 'Task Rejection',
+                'status' =>  true,
+            ]; 
+
+            return $taskComplete;
+
+        }catch(Exception $e){
+            DB::rollback();
+            $taskComplete = [
+                'msg' =>  'Task is not rejected, Try again',
+                'title' => 'Problem Occurred',
+                'status' =>  false,
+            ]; 
+            return $taskComplete;
+        }
+    }
+
+    public function makeJobTicketRejected($jobAllocationId){
+        DB::table('clients_has_taskflows')
+        ->where('job_allocation_id', $jobAllocationId)
+        ->update([
+            'job_ticket_status' => 'REJECT',
+            'job_ticket_rejected_at' => date('Y-m-d H:i:s'),
+        ]);
+    }
+
+    private function abandonedTaskAfterReject($step, $jobTicketId){
+        DB::table('job_task_steps')
+        ->where('job_allocation_id', $jobTicketId)
+        ->where('step_iteration_num', $step)
+        ->update([
+            'job_task_step_status' => 'ABN',
+            'step_rejected_at' => date('Y-m-d H:i:s'),
+        ]);
+
+    }
+
+    private function findNextIterativeStep($jobTicketId,$currentSetpNo){
+
+        $maxiItrStepNum = DB::table('job_task_steps')
+        ->where('job_allocation_id',$jobTicketId)
+        ->max('step_iteration_num');
+        
+        if($maxiItrStepNum == $currentSetpNo){
+            $nextItrSetp = 0;
+        }else{
+            $nextItrSetp = $currentSetpNo + 1;
+        }
+        return $nextItrSetp;
+
+    }
+    
+    public function makeAvailableNextStep($nextJobStep){
+
+        $nextJobStep->job_task_step_status = 'AVAI';
+        $nextJobStep->step_available_at    = date('Y-m-d H:i:s');
+
+    }
+    
 }

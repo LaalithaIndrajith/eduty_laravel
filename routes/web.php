@@ -129,6 +129,9 @@ Route::post('/getCustomerDetails',[JobController::class, 'getCustomerDetails'])-
 Route::post('/getTaskflowDetails',[JobController::class, 'getTaskflowDetails'])->name('getTaskflowDetails');
 Route::post('/fetchJobTicketsToDrawTbl',[JobController::class, 'fetchJobTicketsToDrawTbl'])->name('fetchJobTicketsToDrawTbl');
 Route::post('/fetchAllocatedJobsToDrawTbl',[JobController::class, 'fetchAllocatedJobsToDrawTbl'])->name('fetchAllocatedJobsToDrawTbl');
+Route::post('/takeTask',[JobController::class, 'takeTask'])->name('takeTask');
+Route::post('/completeTask',[JobController::class, 'completeTask'])->name('completeTask');
+Route::post('/rejectTask',[JobController::class, 'rejectTask'])->name('rejectTask');
 
 
 Route::get('/mailable', function () {

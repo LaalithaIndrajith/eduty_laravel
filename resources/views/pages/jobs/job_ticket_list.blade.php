@@ -118,7 +118,6 @@
             </div>
         </div>
         <!--end::Card-->
- 
 @endsection
 
 @section('styles')
@@ -294,6 +293,16 @@
                             'ONG': {
                                 'title': 'Ongoing',
                                 'state': 'primary',
+                               
+                            },
+                            'COMP': {
+                                'title': 'Completed',
+                                'state': 'success',
+                               
+                            },
+                            'REJECT': {
+                                'title': 'Rejected',
+                                'state': 'danger',
                                
                             },
                         };
