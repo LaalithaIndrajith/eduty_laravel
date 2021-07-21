@@ -184,42 +184,47 @@
             formData.append('job_allocation_no', jobAllocationNo);
             formData.append('taskflow_select', taskflowId);
             formData.append('customer_select', customerId);
-
-            Swal.fire({
-                title: "Do you want to issue the Job ticket?",
-                text: "This action will issue job ticket for the system",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonText: "Issue Job Ticket!"
-            }).then(function(result) {
-                
-                if (result.value) {
-                    $.ajax(
-                    {
-                        url:"{{ route('issueJobTicket')}}", 
-                        method:"POST",
-                        headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}', },
-                        data:formData,
-                        cache : false,
-                        processData: false,
-                        contentType: false,
-                        dataType:'json',
-                        success:async function(data)
+            
+            if($('#taskflow_select').val() == '' || $('#customer_select').val() == ''){
+                toastr.warning('Both Customer and Taskflow are needed to be selected before issue the Job Card', 'Cannot issue Job Card')
+            }else{
+                Swal.fire({
+                    title: "Do you want to issue the Job ticket?",
+                    text: "This action will issue job ticket for the system",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Issue Job Ticket!"
+                }).then(function(result) {
+                    
+                    if (result.value) {
+                        $.ajax(
                         {
-                            if(data.status ){
-                                await toastr.success(data.msg,data.title);
-                                resetCustInfo();
-                                location.reload();
+                            url:"{{ route('issueJobTicket')}}", 
+                            method:"POST",
+                            headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}', },
+                            data:formData,
+                            cache : false,
+                            processData: false,
+                            contentType: false,
+                            dataType:'json',
+                            success:async function(data)
+                            {
+                                if(data.status ){
+                                    await toastr.success(data.msg,data.title);
+                                    resetCustInfo();
+                                    location.reload();
+                                }
+                                else{
+                                    await toastr.error(data.msg,data.title);
+                                    location.reload();
+                                }
                             }
-                            else{
-                                await toastr.error(data.msg,data.title);
-                                location.reload();
-                            }
-                        }
-                    }); 
-                
-                }
-            });
+                        }); 
+                    
+                    }
+                });
+
+            }
         }
 
         async function showCustomerDetails(custId){
