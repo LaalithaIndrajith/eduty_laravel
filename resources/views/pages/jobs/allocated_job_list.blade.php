@@ -105,7 +105,7 @@
                             <th class="text-center">Responsible</th>
                             <th class="text-center">Task Details</th>
                             <th class="text-center">Overview</th>
-                            <th class="text-center">Efficiency</th>
+                            <th class="text-center">Due Time</th>
                             <th class="text-center">Status</th>
                             <th class="text-center">Action</th>
                         </tr>
@@ -152,7 +152,7 @@
                 </div>
             </div>
         </div>
- 
+
 @endsection
 
 @section('styles')
@@ -227,7 +227,7 @@
                     render: function(data, type, full, meta) {
                         let output = '';
 
-                        output += `<div class="font-weight-bold font-size-lg text-dark-65 mb-0"> ${data.num}</div>`;
+                        output += `<div class="font-weight-bold font-size-lg text-dark-65 mb-0" onclick="showJobTicketDetailsModal(${data.id})"> ${data.num}</div>`;
                         
                         return output;
                     },
@@ -280,9 +280,12 @@
                 {
                     targets: 4,
                     render: function(data, type, full, meta) {
+
+                        let resultObj = getEfficiencyColor(data.isAheadTime);
+                        let {state, wording} = resultObj;
                         let output = '';
-                        let state = (data.isAheadTime) ? 'success' : 'danger';
-                        let efficiency = (data.isAheadTime) ? 'Ahead of Time' : 'Overdue';
+                        // let state = (data.isAheadTime) ? 'success' : 'danger';
+                        // let efficiency = (data.isAheadTime) ? 'Ahead of Time' : 'Overdue';
                         let updated = moment(data.availableAt).zone("+05:30");
                         let availableDate = updated.format('YYYY-MM-DD')
                         let availableTime = updated.format('hh:mm A')
@@ -294,7 +297,7 @@
                                 </span>
                             </div>
                             <div class="ml-4">
-                                <div class="text-${state} font-weight-bolder font-size-lg mb-2">${efficiency}</div>
+                                <div class="text-${state} font-weight-bolder font-size-lg mb-2">${wording}</div>
                                 <div class="text-${state} font-weight-bold font-size-sm mb-0">available since ${availableDate} ${availableTime}</div>
                             </div>
                         </div>`;
@@ -413,6 +416,49 @@
             ],
 
         });
+    }
+
+    function getEfficiencyColor(val){
+        switch (val) {
+            case 'reject':
+                return {
+                    state : 'danger',
+                    wording : 'Rejected'
+                }
+                
+                break;
+            case 'abandoned':
+                return {
+                    state : 'dark',
+                    wording : 'Abandoned'
+                }
+                
+                break;
+            case 'notTaken':
+                return {
+                    state : 'warning',
+                    wording : 'Not Taken'
+                }
+                
+                break;
+            case 'aheadTime':
+                return {
+                    state : 'success',
+                    wording : 'Ahead of Time'
+                }
+                
+                break;
+            case 'overdue':
+                return {
+                    state : 'danger',
+                    wording : 'Overdue'
+                }
+                
+                break;
+        
+            default:
+                break;
+        }
     }
 
     function getProgressColor(progressValue){
@@ -557,6 +603,30 @@
                 }
             });
         }
+    }
+
+    
+    async function showJobTicketDetailsModal(jobTicketId){
+        var formData = new FormData();
+        formData.append('jobTicketId', jobTicketId);
+
+        let jobTicketDetails = await $.ajax(
+        {
+            url:"{{ route('fetchJobTicketDetails')}}", 
+            method:"POST",
+            headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'},
+            data: formData,
+            cache : false,
+            processData: false,
+            contentType: false,
+            dataType:'json',
+            success:function(data)
+            {
+                return data;
+            }
+        });
+
+        $('#jobTicktDetailsModal').modal('show')
     }
 
 </script>
