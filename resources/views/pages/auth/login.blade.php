@@ -51,7 +51,7 @@ License: You must have a valid license purchased only from themeforest(the above
 					<!--begin::Wrapper-->
 					<div class="login-content d-flex flex-column pt-lg-0 pt-12">
 						<!--begin::Logo-->
-						<a href="#" class="login-logo pb-xl-20 pb-15">
+						<a href="#" class="login-logo pb-xl-20 pb-15 d-none">
 							<img src="{{ asset('media/logos/logo-4.png') }}" class="max-h-70px" alt="" />
 						</a>
 						<!--end::Logo-->
