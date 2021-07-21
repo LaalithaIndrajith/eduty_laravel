@@ -6,6 +6,7 @@ use App\Task;
 use App\User;
 use Exception;
 use App\Client;
+use App\Department;
 use App\JobSteps;
 use App\TaskFlow;
 use Carbon\Carbon;
@@ -266,6 +267,116 @@ class JobController extends Controller
 
     }
 
+    //fetch details for the view modal - Job Ticket Details
+    public function fetchJobTicketDetails(Request $request){
+
+        $jobTicketId = $request->jobTicketId;
+        $jobTicketDetails = DB::table('clients_has_taskflows')
+            ->join('taskflows', 'clients_has_taskflows.taskflow_id', '=', 'taskflows.taskflow_id')
+            ->join('clients', 'clients_has_taskflows.client_id', '=', 'clients.client_id')
+            ->select('clients_has_taskflows.*', 'taskflows.*', 'clients.*')
+            ->where('clients_has_taskflows.job_allocation_id',$jobTicketId)
+            ->get();
+        $tasks = $this->getJobTaskDetails($jobTicketDetails[0]->job_allocation_id);
+        $taskDetails = $this->arrangeTaskDetails($tasks);
+        $jobtacketCompleteTime = $this->jobTicketComplteTime($jobTicketDetails[0]);
+        return array(
+            'jobDetails'=> $jobTicketDetails[0],
+            'issuedByName' => User::getUsername($jobTicketDetails[0]->job_allocation_created_by),
+            'departName' => Department::getDepName($jobTicketDetails[0]->depart_id),
+            'progress' => $this->getProgressOfTaskflow($jobTicketDetails[0]->job_allocation_id),
+            'taskDetials' => $taskDetails,
+            'jobTicketCompleteTime' => $jobtacketCompleteTime,
+
+        );
+        
+    }
+
+    public function getJobTaskDetails($jobAllocationId){
+        $jobTasks = DB::table('job_task_steps')
+        ->join('tasks', 'job_task_steps.job_task_step_number', '=', 'tasks.task_id')
+        ->join('designations', 'job_task_steps.job_task_step_assignee', '=', 'designations.designation_id')
+        ->select('tasks.*', 'job_task_steps.*','designations.*')
+        ->where('job_task_steps.job_allocation_id',$jobAllocationId)
+        ->get();
+
+        return $jobTasks;
+    }
+
+    public function arrangeTaskDetails($tasks){
+        $data = array();
+        
+        foreach($tasks as $task){
+            $d = array();
+            $d['taskId'] = $task->task_id;
+            $d['taskStep'] = $task->step_iteration_num;
+            $d['taskName'] = $task->task_name;
+            $d['taskAssignee'] = $task->designation_name;
+            $d['designationCode'] = $task->designation_code;
+            $d['taskTakenBy'] = User::getUsername($task->job_task_step_taken_by);
+            $d['taskAllocatedTime'] = array(
+                'type'=> $task->task_milestone_time_type,
+                'value'=>$task->task_milestone_time,
+            );
+            $d['status'] = $task->job_task_step_status;
+            $d['avilableAt'] = $task->step_available_at;
+            $d['takenAt'] = $task->job_task_step_taken_at;
+            $d['completedAt'] = $task->job_task_step_completed_at;
+            $d['rejectedAt'] = $task->step_rejected_at;
+            $d['isOverdue'] = $task->job_task_step_is_overdue;
+            $d['timeTaken'] = $this->calculateTimeTakenForTask($task);
+            array_push($data, $d);
+        }
+
+        $result = array(
+			'data' => $data
+		);
+        
+        return $result;
+    }
+
+    private function calculateTimeTakenForTask($task){
+        if($task->job_task_step_status == 'COMP'){
+            $completed = Carbon::create($task->job_task_step_completed_at);
+            $available = Carbon::create($task->step_available_at);
+            $diffrence =  $available->diff($completed);
+            return array(
+                'days' => $diffrence->d,
+                'hours' => $diffrence->h,
+                'mins' => $diffrence->i,
+            );
+        }else if($task->job_task_step_status == 'ONG'){
+            return 'Ongoing';
+        }else if($task->job_task_step_status == 'REJECT'){
+            return 'Rejected';
+        }else if($task->job_task_step_status == 'ABN'){
+            return 'Abandoned';
+        }else if($task->job_task_step_status == 'AVAI'){
+            return 'Pending';
+        }else if($task->job_task_step_status == 'PND'){
+            return 'Not Available to Take';
+        }
+    }
+    
+    private function jobTicketComplteTime($taskflow){
+        if($taskflow->job_ticket_status == 'COMP'){
+            $completed = Carbon::create($taskflow->job_ticket_completed_at);
+            $created = Carbon::create($taskflow->job_allocation_created_at);
+            $diffrence =  $created->diff($completed);
+            return array(
+                'days' => $diffrence->d,
+                'hours' => $diffrence->h,
+                'mins' => $diffrence->i,
+            );
+        }else if($taskflow->job_ticket_status == 'ONG'){
+            return 'Ongoing';
+        }else if($taskflow->job_ticket_status == 'REJECT'){
+            return 'Rejected';
+        }else if($taskflow->job_ticket_status == 'AVAI'){
+            return 'Pending';
+        }
+    }
+
     public function getProgressOfTaskflow($jobAllocationId){
         $totalTaskCount = DB::table('job_task_steps')->where('job_allocation_id',$jobAllocationId)->count();
         $completedCount = DB::table('job_task_steps')->where('job_allocation_id',$jobAllocationId)->where('job_task_step_status','COMP')->count();
@@ -390,6 +501,7 @@ class JobController extends Controller
         ->where('job_allocation_id', $jobAllocationId)
         ->update([
             'job_ticket_status' => 'ONG',
+            'job_ticket_started_at' => date('Y-m-d H:i:s'),
         ]);
     }
     

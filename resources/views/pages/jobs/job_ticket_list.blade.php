@@ -118,6 +118,161 @@
             </div>
         </div>
         <!--end::Card-->
+
+        {{-- Task Job Ticket Details Modal --}}
+        <div class="modal inmodal fade" id="jobTicktDetailsModal">
+            <div class="modal-dialog modal-xl modal-dialog-centered">
+                <div class="modal-content text-center ribbon ribbon-top mb-5">
+                    <div class="ribbon-target bg-success h4" style="top: -2px; right: 20px;" id="job-ticket-status">Ongoing</div>
+                    <div class="modal-header text-center">
+                        <h5 class="modal-title text-center">Job Ticket Details</h5>
+                    </div>
+                    <div class="modal-body bg-gray-200">
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="card card-custom mb-5">
+                                    <div class="card-body">
+                                        <div class="row d-flex justify-content-around align-items-center">
+                                            <h6 class="font-weight-light font-size-sm text-muted text-left">
+                                                Job Ticket Number
+                                            </h6>
+                                            <h6 class="font-weight-bolder font-size-sm text-dark-65 text-right" id="job-allocation-code">
+                                                JOB-20210720-01
+                                            </h6>
+                                        </div>
+                                        <div class="row d-flex justify-content-around align-items-center">
+                                            <h6 class="font-weight-light font-size-sm text-muted text-left">
+                                                Issued by
+                                            </h6>
+                                            <h6 class="font-weight-bolder font-size-sm text-dark-65 text-right" id="job-allocation-issued-by">
+                                                YOUTH/CSR/010
+                                            </h6>
+                                        </div>
+                                        <div class="row d-flex justify-content-around align-items-center">
+                                            <h6 class="font-weight-light font-size-sm text-muted text-left">
+                                                Issued at
+                                            </h6>
+                                            <h6 class="font-weight-bolder font-size-sm text-dark-65 text-right" id="job-allocation-issued-at">
+                                                YOUTH/CSR/010
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card card-custom mb-5 bg-light-warning">
+                                    <div class="card-body">
+                                        <div class="row d-flex justify-content-around align-items-center">
+                                            <h6 class="font-weight-light font-size-sm text-warning text-left">
+                                                Started at
+                                            </h6>
+                                            <h6 class="font-weight-bolder font-size-sm text-warning text-right" id="job-allocation-started-at">
+                                                YOUTH/CSR/010
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card card-custom mb-5 bg-light-success">
+                                    <div class="card-body">
+                                        <div class="row d-flex justify-content-around align-items-center">
+                                            <h6 class="font-weight-light font-size-sm text-success text-left">
+                                                Completed at
+                                            </h6>
+                                            <h6 class="font-weight-bolder font-size-sm text-success text-right"  id="job-allocation-completed-at">
+                                                YOUTH/CSR/010
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card card-custom mb-5 bg-light-danger">
+                                    <div class="card-body">
+                                        <div class="row d-flex justify-content-around align-items-center">
+                                            <h6 class="font-weight-light font-size-sm text-danger text-left">
+                                                Rejected at
+                                            </h6>
+                                            <h6 class="font-weight-bolder font-size-sm text-danger text-right"  id="job-allocation-rejected-at">
+                                                YOUTH/CSR/010
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-8">
+                                <div class="card card-custom mb-5">
+                                    <div class="card-body">
+                                        <div class="row d-flex justify-content-center align-items-center">
+                                            <div class="col-lg-5">
+                                                <h6 class="font-weight-light font-size-sm text-muted text-right">
+                                                    Taskflow belongs to
+                                                </h6>
+                                            </div>
+                                            <div class="col-lg-7">
+                                                <h6 class="font-weight-bolder font-size-sm text-dark-65 text-left" id="job-taskflow-dep">
+                                                    Youth Services Department
+                                                </h6>
+                                            </div>
+                                        </div>
+                                        <div class="row d-flex justify-content-center align-items-center">
+                                            <div class="col-lg-5">
+                                                <h6 class="font-weight-light font-size-sm text-muted text-right">
+                                                    Taskflow Code
+                                                </h6>
+                                            </div>
+                                            <div class="col-lg-7">
+                                                <h6 class="font-weight-bolder font-size-sm text-dark-65 text-left" id="job-taskflow-code">
+                                                    YOUTH/CSR/010
+                                                </h6>
+                                            </div>
+                                        </div>
+                                        <div class="row d-flex justify-content-center align-items-center">
+                                            <div class="col-lg-5">
+                                                <h6 class="font-weight-light font-size-sm text-muted text-right">
+                                                    Taskflow Name
+                                                </h6>
+                                            </div>
+                                            <div class="col-lg-7">
+                                                <h6 class="font-weight-bolder font-size-sm text-dark-65 text-left" id="job-taskflow-name">
+                                                    Providing Volleyball Nets
+                                                </h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card card-custom mb-5">
+                                    <div class="card-body" id="taskDetailsContainer">
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            {{-- <div class="col-lg-2">
+                                <div class="card card-custom mb-5">
+                                    <div class="card-body" id="jobEffIndicator">
+                                        <div class="row d-flex justify-content-center align-items-center" >
+                                            <div class="symbol symbol-40 symbol-light-danger flex-shrink-0">
+                                                <span class="symbol-label font-size-h4 font-weight-bold">
+                                                    <i class="far fa-clock text-danger icon-md"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="row d-flex justify-content-center align-items-center">
+                                            <div class="ml-4">
+                                                <div class="text-danger font-weight-bolder font-size-lg mb-2">Overdue</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> --}}
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" id="reject_task_btn" onclick="rejectTask()">
+                            <i class="fas fa-external-link-alt"></i> Reject Task 
+                        </button>
+                        <button type="button" class="btn btn-light btn_close" data-dismiss="modal">
+                            <i class="fa fa-times-circle"></i> Close 
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
 @endsection
 
 @section('styles')
@@ -191,7 +346,7 @@
                     render: function(data, type, full, meta) {
                         let output = '';
 
-                        output += `<div class="font-weight-bold font-size-lg text-dark-65 mb-0"> ${data.num}</div>`;
+                        output += `<div class="btn btn-icon w-auto px-5 btn-clean font-weight-bold font-size-lg text-dark-65 mb-0" onclick="showJobTicketDetailsModal(${data.id})"> ${data.num}</div>`;
                         
                         return output;
                     },
@@ -317,6 +472,334 @@
             ],
 
         });
+    }
+
+    async function showJobTicketDetailsModal(jobTicketId){
+        $('.appendedTaskkDetails').remove();
+        var formData = new FormData();
+        formData.append('jobTicketId', jobTicketId);
+
+        let jobTicketDetails = await $.ajax(
+        {
+            url:"{{ route('fetchJobTicketDetails')}}", 
+            method:"POST",
+            headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'},
+            data: formData,
+            cache : false,
+            processData: false,
+            contentType: false,
+            dataType:'json',
+            success:function(data)
+            {
+                return data;
+            }
+        });
+        let {jobDetails,issuedByName,departName,taskDetials} = jobTicketDetails;
+        arrangeJobIssueDetails(jobDetails,issuedByName,departName);
+        // console.log(taskDetials);
+        renderTaskDetails(taskDetials.data);
+        $('#jobTicktDetailsModal').modal('show')
+    }
+
+
+    function arrangeJobIssueDetails(jobTicketObj,issuedByName,departName){
+        renderStatus(jobTicketObj.job_ticket_status);
+
+        $('#job-allocation-code').html(jobTicketObj.job_allocation_no)
+        $('#job-allocation-issued-by').html(issuedByName)
+        $('#job-allocation-issued-at').html(arrangeTimesForView(jobTicketObj.job_allocation_created_at))
+
+        if(jobTicketObj.job_ticket_started_at == null){
+            $('#job-allocation-started-at').html('Not Started Yet')
+        }else{
+            $('#job-allocation-started-at').html(arrangeTimesForView(jobTicketObj.job_ticket_started_at))
+        }
+        
+        if(jobTicketObj.job_ticket_completed_at == null){
+            $('#job-allocation-completed-at').html('Not Completed Yet')
+        }else{
+            $('#job-allocation-completed-at').html(arrangeTimesForView(jobTicketObj.job_ticket_completed_at))
+        }
+        
+        if(jobTicketObj.job_ticket_rejected_at == null){
+            $('#job-allocation-rejected-at').html('Not rejected')
+        }else{
+            $('#job-allocation-rejected-at').html(arrangeTimesForView(jobTicketObj.job_ticket_rejected_at))
+        }
+
+        $('#job-taskflow-dep').html(departName)
+        $('#job-taskflow-code').html(jobTicketObj.task_flow_code)
+        $('#job-taskflow-name').html(jobTicketObj.task_flow_name)
+
+    }
+
+    function arrangeTimesForView(timeVal){
+        
+        let arranged = moment(timeVal).zone("+05:30");
+        let viewingDate = arranged.format('YYYY-MM-DD')
+        let viewingTime = arranged.format('hh:mm A')
+        let viewingString = `on ${viewingDate} at ${viewingTime}`;
+        return viewingString;
+    }
+
+    function renderStatus(statusVal){
+        switch (statusVal) {
+            case "ISSUED":
+                $('#job-ticket-status').html('PENDING')
+                $('#job-ticket-status').addClass('bg-warning')
+                $('#job-ticket-status').removeClass('bg-success bg-danger bg-primary')
+                break;
+            case "ONG":
+                $('#job-ticket-status').html('ONGOING')
+                $('#job-ticket-status').addClass('bg-primary')
+                $('#job-ticket-status').removeClass('bg-success bg-danger bg-warning')
+                break;
+            case "COMP":
+                $('#job-ticket-status').html('COMPLETED')
+                $('#job-ticket-status').addClass('bg-success')
+                $('#job-ticket-status').removeClass('bg-primary bg-danger bg-warning')
+                break;
+            case "REJECT":
+                $('#job-ticket-status').html('REJECTED')
+                $('#job-ticket-status').addClass('bg-danger')
+                $('#job-ticket-status').removeClass('bg-primary bg-success bg-warning')
+                break;
+        
+            default:
+                break;
+        }
+    }
+
+    function getTaskStatusColor(status){
+
+        switch (status) {
+            case 'COMP':
+                return {
+                    color :'success',
+                    wording :'Completed',
+                }
+                break;
+            case 'AVAI':
+                return {
+                    color :'warning',
+                    wording :'Available',
+                }
+                break;
+            case 'ONG':
+                return {
+                    color :'primary',
+                    wording :'Ongoing',
+                }
+                break;
+            case 'ABN':
+                return {
+                    color :'dark',
+                    wording :'Abandoned',
+                }
+                break;
+            case 'REJECT':
+                return {
+                    color :'danger',
+                    wording :'Rejected',
+                }
+                break;
+            case 'PND':
+                return {
+                    color :'info',
+                    wording :'Pending',
+                }
+                break;
+        
+            default:
+                break;
+        }
+    }
+
+    function renderTaskDuration(taskTimeObj,status){
+
+        let output = '';
+        if(status != 'COMP'){
+            output = taskTimeObj;
+            return output;
+        }else{
+            output += (taskTimeObj.days != 0) ? `${taskTimeObj.days} days` : '';
+            output += (taskTimeObj.hours != 0) ? ` ${taskTimeObj.hours} hours` : '';
+            output += (taskTimeObj.mins != 0) ? ` ${taskTimeObj.mins} mins` : '';
+
+            return output;
+
+        }
+
+    }
+
+    function renderTaskDetails(taskArr){
+        for(let task of  taskArr){
+            // console.log(task);
+            renderSingleTask(task);
+        }
+    }
+
+    function renderSingleTask(task){
+
+        let statusObj = getTaskStatusColor(task.status);
+
+        let output = '';
+
+        
+        output += `  
+        <div class="accordion accordion-toggle-arrow appendedTaskkDetails mt-4" id="accordionExample${task.taskId}">
+            <div class="card">`
+
+        //heade of accordian
+
+        output += `
+                <div class="card-header">
+                    <div class="card-title collapsed" data-toggle="collapse" data-target="#collapse${task.taskId}">
+                        <div class="symbol symbol-dark symbol-30 mr-3">
+                            <span class="symbol-label font-size-h5">${task.taskStep}</span>
+                        </div>
+                        ${task.taskName}  
+                        <span class="label label-light-${statusObj.color} label-lg label-inline ml-5 mr-5"> ${statusObj.wording}</span>
+                        <span class="label label-${statusObj.color} label-lg label-inline mr-5">${statusObj.wording}</span>
+                    </div>
+                </div>`
+
+        //accoridan body
+        output += `
+                <div id="collapse${task.taskId}" class="collapse" data-parent="#accordionExample${task.taskId}">
+                    <div class="card-body"> `
+
+        let taskDurationString = renderTaskDuration(task.timeTaken,task.status);
+        //1st row
+        output += `
+                        <div class="row d-flex justify-content-center">
+                            <div class="col-lg-6 border-right">
+                                <div class="row d-flex justify-content-around align-items-center">
+                                    <h6 class="font-weight-normal font-size-sm text-muted text-right">
+                                        Alllocated Time
+                                    </h6>
+                                    <h6 class="font-weight-bolder font-size-sm text-dark-65 text-left">
+                                       ${task.taskAllocatedTime.value} ${task.taskAllocatedTime.type}
+                                    </h6>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="row d-flex justify-content-around align-items-center">
+                                    <h6 class="font-weight-light font-size-sm text-muted text-right">
+                                        Task Duration 
+                                    </h6>
+                                    <h6 class="font-weight-bolder font-size-sm text-dark-65 text-left">
+                                        ${taskDurationString}
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>`
+
+        let tasktaken = (task.taskTakenBy == null) ? 'No One' : task.taskTakenBy;
+        output += `
+                        <div class="row d-flex justify-content-center mt-5">
+                            <div class="col-lg-6 border-right">
+                                <div class="row d-flex justify-content-around align-items-center">
+                                    <h6 class="font-weight-normal font-size-sm text-muted text-center">
+                                        Responsible Designation
+                                    </h6>
+                                </div>
+                                <div class="row d-flex justify-content-around align-items-center mt-3">
+                                    <div class="d-flex align-items-center">
+                                        <div class="">
+                                            <div class="text-dark-75 font-weight-bolder font-size-lg mb-0">${task.taskAssignee}</div>
+                                            <a href="#" class="text-muted font-weight-bold text-hover-primary">${task.designationCode}</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="row d-flex justify-content-around align-items-center">
+                                    <h6 class="font-weight-normal font-size-sm text-muted text-center">
+                                        Task taken by
+                                    </h6>
+                                </div>
+                                <div class="row d-flex justify-content-around align-items-center mt-3">
+                                    <div class="d-flex align-items-center">
+                                        <div class="symbol symbol-40 symbol-light-success flex-shrink-0">
+                                            <span class="symbol-label font-size-h4 font-weight-bold">${tasktaken.substring(0, 1)}</span>
+                                        </div>
+                                        <div class="ml-4">
+                                            <div class="text-dark-75 font-weight-bolder font-size-lg mb-0">${tasktaken}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`
+
+        let available = (task.avilableAt == null) ? '' : arrangeTimesForView(task.avilableAt);
+        let taken     = (task.takenAt == null) ? '' : arrangeTimesForView(task.takenAt);
+        let completed = (task.completedAt == null) ? '' : arrangeTimesForView(task.completedAt);
+        let rejected  = (task.rejectedAt == null) ? '' : arrangeTimesForView(task.rejectedAt);
+
+        output += `
+                        <div class="row d-flex justify-content-around mt-5">
+                            <div class="col-lg-8">
+                                <div class="row d-flex justify-content-around align-items-center">
+                                    <div class="col-lg-6">
+                                        <h6 class="font-weight-normal font-size-sm text-dark-50 text-right">
+                                            Task available at 
+                                        </h6>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <h6 class="font-weight-bolder font-size-sm text-dark-65 text-left">
+                                            ${available}
+                                        </h6>
+                                    </div>
+                                </div>
+                                <div class="row d-flex justify-content-around align-items-center">
+                                    <div class="col-lg-6">
+                                        <h6 class="font-weight-normal font-size-sm text-dark-50 text-right">
+                                            Task taken at 
+                                        </h6>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <h6 class="font-weight-bolder font-size-sm text-dark-65 text-left">
+                                            ${taken}
+                                        </h6>
+                                    </div>
+                                </div>
+                                <div class="row d-flex justify-content-around align-items-center">
+                                    <div class="col-lg-6">
+                                        <h6 class="font-weight-normal font-size-sm text-dark-50 text-right">
+                                            Task completed at 
+                                        </h6>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <h6 class="font-weight-bolder font-size-sm text-dark-65 text-left">
+                                            ${completed}
+                                        </h6>
+                                    </div>
+                                </div>
+                                <div class="row d-flex justify-content-around align-items-center">
+                                    <div class="col-lg-6">
+                                        <h6 class="font-weight-normal font-size-sm text-dark-50 text-right">
+                                            Task rejected at 
+                                        </h6>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <h6 class="font-weight-bolder font-size-sm text-dark-65 text-left">
+                                            ${rejected}
+                                        </h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`
+        
+        output += `
+                    </div>
+                </div>
+            </div>
+        </div>`;
+        
+        $('#taskDetailsContainer').append(output);
+        
+
     }
 
     function getProgressColor(progressValue){

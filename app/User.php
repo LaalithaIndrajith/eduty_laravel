@@ -66,5 +66,11 @@ class User extends Authenticatable
         $username = DB::table('users')->where('id',$userId)->value('username');
         return $username;
     }
+
+    public static function getFullName($userId){
+        $user = User::find($userId);
+        $fullName = $user->user_fname.' '.$user->user_lname;
+        return $fullName;
+    }
  
 }

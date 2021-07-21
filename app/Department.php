@@ -2,8 +2,9 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Department extends Model
 {
@@ -26,5 +27,9 @@ class Department extends Model
         $departments = Department::all();
 
         return $departments;
+    }
+
+    public static function getDepName($depId){
+        return DB::table('departments')->where('depart_id', $depId)->value('depart_name');
     }
 }
