@@ -121,11 +121,11 @@
 
         {{-- Task Job Ticket Details Modal --}}
         <div class="modal inmodal fade" id="jobTicktDetailsModal">
-            <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-dialog modal-dialog-scrollable modal-xl modal-dialog-centered">
                 <div class="modal-content text-center ribbon ribbon-top mb-5">
-                    <div class="ribbon-target bg-success h4" style="top: -2px; right: 20px;" id="job-ticket-status">Ongoing</div>
+                    <div class="ribbon-target bg-success h1" style="top: -2px; right: 20px;" id="job-ticket-status">Ongoing</div>
                     <div class="modal-header text-center">
-                        <h5 class="modal-title text-center">Job Ticket Details</h5>
+                        <h5 class="modal-title text-center">Job Ticket Details of &nbsp;<span id="job-no-heading" class="font-weight-bolder">JOB-20210722-0002</span></h5>
                     </div>
                     <div class="modal-body bg-gray-200">
                         <div class="row">
@@ -133,35 +133,99 @@
                                 <div class="card card-custom mb-5">
                                     <div class="card-body">
                                         <div class="row d-flex justify-content-around align-items-center">
-                                            <h6 class="font-weight-light font-size-sm text-muted text-left">
-                                                Job Ticket Number
-                                            </h6>
-                                            <h6 class="font-weight-bolder font-size-sm text-dark-65 text-right" id="job-allocation-code">
-                                                JOB-20210720-01
-                                            </h6>
+                                            <div class="col-lg-6">
+                                                <h6 class="font-weight-normal font-size-sm text-muted text-right">
+                                                    Job Ticket Number
+                                                </h6>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <h6 class="font-weight-bolder font-size-sm text-dark-65 text-left" id="job-allocation-code">
+                                                    JOB-20210720-01
+                                                </h6>
+                                            </div>
                                         </div>
                                         <div class="row d-flex justify-content-around align-items-center">
-                                            <h6 class="font-weight-light font-size-sm text-muted text-left">
-                                                Issued by
-                                            </h6>
-                                            <h6 class="font-weight-bolder font-size-sm text-dark-65 text-right" id="job-allocation-issued-by">
-                                                YOUTH/CSR/010
-                                            </h6>
+                                            <div class="col-lg-6">
+                                                <h6 class="font-weight-normal font-size-sm text-muted text-right">
+                                                    Issued by
+                                                </h6>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <h6 class="font-weight-bolder font-size-sm text-dark-65 text-left" id="job-allocation-issued-by">
+                                                    YOUTH/CSR/010
+                                                </h6>
+                                            </div>
                                         </div>
                                         <div class="row d-flex justify-content-around align-items-center">
-                                            <h6 class="font-weight-light font-size-sm text-muted text-left">
-                                                Issued at
-                                            </h6>
-                                            <h6 class="font-weight-bolder font-size-sm text-dark-65 text-right" id="job-allocation-issued-at">
-                                                YOUTH/CSR/010
-                                            </h6>
+                                            <div class="col-lg-6">
+                                                <h6 class="font-weight-normal font-size-sm text-muted text-right">
+                                                    Issued at
+                                                </h6>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <h6 class="font-weight-bolder font-size-sm text-dark-65 text-left" id="job-allocation-issued-at">
+                                                    YOUTH/CSR/010
+                                                </h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card card-custom mb-5">
+                                    <div class="card-body">
+                                        <div class="row d-flex justify-content-around align-items-center">
+                                            <div class="col-lg-6">
+                                                <h6 class="font-weight-normal font-size-sm text-muted text-right">
+                                                    Customer
+                                                </h6>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <h6 class="font-weight-bolder font-size-sm text-dark-65 text-left" id="job-allocation-customer-name">
+                                                    Mr. Udawatta
+                                                </h6>
+                                            </div>
+                                        </div>
+                                        <div class="row d-flex justify-content-around align-items-center">
+                                            <div class="col-lg-6">
+                                                <h6 class="font-weight-normal font-size-sm text-muted text-right">
+                                                    NIC
+                                                </h6>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <h6 class="font-weight-bolder font-size-sm text-dark-65 text-left" id="job-allocation-customer-nic">
+                                                    985412542V
+                                                </h6>
+                                            </div>
+                                        </div>
+                                        <div class="row d-flex justify-content-around align-items-center">
+                                            <div class="col-lg-6">
+                                                <h6 class="font-weight-normal font-size-sm text-muted text-right">
+                                                    Contact
+                                                </h6>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <h6 class="font-weight-bolder font-size-sm text-dark-65 text-left" id="job-allocation-customer-contact">
+                                                    YOUTH/CSR/010
+                                                </h6>
+                                            </div>
+                                        </div>
+                                        <div class="row d-flex justify-content-around align-items-center">
+                                            <div class="col-lg-6">
+                                                <h6 class="font-weight-normal font-size-sm text-muted text-right">
+                                                    email
+                                                </h6>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <h6 class="font-weight-bolder font-size-sm text-dark-65 text-left" id="job-allocation-customer-email">
+                                                    YOUTH/CSR/010
+                                                </h6>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="card card-custom mb-5 bg-light-warning">
                                     <div class="card-body">
                                         <div class="row d-flex justify-content-around align-items-center">
-                                            <h6 class="font-weight-light font-size-sm text-warning text-left">
+                                            <h6 class="font-weight-normal font-size-sm text-warning text-left">
                                                 Started at
                                             </h6>
                                             <h6 class="font-weight-bolder font-size-sm text-warning text-right" id="job-allocation-started-at">
@@ -173,7 +237,7 @@
                                 <div class="card card-custom mb-5 bg-light-success">
                                     <div class="card-body">
                                         <div class="row d-flex justify-content-around align-items-center">
-                                            <h6 class="font-weight-light font-size-sm text-success text-left">
+                                            <h6 class="font-weight-normal font-size-sm text-success text-left">
                                                 Completed at
                                             </h6>
                                             <h6 class="font-weight-bolder font-size-sm text-success text-right"  id="job-allocation-completed-at">
@@ -185,7 +249,7 @@
                                 <div class="card card-custom mb-5 bg-light-danger">
                                     <div class="card-body">
                                         <div class="row d-flex justify-content-around align-items-center">
-                                            <h6 class="font-weight-light font-size-sm text-danger text-left">
+                                            <h6 class="font-weight-normal font-size-sm text-danger text-left">
                                                 Rejected at
                                             </h6>
                                             <h6 class="font-weight-bolder font-size-sm text-danger text-right"  id="job-allocation-rejected-at">
@@ -263,9 +327,6 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" id="reject_task_btn" onclick="rejectTask()">
-                            <i class="fas fa-external-link-alt"></i> Reject Task 
-                        </button>
                         <button type="button" class="btn btn-light btn_close" data-dismiss="modal">
                             <i class="fa fa-times-circle"></i> Close 
                         </button>
@@ -504,10 +565,18 @@
 
     function arrangeJobIssueDetails(jobTicketObj,issuedByName,departName){
         renderStatus(jobTicketObj.job_ticket_status);
-
+        
+        $('#job-no-heading').html(jobTicketObj.job_allocation_no)
         $('#job-allocation-code').html(jobTicketObj.job_allocation_no)
         $('#job-allocation-issued-by').html(issuedByName)
         $('#job-allocation-issued-at').html(arrangeTimesForView(jobTicketObj.job_allocation_created_at))
+
+        let customerName = `${jobTicketObj.client_title} . ${jobTicketObj.client_fname} ${jobTicketObj.client_lname}`
+        let custEmail = (jobTicketObj.client_email == '') ? 'Not Provided' : jobTicketObj.client_email;
+        $('#job-allocation-customer-name').html(customerName)
+        $('#job-allocation-customer-nic').html(jobTicketObj.client_nic)
+        $('#job-allocation-customer-contact').html(jobTicketObj.client_contact)
+        $('#job-allocation-customer-email').html(custEmail)
 
         if(jobTicketObj.job_ticket_started_at == null){
             $('#job-allocation-started-at').html('Not Started Yet')

@@ -443,15 +443,42 @@ class JobController extends Controller
         $dtAvai = Carbon::create($allocatedJob->step_available_at) ;
         $type = $allocatedJob->task_milestone_time_type;
         $time = $allocatedJob->task_milestone_time;
-        
-        if($type == 'mins'){
-            $dtAvai->addMinutes($time);
-        }else if($type == 'hours'){
-            $dtAvai->addHours($time);
-        }else if($type == 'days'){
-            $dtAvai->addDays($time);
+
+        if($allocatedJob->job_task_step_status == 'REJECT'){
+            return 'reject';
+        }else if($allocatedJob->job_task_step_status == 'ABN'){
+            return 'abandoned';
+        }else{
+            if($allocatedJob->job_task_step_taken_at == null){
+                return 'notTaken';
+            }else if($allocatedJob->job_task_step_completed_at == null){
+                $taken = Carbon::create($allocatedJob->job_task_step_taken_at);
+                
+                if($type == 'mins'){
+                    $taken->addMinutes($time);
+                }else if($type == 'hours'){
+                    $taken->addHours($time);
+                }else if($type == 'days'){
+                    $taken->addDays($time);
+                }
+                $result = ($dtNow->lessThanOrEqualTo($taken)) ? 'aheadTime': 'overdue';
+                return $result;
+                
+            }else{
+                $completed = Carbon::create($allocatedJob->job_task_step_completed_at) ;
+                if($type == 'mins'){
+                    $completed->addMinutes($time);
+                }else if($type == 'hours'){
+                    $completed->addHours($time);
+                }else if($type == 'days'){
+                    $completed->addDays($time);
+                }
+                $result = ($dtNow->lessThanOrEqualTo($completed)) ? 'aheadTime': 'overdue';
+                return $result;
+            }
+
         }
-        return $dtNow->lessThanOrEqualTo($dtAvai);
+
 
     }
 

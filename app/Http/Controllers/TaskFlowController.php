@@ -303,6 +303,7 @@ class TaskFlowController extends Controller
             $task->task_name                = $taskNames[$key];
             $task->task_milestone_time_type = $milestoneTypes[$key];
             $task->task_milestone_time      = $milestoneVals[$key];
+            $task->task_status              = 1;
 
             $task->save();
             $i++;
