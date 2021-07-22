@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use Exception;
 use App\Client;
+use App\Events\newCustomerCreated;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -86,6 +87,9 @@ class ClientController extends Controller
             $client->client_created_by = auth()->user()->id;
             $client->client_updated_by = auth()->user()->id;
             $client->save();
+
+            //send mail using event & listeners    
+            // event(new newCustomerCreated($client));
            
             $clientRegistration = [
                 'msg' =>  'Customer Registered Successfully',

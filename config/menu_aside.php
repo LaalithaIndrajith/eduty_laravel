@@ -214,10 +214,34 @@ return [
         
     ],
     'other' =>[
+        [
+            'title' => 'Dashboard',
+            'root' => true,
+            'icon' => 'media/svg/icons/Design/Layers.svg', // or can be 'flaticon-home' or any flaticon-*
+            'page' => '/',
+            'new-tab' => false,
+        ],
         // Custom
         [
             'section' => 'Normal User',
         ],
+        [
+            'title' => 'Job Tickets',
+            'icon' => 'media/svg/icons/Communication/Clipboard-list.svg',
+            'bullet' => 'dot',
+            'root' => true,
+            'page' => '/viewJobTicketList'
+            
+        ],
+        [
+            'title' => 'Allocated Jobs',
+            'icon' => 'media/svg/icons/Design/Position.svg',
+            'bullet' => 'dot',
+            'root' => true,
+            'page' => '/viewAllocatedJobList'
+            
+        ],
+        
     ],
 
 ];

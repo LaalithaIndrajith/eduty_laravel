@@ -28,12 +28,14 @@
                             <!--end::Svg Icon-->
                         </span>Update User
                     </button>
+                    @if(request()->session()->get('userType') == 'SYSTEM-ADMIN' OR request()->session()->get('userType') == 'ADMIN')
                     <a href="{{ route('viewUserList') }}" class="btn btn-success ml-1">
                         <span class="svg-icon svg-icon-md">
                             <i class="far fa-list-alt"></i>
                         </span>
                         User List
                     </a>
+                    @endif
                     <a href="{{ route('userEditView', $user->id) }}" class="btn btn-light-danger ml-1"">
                         <span class="svg-icon svg-icon-md">
                             <i class="fas fa-sync-alt"></i>
@@ -54,7 +56,11 @@
                                     <select class="form-control form-control-lg dynamic mt-2 selectpicker @error('department_select') is-invalid @enderror" name="department_select" id="department_select" data-dependent="department_select" data-size="7" data-live-search="true">
                                         <option value="">Select a Department</option>
                                         @foreach ($data['departments'] as $department )
+                                        @if(request()->session()->get('userType') == 'SYSTEM-ADMIN')
                                         <option value="{{ $department->depart_id }}"  {{ ($user->depart_id == $department->depart_id) ? 'selected' : '' }}>{{ $department->depart_code }} | {{ $department->depart_name }}</option>   
+                                        @else
+                                        <option value="{{ $department->depart_id }}"  {{ ($user->depart_id == $department->depart_id) ? 'selected' : 'disabled' }}>{{ $department->depart_code }} | {{ $department->depart_name }}</option>  
+                                        @endif
                                         @endforeach
                                     </select>
                                     @error('department_select')
@@ -69,7 +75,11 @@
                                     <select class="form-control form-control-lg dynamic mt-2 selectpicker @error('designation_select') is-invalid @enderror" name="designation_select" id="designation_select" data-size="7" data-live-search="true">
                                         <option value="">Select a Designation</option>
                                         @foreach ($data['designations'] as $designation )
-                                        <option value="{{ $designation->designation_id }}" {{ ($user->designation_id == $designation->designation_id) ? 'selected' : '' }}>{{ $designation->designation_code }} | {{ $designation->designation_name }}</option>   
+                                        @if(request()->session()->get('userType') == 'SYSTEM-ADMIN')
+                                        <option value="{{ $designation->designation_id }}" {{ ($user->designation_id == $designation->designation_id) ? 'selected' : '' }}>{{ $designation->designation_code }} | {{ $designation->designation_name }}</option>
+                                        @else
+                                        <option value="{{ $designation->designation_id }}" {{ ($user->designation_id == $designation->designation_id) ? 'selected' : 'disabled' }}>{{ $designation->designation_code }} | {{ $designation->designation_name }}</option>
+                                        @endif
                                         @endforeach
                                     </select>
                                     @error('designation_select')
@@ -243,7 +253,7 @@
     <script src="{{ asset('js/pages/custom/profile/profile.js') }}" type="text/javascript"></script>
     <script>
         FormValidation.formValidation(
-        document.getElementById('register-new-user-form'), {
+        document.getElementById('edit-user-form'), {
                 fields: {
                     department_select: {
                         validators: {
