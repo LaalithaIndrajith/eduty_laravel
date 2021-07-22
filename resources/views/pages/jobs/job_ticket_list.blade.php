@@ -135,7 +135,7 @@
                                         <div class="row d-flex justify-content-around align-items-center">
                                             <div class="col-lg-6">
                                                 <h6 class="font-weight-normal font-size-sm text-muted text-right">
-                                                    Job Ticket Number
+                                                    Ticket Number
                                                 </h6>
                                             </div>
                                             <div class="col-lg-6">
@@ -729,7 +729,7 @@
                         </div>
                         ${task.taskName}  
                         <span class="label label-light-${statusObj.color} label-lg label-inline ml-5 mr-5"> ${statusObj.wording}</span>
-                        <span class="label label-${statusObj.color} label-lg label-inline mr-5">${statusObj.wording}</span>
+                        
                     </div>
                 </div>`
 
