@@ -109,7 +109,7 @@ class RegisterController extends Controller
             DB::commit();  
             
             //send mail using event & listeners    
-            event(new userDetailsUpdatedEvent($user));
+            // event(new userDetailsUpdatedEvent($user));
 
             $userEdit = [
                 'msg' =>  'User Details Updated Successfully',

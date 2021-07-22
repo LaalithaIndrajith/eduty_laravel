@@ -3,13 +3,17 @@
 namespace App\Providers;
 
 use App\Events\userCreatedEvent;
-use App\Events\userDetailsUpdatedEvent;
-use App\Listeners\sendUserCreatedMailListener;
-use App\Listeners\sendUserDeatilsUpdatedMailListener;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Auth\Events\Registered;
+use App\Events\userDetailsUpdatedEvent;
+use App\Events\newCustomerRegisteredEvent;
+use App\Events\newJobTicketIssuedEvent;
+use App\Listeners\sendUserCreatedMailListener;
+use App\Listeners\notifyCustomerOnIssuedJobListener;
+use App\Listeners\notifyCustomerRegistrationListener;
+use App\Listeners\sendUserDeatilsUpdatedMailListener;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Event;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -24,6 +28,12 @@ class EventServiceProvider extends ServiceProvider
         ],
         userCreatedEvent::class => [
             sendUserCreatedMailListener::class,
+        ],
+        newCustomerRegisteredEvent::class => [
+            notifyCustomerRegistrationListener::class,
+        ],
+        newJobTicketIssuedEvent::class => [
+            notifyCustomerOnIssuedJobListener::class,
         ],
     ];
 

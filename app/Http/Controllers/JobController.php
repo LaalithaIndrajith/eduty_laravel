@@ -7,6 +7,7 @@ use App\User;
 use Exception;
 use App\Client;
 use App\Department;
+use App\Events\newJobTicketIssuedEvent;
 use App\JobSteps;
 use App\TaskFlow;
 use Carbon\Carbon;
@@ -130,13 +131,18 @@ class JobController extends Controller
                 ]
             );
             $this->storeJobStepDetails($tasks,$jobAllocationId);
+            $jobTicketDetails = $this->getJobTickeNumberForMail($jobAllocationId);
             // dd('here');
+            if($client->client_email != ''){
+                event(new newJobTicketIssuedEvent($client,$jobTicketDetails, $taskflow));
+            }
             DB::commit(); 
             $issueJobTicket = [
                 'msg' =>  'Job Ticket issued to the system successfully ',
                 'title' => 'Issue Job Ticket',
                 'status' =>  true,
             ];
+
 
             return $issueJobTicket;
         }catch(Exception $e){
@@ -190,6 +196,16 @@ class JobController extends Controller
 
         return $jobNo;
     }
+
+    //getting jobticket details for mail
+    private function getJobTickeNumberForMail($jobTicketId){
+        $jobTicketNum = DB::table('clients_has_taskflows')
+        ->where('job_allocation_id',$jobTicketId)
+        ->value('job_allocation_no');
+
+        return $jobTicketNum;
+    }
+
 
     public function getCustomerDetails(Request $request){
         $clientId = $request->custId;
