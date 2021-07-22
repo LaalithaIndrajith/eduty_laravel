@@ -102,7 +102,7 @@
                     <thead>
                         <tr>
                             <th class="text-center">Job Number</th>
-                            <th class="text-center">Responsible</th>
+                            {{-- <th class="text-center">Responsible</th> --}}
                             <th class="text-center">Task Details</th>
                             <th class="text-center">Overview</th>
                             <th class="text-center">Due Time</th>
@@ -406,12 +406,12 @@
             destroy: true,
             retrieve: false,
             order: [
-                [0, 'asc']
+                [0, 'desc']
             ],
             data: retrivedTblData.data,
             columns: [
 				{data: 'jobNumDetails',className: 'text-center'},
-				{data: 'designationDetails',className: 'text-center'},
+				// {data: 'designationDetails',className: 'text-center'},
 				{data: 'taskDetails',className: 'text-center'},
 				{data: 'overview',className: 'text-center'},
 				{data: 'efficiency',className: 'text-center'},
@@ -449,7 +449,7 @@
                     },
                 },
                 {
-                    targets: 2,
+                    targets: 1,
                     render: function(data, type, full, meta) {
                         let output = '';
 
@@ -462,39 +462,39 @@
                         return output;
                     },
                 },
-                {
-                    targets: 1,
-                    render: function(data, type, full, meta) {
-                        let output = '';
+                // {
+                //     targets: 1,
+                //     render: function(data, type, full, meta) {
+                //         let output = '';
                         
-                        let stateNo = KTUtil.getRandomInt(0, 7);
-                        let states = [
-                            'success',
-                            'primary',
-                            'danger',
-                            'success',
-                            'warning',
-                            'dark',
-                            'primary',
-                            'info'];
-                        let state = states[stateNo];
+                //         let stateNo = KTUtil.getRandomInt(0, 7);
+                //         let states = [
+                //             'success',
+                //             'primary',
+                //             'danger',
+                //             'success',
+                //             'warning',
+                //             'dark',
+                //             'primary',
+                //             'info'];
+                //         let state = states[stateNo];
 
-                        output = `<div class="d-flex align-items-center">
-                            <div class="symbol symbol-40 symbol-light-${state} flex-shrink-0">
-                                <span class="symbol-label font-size-h4 font-weight-bold">${data.name.substring(0, 1)}</span>
-                            </div>
-                            <div class="ml-4">
-                                <div class="text-dark-75 font-weight-bolder font-size-lg mb-0">${data.name}</div>
-                                <a href="#" class="text-muted font-weight-bold text-hover-primary">${data.code}</a>
-                            </div>
-                        </div>`;
+                //         output = `<div class="d-flex align-items-center">
+                //             <div class="symbol symbol-40 symbol-light-${state} flex-shrink-0">
+                //                 <span class="symbol-label font-size-h4 font-weight-bold">${data.name.substring(0, 1)}</span>
+                //             </div>
+                //             <div class="ml-4">
+                //                 <div class="text-dark-75 font-weight-bolder font-size-lg mb-0">${data.name}</div>
+                //                 <a href="#" class="text-muted font-weight-bold text-hover-primary">${data.code}</a>
+                //             </div>
+                //         </div>`;
                        
-                        return output;
-                    },
+                //         return output;
+                //     },
                     
-                },
+                // },
                 {
-                    targets: 4,
+                    targets: 3,
                     render: function(data, type, full, meta) {
 
                         let resultObj = getEfficiencyColor(data.isAheadTime);
@@ -523,7 +523,7 @@
                     
                 },
                 {
-                    targets: 3,
+                    targets: 2,
                     render: function(data, type, full, meta) {
                         let output = '';
 
@@ -542,7 +542,7 @@
                     },
                 },
                 {
-                    targets: 6,
+                    targets: 5,
                     render: function(data, type, full, meta) {
                         switch (full.status) {
                             case 'AVAI':
@@ -592,7 +592,7 @@
                     },
                 },
                 {
-                    targets: 5,
+                    targets: 4,
                     render: function(data, type, full, meta) {
                         var status = {
                             'AVAI': {
