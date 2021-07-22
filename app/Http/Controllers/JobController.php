@@ -278,8 +278,10 @@ class JobController extends Controller
             ->where('clients_has_taskflows.job_allocation_id',$jobTicketId)
             ->get();
         $tasks = $this->getJobTaskDetails($jobTicketDetails[0]->job_allocation_id);
+        $taskflowTime = $this->calTotalTaskflowTime($tasks);
         $taskDetails = $this->arrangeTaskDetails($tasks);
         $jobtacketCompleteTime = $this->jobTicketComplteTime($jobTicketDetails[0]);
+        $isOverdueJobTicket = $this->isOverdueJobTicket($taskflowTime,$jobtacketCompleteTime);
         return array(
             'jobDetails'=> $jobTicketDetails[0],
             'issuedByName' => User::getUsername($jobTicketDetails[0]->job_allocation_created_by),
@@ -287,6 +289,8 @@ class JobController extends Controller
             'progress' => $this->getProgressOfTaskflow($jobTicketDetails[0]->job_allocation_id),
             'taskDetials' => $taskDetails,
             'jobTicketCompleteTime' => $jobtacketCompleteTime,
+            'allocatedJobTicketTime' => $taskflowTime,
+            'isJobTicketOverdue' => $isOverdueJobTicket,
 
         );
         
@@ -358,23 +362,96 @@ class JobController extends Controller
         }
     }
     
-    private function jobTicketComplteTime($taskflow){
-        if($taskflow->job_ticket_status == 'COMP'){
-            $completed = Carbon::create($taskflow->job_ticket_completed_at);
-            $created = Carbon::create($taskflow->job_allocation_created_at);
+    private function jobTicketComplteTime($jobticket){
+        if($jobticket->job_ticket_status == 'COMP'){
+            $completed = Carbon::create($jobticket->job_ticket_completed_at);
+            $created = Carbon::create($jobticket->job_allocation_created_at);
             $diffrence =  $created->diff($completed);
             return array(
                 'days' => $diffrence->d,
                 'hours' => $diffrence->h,
                 'mins' => $diffrence->i,
             );
-        }else if($taskflow->job_ticket_status == 'ONG'){
-            return 'Ongoing';
-        }else if($taskflow->job_ticket_status == 'REJECT'){
-            return 'Rejected';
-        }else if($taskflow->job_ticket_status == 'AVAI'){
-            return 'Pending';
+        }else if($jobticket->job_ticket_status == 'ONG'){
+            return $this->calculateNonCompletedJobTicktDuration($jobticket);
+            // return 'Ongoing';
+        }else if($jobticket->job_ticket_status == 'REJECT'){
+            return $this->calculateRejectedJobTicketDuration($jobticket);
+            // return 'Rejected';
+        }else if($jobticket->job_ticket_status == 'AVAI'){
+            return $this->calculateNonCompletedJobTicktDuration($jobticket);
+            // return 'Pending';
+        }else if($jobticket->job_ticket_status == 'ISSUED'){
+            return $this->calculateNonCompletedJobTicktDuration($jobticket);
+            // return 'Pending';
         }
+    }
+
+    private function calculateNonCompletedJobTicktDuration($jobticket){
+        $now = Carbon::now();
+        $created = Carbon::create($jobticket->job_allocation_created_at);
+        $diffrence =  $created->diff($now);
+        return array(
+            'days' => $diffrence->d,
+            'hours' => $diffrence->h,
+            'mins' => $diffrence->i,
+        );
+    }
+
+    private function calculateRejectedJobTicketDuration($jobticket){
+        $rejected = Carbon::create($jobticket->job_ticket_rejected_at);
+        $created = Carbon::create($jobticket->job_ticket_started_at);
+        $diffrence =  $created->diff($rejected);
+        return array(
+            'days' => $diffrence->d,
+            'hours' => $diffrence->h,
+            'mins' => $diffrence->i,
+        );
+    }
+
+    //calculate the allocated time by the system
+    private function calTotalTaskflowTime($tasks){
+        $now = Carbon::now();
+        $dt = Carbon::now();
+        foreach($tasks as $task){
+            $type = $task->task_milestone_time_type;
+            $value = $task->task_milestone_time;
+
+            if($type == 'mins'){
+                $dt->addMinutes($value);
+            }else if($type == 'hours'){
+                $dt->addHours($value);
+            }else if($type == 'days'){
+                $dt->addDays($value);
+            }
+            
+        }
+
+        $diffrence = $dt->diff($now);
+        return array(
+            'days' => $diffrence->d,
+            'hours' => $diffrence->h,
+            'mins' => $diffrence->i,
+        );
+    }
+
+    //calculate jo is overdue or not
+    private function isOverdueJobTicket($taskflowTime,$jobticketCompleteTime){
+        $taskflow = $this->getComparebleDate($taskflowTime);
+        $duration = $this->getComparebleDate($jobticketCompleteTime);
+        $isOverDue = ($duration->lessThan($taskflow)) ? false : true;
+        return $isOverDue;
+       
+    }
+
+    private function getComparebleDate($dateObj){
+        $date = Carbon::now();
+        $date->addDays($dateObj['days']);
+        $date->addHours($dateObj['hours']);
+        $date->addMinutes($dateObj['mins']);
+
+        return $date;
+        
     }
 
     public function getProgressOfTaskflow($jobAllocationId){
