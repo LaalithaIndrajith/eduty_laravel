@@ -361,9 +361,45 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-light btn_close" data-dismiss="modal">
-                            <i class="fa fa-times-circle"></i> Close 
-                        </button>
+                        <div class="col-lg-12">
+                            <div class="row d-flex justify-content-around">
+                                <div class="col-lg-8">
+                                    <div class="row d-flex justify-content-around">
+                                        <div class="col-lg-4 border-right">
+                                            <div class="symbol symbol-40 symbol-success flex-shrink-0">
+                                                <span class="symbol-label font-size-h4 font-weight-bold"><i class="fas fa-hourglass-end text-dark icon-md"></i></span>
+                                            </div>
+                                            <div class="ml-4">
+                                                <div class="text-dark-75 font-weight-bolder font-size-lg mb-0" id="taskflow-allocate-time">2 Days 3 hours</div>
+                                                <a href="#" class="text-muted font-weight-bold text-hover-primary">Allocated Time</a>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 border-right">
+                                            <div class="symbol symbol-40 symbol-danger flex-shrink-0">
+                                                <span class="symbol-label font-size-h4 font-weight-bold"><i class="fas fa-hourglass-end text-dark icon-md"></i></span>
+                                            </div>
+                                            <div class="ml-4">
+                                                <div class="text-dark-75 font-weight-bolder font-size-lg mb-0" id="taskflow-taken-time">4 Days</div>
+                                                <a href="#" class="text-muted font-weight-bold text-hover-primary">Total time taken</a>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-center col-lg-4 align-items-center" id="taskflow-overdue">
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="row d-flex justify-content-end align-items-end">
+                                        {{-- <div class="col-lg-12"> --}}
+                                            <button type="button" class="btn btn-light btn_close" data-dismiss="modal">
+                                                <i class="fa fa-times-circle"></i> Close 
+                                            </button>
+                                        {{-- </div> --}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
                     </div>
                 </div>
             </div>
@@ -728,7 +764,7 @@
         });
     }
 
-    //Complte Task Action 
+    //Complete Task Action 
     function completeTask(jobTaskId){
         var formData = new FormData();
         formData.append('jobTaskId', jobTaskId);
@@ -823,7 +859,10 @@
 
     
     async function showJobTicketDetailsModal(jobTicketId){
+        
         $('.appendedTaskkDetails').remove();
+        $('.appendedLabel').remove();
+
         var formData = new FormData();
         formData.append('jobTicketId', jobTicketId);
 
@@ -842,14 +881,23 @@
                 return data;
             }
         });
-        let {jobDetails,issuedByName,departName,taskDetials} = jobTicketDetails;
-        arrangeJobIssueDetails(jobDetails,issuedByName,departName);
+        let {
+            jobDetails,
+            issuedByName,
+            departName,
+            taskDetials,
+            allocatedJobTicketTime,
+            jobTicketCompleteTime,
+            isJobTicketOverdue } = jobTicketDetails;
+            
+        arrangeJobIssueDetails(jobDetails,issuedByName,departName,allocatedJobTicketTime,jobTicketCompleteTime,isJobTicketOverdue);
         // console.log(taskDetials);
         renderTaskDetails(taskDetials.data);
         $('#jobTicktDetailsModal').modal('show')
     }
 
-    function arrangeJobIssueDetails(jobTicketObj,issuedByName,departName){
+
+    function arrangeJobIssueDetails(jobTicketObj,issuedByName,departName,allocatedJobTicketTime, jobticketTakenTime,isJobTicketOverdue){
         renderStatus(jobTicketObj.job_ticket_status);
         
         $('#job-no-heading').html(jobTicketObj.job_allocation_no)
@@ -885,6 +933,48 @@
         $('#job-taskflow-dep').html(departName)
         $('#job-taskflow-code').html(jobTicketObj.task_flow_code)
         $('#job-taskflow-name').html(jobTicketObj.task_flow_name)
+
+        let totalTaskflowAllocateTime = renderTotalTaskfTime(allocatedJobTicketTime)
+        let totalTaskflowTakenTime = renderTotalTaskfTime(jobticketTakenTime)
+
+        $('#taskflow-allocate-time').html(totalTaskflowAllocateTime)
+        $('#taskflow-taken-time').html(totalTaskflowTakenTime)
+
+        let isOverdueObj = getOverdueObj(isJobTicketOverdue);
+
+        renderOverdueMsg(isOverdueObj);
+
+    }
+
+    function getOverdueObj(isOverdueVal){
+        if(isOverdueVal){
+            return {
+                state : 'danger',
+                wording : 'Behind scheduled Time',
+            }
+        }else{
+            return {
+                state : 'success',
+                wording : 'Ahead of scheduled Time',
+            }
+        }
+    }
+
+    function renderOverdueMsg(isOverdueObj){
+        let output = '';
+        output += `<span class="appendedLabel label label-xl label-inline font-weight-boldest label-${isOverdueObj.state}">${isOverdueObj.wording}</span>`
+
+        $('#taskflow-overdue').append(output);
+
+    }
+
+    function renderTotalTaskfTime(timeObj){
+        let output = '';
+        output += (timeObj.days != 0) ? `${timeObj.days} days` : '';
+        output += (timeObj.hours != 0) ? ` ${timeObj.hours} hours` : '';
+        output += (timeObj.mins != 0) ? ` ${timeObj.mins} mins` : '';
+
+        return output;
 
     }
 
