@@ -1,5 +1,7 @@
 <?php
 
+use App\Client;
+use App\Events\newCustomerCreated;
 use App\Events\userDetailsUpdatedEvent;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
@@ -17,6 +19,7 @@ use App\Http\Controllers\DesignationController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\TaskFlowController;
+use App\Mail\customerRegistered;
 use App\Mail\userEdited;
 use App\User;
 
@@ -134,9 +137,13 @@ Route::post('/takeTask',[JobController::class, 'takeTask'])->name('takeTask');
 Route::post('/completeTask',[JobController::class, 'completeTask'])->name('completeTask');
 Route::post('/rejectTask',[JobController::class, 'rejectTask'])->name('rejectTask');
 
+//Dashboard 
+Route::post('/getSysAdminDashDetails',[DashboardController::class, 'getSysAdminDashDetails'])->name('getSysAdminDashDetails');
+Route::post('/getSysAdminDoughnutChartData',[DashboardController::class, 'getSysAdminDoughnutChartData'])->name('getSysAdminDoughnutChartData');
+
 
 Route::get('/mailable', function () {
-    $user = User::find(1);
+    $customer = Client::find(1);
 
-    return new userEdited($user,'my self');
+    return new customerRegistered($customer);
 });
