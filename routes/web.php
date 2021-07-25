@@ -18,6 +18,7 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DesignationController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\MailController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\TaskFlowController;
 use App\Mail\customerRegistered;
 use App\Mail\userEdited;
@@ -140,6 +141,9 @@ Route::post('/rejectTask',[JobController::class, 'rejectTask'])->name('rejectTas
 //Dashboard 
 Route::post('/getSysAdminDashDetails',[DashboardController::class, 'getSysAdminDashDetails'])->name('getSysAdminDashDetails');
 Route::post('/getSysAdminDoughnutChartData',[DashboardController::class, 'getSysAdminDoughnutChartData'])->name('getSysAdminDoughnutChartData');
+
+//Reports
+Route::get('/viewMonthlyOverAllReport',[ReportController::class, 'viewMonthlyOverAllReport'])->name('monthlyOverAllReport');
 
 
 Route::get('/mailable', function () {
