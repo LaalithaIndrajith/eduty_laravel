@@ -108,6 +108,27 @@ return [
             'page' => '/viewAllocatedJobList'
             
         ],
+        [
+            'section' => 'Reports',
+        ],
+        [
+            'title' => 'Monthly Reports',
+            'icon' => 'media/svg/icons/Communication/Chat-check.svg',
+            'bullet' => 'dot',
+            'root' => true,
+            'submenu' => [
+                [
+                    'title' => 'Overall Overview',
+                    'bullet' => 'dot',
+                    'page' => '/viewUserType',
+                ],
+                [
+                    'title' => 'Department Overview',
+                    'bullet' => 'dot',
+                    'page' => '/viewUserType',
+                ],
+            ]
+        ],
         
        
        
@@ -125,36 +146,11 @@ return [
             'section' => 'Department Admin',
         ],
         [
-            'title' => 'Masters',
-            'icon' => 'media/svg/icons/Layout/Layout-4-blocks.svg',
+            'title' => 'Users',
+            'icon' => 'media/svg/icons/Communication/Group.svg',
             'bullet' => 'dot',
-            'root' => true,
-            'submenu' => [
-                [
-                    'title' => 'Users',
-                    'bullet' => 'dot',
-                    'submenu' => [
-                        [
-                            'title' => 'User Creation',
-                            'page' => '/viewRegisterUser',
-                        ],
-                        [
-                            'title' => 'User List',
-                            'page' => '/viewUserList'
-                        ],
-                    ]
-                ],
-                [
-                    'title' => 'Departments',
-                    'bullet' => 'dot',
-                    'page' => '/viewDepartmentList'
-                ],
-                [
-                    'title' => 'Designations',
-                    'bullet' => 'dot',
-                    'page' => '/viewDesignationList'
-                ]
-            ]
+            'page' => '/viewUserList'
+            
         ],
         [
             'title' => 'TaskFlows',
@@ -181,6 +177,22 @@ return [
             'root' => true,
             'page' => '/viewAllocatedJobList'
             
+        ],
+        [
+            'section' => 'Reports',
+        ],
+        [
+            'title' => 'Overview Report',
+            'icon' => 'media/svg/icons/Communication/Chat-check.svg',
+            'bullet' => 'dot',
+            'root' => true,
+            'submenu' => [
+                [
+                    'title' => 'Monthly',
+                    'bullet' => 'dot',
+                    'page' => '/viewUserType',
+                ],
+            ]
         ],
     ],
     'frontDesk' =>[
@@ -224,14 +236,6 @@ return [
         // Custom
         [
             'section' => 'Normal User',
-        ],
-        [
-            'title' => 'Job Tickets',
-            'icon' => 'media/svg/icons/Communication/Clipboard-list.svg',
-            'bullet' => 'dot',
-            'root' => true,
-            'page' => '/viewJobTicketList'
-            
         ],
         [
             'title' => 'Allocated Jobs',

@@ -15,6 +15,7 @@
                 </div> 
                 <div class="card-toolbar">
                     <!-- <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i>Save</button> -->
+                    @if(request()->session()->get('userType') == 'SYSTEM-ADMIN')
                     <button type="submit" class="btn btn-info">
                         <span class="svg-icon svg-icon-md">
                             <!--begin::Svg Icon | path:assets/media/svg/icons/Design/Flatten.svg-->
@@ -28,6 +29,7 @@
                             <!--end::Svg Icon-->
                         </span>Update User
                     </button>
+                    @endif
                     @if(request()->session()->get('userType') == 'SYSTEM-ADMIN' OR request()->session()->get('userType') == 'ADMIN')
                     <a href="{{ route('viewUserList') }}" class="btn btn-success ml-1">
                         <span class="svg-icon svg-icon-md">

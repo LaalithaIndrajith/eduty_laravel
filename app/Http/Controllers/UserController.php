@@ -72,7 +72,14 @@ class UserController extends Controller
 
     public function fecthUsersToDrawTbl(){
         
-        $users = User::with(['department','designation'])->where('user_is_system_admin','!=',1)->get();
+        if(auth()->user()->userType != 'SYSTEM-ADMIN'){
+            $users = User::with(['department','designation'])
+            ->where('user_is_system_admin','!=',1)
+            ->where('depart_id',auth()->user()->depart_id)
+            ->get();
+        }else{
+            $users = User::with(['department','designation'])->where('user_is_system_admin','!=',1)->get();
+        }
         $data = array();
         
         foreach($users as $user){
