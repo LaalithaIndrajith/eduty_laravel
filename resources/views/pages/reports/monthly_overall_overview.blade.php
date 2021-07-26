@@ -343,19 +343,18 @@
 
                             let percentage = Number.parseFloat(data.percentage).toFixed(0);
                             output += `
-                            <div class='row'>
+                            <div class='row d-flex justify-content-center'>
                                 <div class='col-lg-4'>
                                     <div class="h2">
                                         ${data.count}/ 
                                         <span class="text-primary font-size-nm h5">${data.totalIssued}</span>
                                     </div>
                                 </div>
-                                <div class="col-lg-8">
-                                    <div class="progress">
-                                        <div class="progress-bar bg-primary" role="progressbar" style="width: ${percentage}%;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
-                                        </div>
+                                <div class="col-lg-6">
+                                    <div class="font-size-sm">
+                                        <span class="font-weight-bolder text-primary h2">${percentage}%</span> 
+                                        of total Issued Job Tickets
                                     </div>
-                                    <div class="font-size-sm mt-3"><span class="font-weight-bolder text-primary">${percentage}%</span> of total Issued Job Tickets</div>
                                 </div>
                             </div>
                             `;
@@ -370,19 +369,18 @@
 
                             let percentage = Number.parseFloat(data.percentage).toFixed(0);
                             output += `
-                            <div class='row'>
+                            <div class='row d-flex justify-content-center'>
                                 <div class='col-lg-4'>
                                     <div class="h2">
                                         ${data.count}/ 
                                         <span class="text-success font-size-nm h5">${data.totalTimeAhead}</span>
                                     </div>
                                 </div>
-                                <div class="col-lg-8">
-                                    <div class="progress">
-                                        <div class="progress-bar bg-success" role="progressbar" style="width: ${percentage}%;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
-                                        </div>
+                                <div class="col-lg-6">
+                                    <div class="font-size-sm">
+                                        <span class="font-weight-bolder text-success h2">${percentage}%</span> 
+                                        of total In-Time Job Tickets
                                     </div>
-                                    <div class="font-size-sm mt-3"><span class="font-weight-bolder text-success">${percentage}%</span> of total All In-Time Job Tickets</div>
                                 </div>
                             </div>
                             `;
@@ -397,19 +395,18 @@
 
                             let percentage = Number.parseFloat(data.percentage).toFixed(0);
                             output += `
-                            <div class='row'>
+                            <div class='row d-flex justify-content-center'>
                                 <div class='col-lg-4'>
                                     <div class="h2">
                                         ${data.count}/ 
                                         <span class="text-danger font-size-nm h5">${data.totalOverDue}</span>
                                     </div>
                                 </div>
-                                <div class="col-lg-8">
-                                    <div class="progress">
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: ${percentage}%;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
-                                        </div>
+                                <div class="col-lg-6">
+                                    <div class="font-size-sm">
+                                        <span class="font-weight-bolder text-danger h2">${percentage}%</span> 
+                                        of total Overdue Job Tickets
                                     </div>
-                                    <div class="font-size-sm mt-3"><span class="font-weight-bolder text-danger">${percentage}%</span> of total All Overdue Tickets</div>
                                 </div>
                             </div>
                             `;
