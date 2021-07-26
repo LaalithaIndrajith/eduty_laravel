@@ -74,7 +74,7 @@ class DashboardController extends Controller
                     'page' => '#',
                 ],
                 'sub_module' =>  [   
-                    'title' => 'Front Desk Officer',
+                    'title' => 'Normal User',
                     'page' => '#',
                 ],
             ];
@@ -224,4 +224,36 @@ class DashboardController extends Controller
         return array($pending,$ongoing,$rejected,$completed);
     }
 
+    //Normal User
+    public function getNormalDashDetails(){
+        $todayTotalAllocated = $this->getTodayTotalAlloJobs();
+        $completedTasks      = $this->getCompletedTasks();
+
+        return array(
+            'todayTotalAllocated' => $todayTotalAllocated,
+            'completedTasks'      => $completedTasks,
+        );
+    }
+
+    private function getTodayTotalAlloJobs(){
+        $now   = Carbon::now();
+        $today = $now->format('Y-m-d 23:59:59');
+        $userDesig = auth()->user()->designation_id;
+        return DB::table('job_task_steps')
+        ->where('job_task_step_assignee', $userDesig)
+        ->where('step_available_at',$today)
+        ->where('job_task_step_status','AVAI')
+        ->count();
+    }
+    
+    private function getCompletedTasks(){
+        $now       = Carbon::now();
+        $userDesig = auth()->user()->designation_id;
+        $userId    = auth()->user()->id;
+        return DB::table('job_task_steps')
+        ->where('job_task_step_assignee', $userDesig)
+        ->where('job_task_step_completed_by', $userId)
+        ->where('job_task_step_status','COMP')
+        ->count();
+    }
 }

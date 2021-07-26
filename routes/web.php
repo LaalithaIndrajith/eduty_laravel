@@ -141,6 +141,7 @@ Route::post('/rejectTask',[JobController::class, 'rejectTask'])->name('rejectTas
 //Dashboard 
 Route::post('/getSysAdminDashDetails',[DashboardController::class, 'getSysAdminDashDetails'])->name('getSysAdminDashDetails');
 Route::post('/getSysAdminDoughnutChartData',[DashboardController::class, 'getSysAdminDoughnutChartData'])->name('getSysAdminDoughnutChartData');
+Route::post('/getNormalDashDetails',[DashboardController::class, 'getNormalDashDetails'])->name('getNormalDashDetails');
 
 //Reports
 Route::get('/viewMonthlyOverAllReport',[ReportController::class, 'viewMonthlyOverAllReport'])->name('monthlyOverAllReport');
