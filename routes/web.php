@@ -144,6 +144,7 @@ Route::post('/getSysAdminDoughnutChartData',[DashboardController::class, 'getSys
 
 //Reports
 Route::get('/viewMonthlyOverAllReport',[ReportController::class, 'viewMonthlyOverAllReport'])->name('monthlyOverAllReport');
+Route::post('/getMonthlyOverviewJobTickets',[ReportController::class, 'getMonthlyOverviewJobTickets'])->name('getMonthlyOverviewJobTickets');
 
 
 Route::get('/mailable', function () {
