@@ -62,7 +62,7 @@
                         </form>
                     </div>
                     <div class="col-lg-8 col-12 pl-10">
-                        <section id="no-records-found-container">
+                        <section id="no-records-found-container" class="d-none">
                             <div class="row d-flex justify-content-center">
                                 <div class="col-lg-8">
                                     <div role="alert" class="alert alert-custom alert-light-danger text-center alert-outline-danger bg-light-danger">
@@ -72,7 +72,7 @@
                                 </div>
                             </div>
                         </section>
-                        <section id="report-overview-container">
+                        <section id="report-overview-container" class="d-none">
                             <div class="row d-flex justify-content-around align-items-center">
                                 <div class="col-lg-4">
                                     <div class="row mb-3">
@@ -152,7 +152,7 @@
             </div>
             
             <div class="card-body py-10">
-                <section id="department-overview">
+                <section id="department-overview" class="d-none">
                     <table class="table table-separate table-head-custom collapsed" id="overall-dep-details-tbl">
                         <thead>
                             <tr>
@@ -187,14 +187,18 @@
                 format: 'YYYY-MMMM',
             });
 
-            $('#report-overview-container').hide();
-            $('#department-overview').hide();
-            $('#no-records-found-container').hide();
+            $('#report-overview-container').addClass('d-none');
+            $('#department-overview').addClass('d-none');
+            $('#no-records-found-container').addClass('d-none');
+            // $('#report-overview-container').hide();
+            // $('#department-overview').hide();
+            // $('#no-records-found-container').hide();
         });
 
         // let appointTime = moment(e.time.value,'HH:mm A').format('HH:mm:00');
         async function generateMonthlyOverviewJobTickets(){
-            $('#report-overview-container').hide();
+            // $('#report-overview-container').hide();
+            $('#report-overview-container').addClass('d-none');
             $('.appendedProgress').remove();
             
             let selectedMonth = $("#report_month_select").data("datetimepicker")._datesFormatted[0]
@@ -228,21 +232,26 @@
             }); 
 
             if(retrivedData.foundJobTickets){
-                $('#department-overview').show();
-                $('#no-records-found-container').hide();
+                $('#department-overview').removeClass('d-none');
+                // $('#department-overview').show();
+                $('#no-records-found-container').addClass('d-none');
+                // $('#no-records-found-container').hide();
                 arrangeReportOverview(retrivedData,dateObj) 
                 drawOverviewDepTbl(retrivedData.departmentOverviewData)
             } else{
                 drawOverviewDepTbl(retrivedData.departmentOverviewData)
-                $('#department-overview').hide();
-                $('#no-records-found-container').show();
+                $('#department-overview').addClass('d-none');
+                // $('#department-overview').hide();
+                $('#no-records-found-container').removeClass('d-none');
+                // $('#no-records-found-container').show();
 
             }
              
         }
 
         function arrangeReportOverview(detailObj,dateObj){
-            $('#report-overview-container').show();
+            // $('#report-overview-container').show();
+            $('#report-overview-container').removeClass('d-none');
 
             let {issuedJobTicketCount, overdueDetails, aheadTimeDetails} = detailObj;
 
