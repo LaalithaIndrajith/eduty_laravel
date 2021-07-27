@@ -196,8 +196,8 @@ class DashboardController extends Controller
         $now   = Carbon::now();
         $today = $now->format('Y-m-d 23:59:59');
         $lastweek = $now->subDays(7)->format('Y-m-d 23:59:59');
-        $pending = DB::table('clients_has_taskflows')
 
+        $pending = DB::table('clients_has_taskflows')
         ->where('job_ticket_status','ISSUED')
         ->where('job_allocation_created_at','<=',$today)
         ->where('job_allocation_created_at','>',$lastweek)
@@ -219,6 +219,72 @@ class DashboardController extends Controller
         ->where('job_ticket_status','COMP')
         ->where('job_allocation_created_at','<=',$today)
         ->where('job_allocation_created_at','>',$lastweek)
+        ->count();
+
+        return array($pending,$ongoing,$rejected,$completed);
+    }
+
+    //Department Admin
+    public function getDepAdminDashDetails(){
+        $totalActivatedDepUsers  = $this->getTotalActivateDepUsers();
+        $totalActiveDepTaskflows = $this->getTotalActiveDepTaskflows();
+
+        return array(
+            'totalActivatedUsers' => $totalActivatedDepUsers,
+            'totalActiveTaskflows' => $totalActiveDepTaskflows,
+        );
+    }
+
+    private function getTotalActivateDepUsers(){
+        return DB::table('users')
+        ->where('user_is_verified', 1)
+        ->where('depart_id',auth()->user()->depart_id)
+        ->where('user_is_system_admin',0)
+        ->count();
+    }
+
+    private function getTotalActiveDepTaskflows(){
+        return DB::table('taskflows')
+        ->where('taskflow_status',1)
+        ->where('depart_id',auth()->user()->depart_id)
+        ->count();
+    }
+
+    public function getDepAdminDoughnutChartData(){
+        $now   = Carbon::now();
+        $today = $now->format('Y-m-d 23:59:59');
+        $lastweek = $now->subDays(7)->format('Y-m-d 23:59:59');
+
+        $pending = DB::table('clients_has_taskflows')
+        ->join('taskflows', 'clients_has_taskflows.taskflow_id', '=', 'taskflows.taskflow_id')
+        ->where('taskflows.depart_id',auth()->user()->depart_id)
+        ->where('clients_has_taskflows.job_ticket_status','ISSUED')
+        ->where('clients_has_taskflows.job_allocation_created_at','<=',$today)
+        ->where('clients_has_taskflows.job_allocation_created_at','>',$lastweek)
+        ->count();
+
+        $ongoing = DB::table('clients_has_taskflows')
+        ->join('taskflows', 'clients_has_taskflows.taskflow_id', '=', 'taskflows.taskflow_id')
+        ->where('taskflows.depart_id',auth()->user()->depart_id)
+        ->where('clients_has_taskflows.job_ticket_status','ONG')
+        ->where('clients_has_taskflows.job_allocation_created_at','<=',$today)
+        ->where('clients_has_taskflows.job_allocation_created_at','>',$lastweek)
+        ->count();
+
+        $rejected = DB::table('clients_has_taskflows')
+        ->join('taskflows', 'clients_has_taskflows.taskflow_id', '=', 'taskflows.taskflow_id')
+        ->where('taskflows.depart_id',auth()->user()->depart_id)
+        ->where('clients_has_taskflows.job_ticket_status','REJECT')
+        ->where('clients_has_taskflows.job_allocation_created_at','<=',$today)
+        ->where('clients_has_taskflows.job_allocation_created_at','>',$lastweek)
+        ->count();
+
+        $completed = DB::table('clients_has_taskflows')
+        ->join('taskflows', 'clients_has_taskflows.taskflow_id', '=', 'taskflows.taskflow_id')
+        ->where('taskflows.depart_id',auth()->user()->depart_id)
+        ->where('clients_has_taskflows.job_ticket_status','COMP')
+        ->where('clients_has_taskflows.job_allocation_created_at','<=',$today)
+        ->where('clients_has_taskflows.job_allocation_created_at','>',$lastweek)
         ->count();
 
         return array($pending,$ongoing,$rejected,$completed);

@@ -138,9 +138,19 @@ Route::post('/takeTask',[JobController::class, 'takeTask'])->name('takeTask');
 Route::post('/completeTask',[JobController::class, 'completeTask'])->name('completeTask');
 Route::post('/rejectTask',[JobController::class, 'rejectTask'])->name('rejectTask');
 
-//Dashboard 
+/**
+ * Dashboard
+ */
+
+ //System Admin
 Route::post('/getSysAdminDashDetails',[DashboardController::class, 'getSysAdminDashDetails'])->name('getSysAdminDashDetails');
 Route::post('/getSysAdminDoughnutChartData',[DashboardController::class, 'getSysAdminDoughnutChartData'])->name('getSysAdminDoughnutChartData');
+
+//Department Admin
+Route::post('/getDepAdminDashDetails',[DashboardController::class, 'getDepAdminDashDetails'])->name('getDepAdminDashDetails');
+Route::post('/getDepAdminDoughnutChartData',[DashboardController::class, 'getDepAdminDoughnutChartData'])->name('getDepAdminDoughnutChartData');
+
+//Normal User
 Route::post('/getNormalDashDetails',[DashboardController::class, 'getNormalDashDetails'])->name('getNormalDashDetails');
 
 //Reports
