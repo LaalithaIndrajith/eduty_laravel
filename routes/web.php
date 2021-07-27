@@ -153,6 +153,9 @@ Route::post('/getDepAdminDoughnutChartData',[DashboardController::class, 'getDep
 //Normal User
 Route::post('/getNormalDashDetails',[DashboardController::class, 'getNormalDashDetails'])->name('getNormalDashDetails');
 
+//Front Desk
+Route::post('/getFrontDeskDashDetails',[DashboardController::class, 'getFrontDeskDashDetails'])->name('getFrontDeskDashDetails');
+
 //Reports
 Route::get('/viewMonthlyOverAllReport',[ReportController::class, 'viewMonthlyOverAllReport'])->name('monthlyOverAllReport');
 Route::post('/getMonthlyOverviewJobTickets',[ReportController::class, 'getMonthlyOverviewJobTickets'])->name('getMonthlyOverviewJobTickets');

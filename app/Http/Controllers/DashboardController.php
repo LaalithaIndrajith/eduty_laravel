@@ -322,4 +322,37 @@ class DashboardController extends Controller
         ->where('job_task_step_status','COMP')
         ->count();
     }
+
+    //Front Desk User
+    public function getFrontDeskDashDetails(){
+        $issuedJobTickets  = $this->getTotalIssuedJobTickets();
+        $totalRegCustomers = $this->getTotalRegCustomers();
+
+        return array(
+            'issuedJobTickets' => $issuedJobTickets,
+            'totalRegCustomers' => $totalRegCustomers,
+        );
+    }
+
+    private function getTotalIssuedJobTickets(){
+        $now   = Carbon::now();
+        $today = $now->format('Y-m-d 23:59:59');
+        $todayEarlier = $now->format('Y-m-d 00:00:01');
+
+        $issued = DB::table('clients_has_taskflows')
+        ->where('job_ticket_status','ISSUED')
+        ->where('job_allocation_created_at','<=',$today)
+        ->where('job_allocation_created_at','>=',$todayEarlier)
+        ->count();
+
+        return $issued;
+    }
+
+    private function getTotalRegCustomers(){
+        return DB::table('clients')
+        ->where('client_status',1)
+        ->count();
+    }
+
+
 }
