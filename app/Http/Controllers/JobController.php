@@ -542,7 +542,19 @@ class JobController extends Controller
             return 'reject';
         }else if($allocatedJob->job_task_step_status == 'ABN'){
             return 'abandoned';
-        }else{
+        }else if($allocatedJob->job_task_step_status == 'COMP'){
+            $completed = Carbon::create($allocatedJob->job_task_step_completed_at);
+            if($type == 'mins'){
+                $completed->addMinutes($time);
+            }else if($type == 'hours'){
+                $completed->addHours($time);
+            }else if($type == 'days'){
+                $completed->addDays($time);
+            }
+            $result = ($dtAvai->lessThanOrEqualTo($completed)) ? 'aheadTime': 'overdue';
+            return $result;
+        }
+        else{
             if($allocatedJob->job_task_step_taken_at == null){
                 return 'notTaken';
             }else if($allocatedJob->job_task_step_completed_at == null){
