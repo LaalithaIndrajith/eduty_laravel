@@ -7,7 +7,7 @@
             <div class="card-header flex-wrap border-0 pt-6 pb-0">
                 <div class="card-title">
                     <h3 class="card-label"> Monthly Report - Job Tickets Overview
-                        <span class="d-block text-muted pt-2 font-size-sm">Dsipalys Overall Overview of the Job Tickets for the Selected Month</span>
+                        <span class="d-block text-muted pt-2 font-size-sm">Displays Overall Overview of the Job Tickets for the Selected Month</span>
                     </h3>
                 </div>
                 <div class="card-toolbar">

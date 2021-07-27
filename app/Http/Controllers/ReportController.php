@@ -31,7 +31,29 @@ class ReportController extends Controller
 
         return view('pages.reports.monthly_overall_overview', compact('page_title','page_breadcrumbs'));
     }
+    
+    public function viewMonthlyDepOverViewReport(){
+       
+        $page_breadcrumbs = [
+            'main_module' =>  [   
+                'title' => 'Reports',
+                'page' => '#',
+            ],
+            'sub_module' =>  [   
+                'title' => 'Monthly Reports',
+                'page' => '#',
+            ],
+        ];
 
+        $departments = Department::fetchAllDepartments();
+        $page_title = 'Department Overview';
+
+        return view('pages.reports.monthly_department_overview', compact('page_title','page_breadcrumbs','departments'));
+    }
+
+    /**
+     * Monthly Overview Job Tickets Report
+     */
     public function getMonthlyOverviewJobTickets(Request $request){
 
         $jobTickets = DB::table('clients_has_taskflows')
@@ -222,7 +244,7 @@ class ReportController extends Controller
         );
     }
 
-    //calculate jo is overdue or not
+    //calculate job is overdue or not
     private function isOverdueJobTicket($taskflowTime,$jobticketCompleteTime){
         $taskflow = $this->getComparebleDate($taskflowTime);
         $duration = $this->getComparebleDate($jobticketCompleteTime);
@@ -239,5 +261,152 @@ class ReportController extends Controller
 
         return $date;
         
+    }
+
+
+    /**
+     * Monthly Overview Department Report
+     */
+
+    public function getMonthlyOverviewDepartment(Request $request){
+      
+        $departmentId = ($request->depId == 0) ? auth()->user()->depart_id : $request->depId;
+        $jobTicketsDep = DB::table('clients_has_taskflows')
+        ->join('taskflows', 'clients_has_taskflows.taskflow_id', '=', 'taskflows.taskflow_id')
+        ->where('clients_has_taskflows.job_allocation_created_at','<=',$request->endOfMonth)
+        ->where('clients_has_taskflows.job_allocation_created_at','>=',$request->startOfMonth)
+        ->where('taskflows.depart_id',$departmentId)
+        ->get();  
+
+        if($jobTicketsDep->count() != 0){
+            $issuedJobTicketCount = sizeof($jobTicketsDep);
+            $timeAheadArr = array();
+            $overdueArr = array();
+            foreach($jobTicketsDep as $jobTicket){
+                $completionTime = $this->jobTicketComplteTime($jobTicket);
+                $tasks          = $this->getTasksOfTaskflow($jobTicket->job_allocation_id);
+                $allocatedTime  = $this->calTotalTaskflowTime($tasks);
+                $isOverDue      = $this->isOverdueJobTicket($allocatedTime,$completionTime);
+                ($isOverDue) ? array_push($overdueArr,$jobTicket->job_allocation_id) :array_push($timeAheadArr,$jobTicket->job_allocation_id);
+            }
+    
+            $overdueJobTicketCount = sizeof($overdueArr);
+            $aheadJobTicketCount = sizeof($timeAheadArr);
+            $overdueDetails = array(
+                'count'      => $overdueJobTicketCount,
+                'percentage' => ($overdueJobTicketCount/$issuedJobTicketCount) * 100,
+            );
+            $aheadTimeDetails = array(
+                'count'      => $aheadJobTicketCount,
+                'percentage' => ($aheadJobTicketCount/$issuedJobTicketCount) * 100,
+            );
+
+            $departOverViewDetails = $this->arrangeDepartmentMonthlyOverview($jobTicketsDep);
+            // dd($departOverViewDetails['doughtnutdata']);
+            
+            return array(
+                'foundJobTickets'        => true,
+                'issuedJobTicketCount'   => $issuedJobTicketCount,
+                'overdueDetails'         => $overdueDetails,
+                'aheadTimeDetails'       => $aheadTimeDetails,
+                'departmentOverviewData' => $departOverViewDetails,
+                'doughnutData'           => $departOverViewDetails['doughtnutdata'],
+                'pendingDetails'         => $departOverViewDetails['pendingDetails'],
+                'ongoingDetails'         => $departOverViewDetails['ongoingDetails'],
+                'completeDetails'        => $departOverViewDetails['completeDetails'],
+                'rejectDetails'          => $departOverViewDetails['rejectDetails'],
+            );
+            
+        }else{
+            return array(
+                'foundJobTickets' => false,
+                'departmentOverviewData' => [],
+            );
+        }
+    }
+
+    public function arrangeDepartmentMonthlyOverview($jobTickets){
+
+        $pendingArr   = array();
+        $pendingOverdue   = array();
+        $pendingAhead   = array();
+
+        $ongoingArr   = array();
+        $ongoingOverdue   = array();
+        $ongoingAhead   = array();
+
+        $completedArr = array();
+        $completedOverdue = array();
+        $completedAhead = array();
+
+        $rejectedArr  = array();
+        $rejectedOverdue  = array();
+        $rejectedAhead  = array();
+        foreach($jobTickets as $jobTicket){
+            $completionTime = $this->jobTicketComplteTime($jobTicket);
+            $tasks          = $this->getTasksOfTaskflow($jobTicket->job_allocation_id);
+            $allocatedTime  = $this->calTotalTaskflowTime($tasks);
+            $isOverDue      = $this->isOverdueJobTicket($allocatedTime,$completionTime);
+
+            if($jobTicket->job_ticket_status == 'COMP'){
+                array_push($completedArr,$jobTicket->job_allocation_id);
+                ($isOverDue) ? array_push($completedOverdue,$jobTicket->job_allocation_id) : array_push($completedAhead,$jobTicket->job_allocation_id) ;
+
+            }else if($jobTicket->job_ticket_status == 'ONG'){
+                array_push($ongoingArr,$jobTicket->job_allocation_id);
+                ($isOverDue) ? array_push($ongoingOverdue,$jobTicket->job_allocation_id) : array_push($ongoingAhead,$jobTicket->job_allocation_id) ;
+
+            }else if($jobTicket->job_ticket_status == 'REJECT'){
+                array_push($rejectedArr,$jobTicket->job_allocation_id);
+                ($isOverDue) ? array_push($rejectedOverdue,$jobTicket->job_allocation_id) : array_push($rejectedAhead,$jobTicket->job_allocation_id) ;
+
+            }else if($jobTicket->job_ticket_status == 'ISSUED'){
+                array_push($pendingArr,$jobTicket->job_allocation_id);
+                ($isOverDue) ? array_push($pendingOverdue,$jobTicket->job_allocation_id) : array_push($pendingAhead,$jobTicket->job_allocation_id) ;
+
+            }
+
+
+        }
+        
+        $doughtnutdata = [ sizeof($pendingArr),sizeof($ongoingArr),sizeof($completedArr),sizeof($rejectedArr)];
+        $pendingDetails = array(
+            'total' => sizeof($pendingArr),
+            'overdue' => sizeof($pendingOverdue),
+            'ahead' => sizeof($pendingAhead),
+        );
+        $ongoingDetails = array(
+            'total' => sizeof($ongoingArr),
+            'overdue' => sizeof($ongoingOverdue),
+            'ahead' => sizeof( $ongoingAhead),
+        );
+        $completeDetails = array(
+            'total' => sizeof($completedArr),
+            'overdue' => sizeof($completedOverdue),
+            'ahead' =>  sizeof($completedAhead),
+        );
+        $rejectDetails = array(
+            'total' => sizeof($rejectedArr),
+            'overdue' => sizeof($rejectedOverdue),
+            'ahead' =>  sizeof($rejectedAhead),
+        );
+
+        // $arrangedData = array(
+        //     'doughtnutdata ' => $doughtnutdata,
+        //     'pendingDetails ' => $pendingDetails,
+        //     'ongoingDetails ' => $ongoingDetails,
+        //     'completeDetails ' => $completeDetails,
+        //     'rejectDetails ' => $rejectDetails,
+        // );
+
+        $arrangedData = array();
+
+        $arrangedData['doughtnutdata']   = $doughtnutdata;
+        $arrangedData['pendingDetails']  = $pendingDetails;
+        $arrangedData['ongoingDetails']  = $ongoingDetails;
+        $arrangedData['completeDetails'] = $completeDetails;
+        $arrangedData['rejectDetails']   = $rejectDetails;
+
+        return $arrangedData;
     }
 }

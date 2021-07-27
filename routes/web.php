@@ -158,7 +158,9 @@ Route::post('/getFrontDeskDashDetails',[DashboardController::class, 'getFrontDes
 
 //Reports
 Route::get('/viewMonthlyOverAllReport',[ReportController::class, 'viewMonthlyOverAllReport'])->name('monthlyOverAllReport');
+Route::get('/viewMonthlyDepOverViewReport',[ReportController::class, 'viewMonthlyDepOverViewReport'])->name('MonthlyDepOverViewReport');
 Route::post('/getMonthlyOverviewJobTickets',[ReportController::class, 'getMonthlyOverviewJobTickets'])->name('getMonthlyOverviewJobTickets');
+Route::post('/getMonthlyOverviewDepartment',[ReportController::class, 'getMonthlyOverviewDepartment'])->name('getMonthlyOverviewDepartment');
 
 
 Route::get('/mailable', function () {

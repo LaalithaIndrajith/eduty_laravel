@@ -125,7 +125,7 @@ return [
                 [
                     'title' => 'Department Overview',
                     'bullet' => 'dot',
-                    'page' => '/viewUserType',
+                    'page' => '/viewMonthlyDepOverViewReport',
                 ],
             ]
         ],
