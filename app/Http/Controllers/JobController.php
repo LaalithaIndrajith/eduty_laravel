@@ -81,12 +81,12 @@ class JobController extends Controller
                 'page' => '#',
             ],
             'sub_module' =>  [   
-                'title' => 'Job Tickets',
+                'title' => 'Allocated Jobs',
                 'page' => '#',
             ],
         ];
 
-        $page_title       = 'Job Ticket List';
+        $page_title       = 'Allocated Jobs';
         $page_description = 'Information of all the Job Tickets';
 
         return view('pages.jobs.allocated_job_list', compact('page_title','page_breadcrumbs',));

@@ -85,7 +85,7 @@
                         <div class="card-header border-0 pt-6 mb-2">
                             <h3 class="card-title align-items-start flex-column">
                                 <span class="card-label font-weight-bold font-size-h4 text-dark-75 mb-3">Overview</span>
-                                <span class="text-muted font-weight-bold font-size-sm">Displaying Overall figures of Last week </span>
+                                <span class="text-muted font-weight-bold font-size-sm">Displaying Overall figures </span>
                             </h3>
                             <div class="card-toolbar">
                                 <a href="#" class="btn btn-light-info btn-sm font-weight-bolder font-size-sm py-3 px-6">for Last 7 days</a>

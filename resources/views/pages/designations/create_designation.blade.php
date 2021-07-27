@@ -62,7 +62,7 @@
                         </div>
                         <div class="col-lg-3 form-group">
                             <label class="form-label col-form-label">Designation Code<span class="text-danger">*</span></label>
-                            <input id="desig_code" type="text" class="form-control @error('desig_code') is-invalid @enderror" placeholder="Enter NIC" name="desig_code" />
+                            <input id="desig_code" type="text" class="form-control @error('desig_code') is-invalid @enderror" name="desig_code" />
                             @error('desig_code')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -71,7 +71,7 @@
                         </div>
                         <div class="col-lg-3 form-group">
                             <label class="form-label col-form-label">Designation Name<span class="text-danger">*</span></label>
-                            <input id="desig_name" type="text" class="form-control @error('desig_name') is-invalid @enderror" placeholder="Enter NIC" name="desig_name" />
+                            <input id="desig_name" type="text" class="form-control @error('desig_name') is-invalid @enderror" name="desig_name" />
                             @error('desig_name')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
