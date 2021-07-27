@@ -25,7 +25,7 @@
                                 </div>
                                 <div class="d-flex flex-column align-items-end">
                                     <a href="#" class="text-dark text-hover-primary font-weight-bold font-size-h4 mb-3">
-                                    Allocated Tasks
+                                    Available Tasks
                                     </a>
                                     <div class="text-warning">
                                         <h1 class="display-2 font-weight-bolder" id="total-allocated-jobs-today"></h1>
@@ -72,6 +72,18 @@
                     </div>
                 </div>
                 
+            </div>
+        </div>
+        <div class="col-lg-6">
+            
+        </div>
+    </div>
+    <div class="row mt-8">
+        <div class="col-lg-12">
+            <div class="card card-custom bgi-no-repeat bgi-no-repeat bgi-size-cover gutter-b" style="height: 360px; background-image: url({{ asset('media/bg/bg-9.jpg') }})">
+                <div class="card-body d-flex flex-column align-items-center justify-content-center">
+                    <span class="text-dark-75 text-hover-primary font-weight-bolder font-size-h1 display-2">Welcome to eDuty </span>
+                </div>
             </div>
         </div>
     </div>
