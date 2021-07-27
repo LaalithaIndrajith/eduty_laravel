@@ -292,7 +292,7 @@ class DashboardController extends Controller
 
     //Normal User
     public function getNormalDashDetails(){
-        $todayTotalAllocated = $this->getTodayTotalAlloJobs();
+        $todayTotalAllocated = $this->getTodayTotalAllocatedJobs();
         $completedTasks      = $this->getCompletedTasks();
 
         return array(
@@ -301,23 +301,23 @@ class DashboardController extends Controller
         );
     }
 
-    private function getTodayTotalAlloJobs(){
+    private function getTodayTotalAllocatedJobs(){
         $now   = Carbon::now();
         $today = $now->format('Y-m-d 23:59:59');
+        $todayEarlier = $now->format('Y-m-d 00:00:01');
         $userDesig = auth()->user()->designation_id;
         return DB::table('job_task_steps')
         ->where('job_task_step_assignee', $userDesig)
-        ->where('step_available_at',$today)
+        ->where('step_available_at','<=',$today)
+        ->where('step_available_at','>=',$todayEarlier)
         ->where('job_task_step_status','AVAI')
         ->count();
     }
     
     private function getCompletedTasks(){
-        $now       = Carbon::now();
         $userDesig = auth()->user()->designation_id;
         $userId    = auth()->user()->id;
         return DB::table('job_task_steps')
-        ->where('job_task_step_assignee', $userDesig)
         ->where('job_task_step_completed_by', $userId)
         ->where('job_task_step_status','COMP')
         ->count();
