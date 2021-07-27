@@ -130,7 +130,7 @@ class ReportController extends Controller
 
     private function calculateRejectedJobTicketDuration($jobticket){
         $rejected = Carbon::create($jobticket->job_ticket_rejected_at);
-        $created = Carbon::create($jobticket->job_ticket_started_at);
+        $created = Carbon::create($jobticket->job_allocation_created_at);
         $diffrence =  $created->diff($rejected);
         return array(
             'days' => $diffrence->d,
