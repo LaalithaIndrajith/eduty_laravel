@@ -81,6 +81,7 @@
                     </div>
                     <!--end::Dropdown-->
                     <!--begin::Button-->
+                    @if(auth()->user()->hasPermissionTo('viewCreateJobTicket'))
                     <a href="{{ route('jobTicketCreationView') }}" class="btn btn-primary font-weight-bolder">
                         <span class="svg-icon svg-icon-md">
                             <!--begin::Svg Icon | path:assets/media/svg/icons/Design/Flatten.svg-->
@@ -92,7 +93,9 @@
                                 </g>
                             </svg>
                             <!--end::Svg Icon-->
-                        </span>Issue Job Ticket</a>
+                        </span>Issue Job Ticket
+                    </a>
+                    @endif
                     <!--end::Button-->
                 </div>
             </div>
