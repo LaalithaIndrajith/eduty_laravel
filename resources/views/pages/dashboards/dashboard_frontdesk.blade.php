@@ -88,7 +88,7 @@
                                         <a href="{{ route('clientRegisterView') }}">
                                             <div class="btn btn-icon w-auto btn-clean d-flex align-items-center btn-lg">
                                                 <div class="symbol symbol-40 symbol-success flex-shrink-0">
-                                                    <span class="symbol-label font-size-h4 font-weight-bold">C</span>
+                                                    <span class="symbol-label font-size-h4 font-weight-bold">R</span>
                                                 </div>
                                                 <div class="ml-4">
                                                     <div class="text-dark-75 font-weight-bolder font-size-lg mb-0">Register Customer</div>
@@ -129,7 +129,7 @@
                                         <a href="{{ route('viewJobTicketList') }}">
                                             <div class="btn btn-icon w-auto btn-clean d-flex align-items-center btn-lg">
                                                 <div class="symbol symbol-40 symbol-info flex-shrink-0">
-                                                    <span class="symbol-label font-size-h4 font-weight-bold">I</span>
+                                                    <span class="symbol-label font-size-h4 font-weight-bold">J</span>
                                                 </div>
                                                 <div class="ml-4">
                                                     <div class="text-dark-75 font-weight-bolder font-size-lg mb-0">Job Ticket List</div>

@@ -204,6 +204,7 @@
             const warning = '#FFA800';
             const danger = '#F64E60';
 
+            console.log(jobTicketArray)
             var options = {
                 series: jobTicketArray,
                 labels: ['Pending', 'Ongoing', 'Rejected', 'Completed', ],
