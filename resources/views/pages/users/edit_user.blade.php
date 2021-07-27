@@ -15,7 +15,7 @@
                 </div> 
                 <div class="card-toolbar">
                     <!-- <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i>Save</button> -->
-                    @if(request()->session()->get('userType') == 'SYSTEM-ADMIN')
+                    @if(request()->session()->get('userType') == 'SYSTEM-ADMIN' OR auth()->user()->id == $user->id)
                     <button type="submit" class="btn btn-info">
                         <span class="svg-icon svg-icon-md">
                             <!--begin::Svg Icon | path:assets/media/svg/icons/Design/Flatten.svg-->
@@ -96,7 +96,11 @@
                                     <select class="form-control form-control-lg dynamic mt-2 selectpicker @error('user_type_select') is-invalid @enderror" name="user_type_select" id="user_type_select" data-size="7" data-live-search="true">
                                         <option value="">Select a User Type</option>
                                         @foreach ($data['userTypes'] as $userType )
+                                        @if(request()->session()->get('userType') == 'SYSTEM-ADMIN')
                                         <option value="{{ $userType->id }}" {{ ($userType->id == $data['userTypeId']) ? 'selected' : '' }}>{{ $userType->name }}</option>   
+                                        @else
+                                        <option value="{{ $userType->id }}" {{ ($userType->id == $data['userTypeId']) ? 'selected' : 'disabled' }}>{{ $userType->name }}</option>   
+                                        @endif
                                         @endforeach
                                     </select>
                                     @error('user_type_select')
