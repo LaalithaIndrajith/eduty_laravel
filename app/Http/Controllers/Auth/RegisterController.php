@@ -197,7 +197,7 @@ class RegisterController extends Controller
         $user->username             = Str::upper($request->user_name);
         $user->email                = Str::lower($request->email);
         $user->user_is_verified     = isset($request->user_status) ? 1 : 0;
-        $user->user_is_system_admin = 0;
+        $user->user_is_system_admin = ($request->user_type_select == 1) ? 1 : 0;
     }
 
     private function userProfileImgSave( User $user, Request $request){
