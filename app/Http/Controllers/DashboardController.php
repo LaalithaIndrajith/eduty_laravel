@@ -341,7 +341,7 @@ class DashboardController extends Controller
 
         $issued = DB::table('clients_has_taskflows')
         // ->where('job_ticket_status','ISSUED')
-        ->where('job_allocation_created_by',auth()->user()->id)
+        // ->where('job_allocation_created_by',auth()->user()->id)
         ->where('job_allocation_created_at','<=',$today)
         ->where('job_allocation_created_at','>=',$todayEarlier)
         ->count();
