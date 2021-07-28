@@ -208,7 +208,11 @@
 
         // Add rows to VTable
         document.querySelector('#add_task_btn').addEventListener('click', function() {
-            addTaskRow()
+            if($('#designation_select option:selected').val() == '' || $('#task_name').val() == ''){
+                toastr.warning('Please enter all the required details to add the task', 'Attention')
+            }else{
+                addTaskRow()
+            }
         });
 
         async function fetchDesignationsOfDep(departmentId){
