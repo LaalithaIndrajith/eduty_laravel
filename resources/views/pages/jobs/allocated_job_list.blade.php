@@ -290,6 +290,14 @@
                                                 YOUTH/CSR/010
                                             </h6>
                                         </div>
+                                        <div class="row d-flex justify-content-around align-items-center">
+                                            <h6 class="font-weight-normal font-size-sm text-danger text-left">
+                                                Rejected Reason
+                                            </h6>
+                                            <h6 class="font-weight-bolder font-size-sm text-danger text-right"  id="job-allocation-rejected-reason">
+                                                
+                                            </h6>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -926,8 +934,10 @@
         
         if(jobTicketObj.job_ticket_rejected_at == null){
             $('#job-allocation-rejected-at').html('Not rejected')
+            $('#job-allocation-rejected-reason').html('-')
         }else{
             $('#job-allocation-rejected-at').html(arrangeTimesForView(jobTicketObj.job_ticket_rejected_at))
+            $('#job-allocation-rejected-reason').html(jobTicketObj.Job_ticket_rejected_reason)
         }
 
         $('#job-taskflow-dep').html(departName)
