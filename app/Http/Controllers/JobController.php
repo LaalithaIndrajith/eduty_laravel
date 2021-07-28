@@ -701,7 +701,7 @@ class JobController extends Controller
             $allocatedJob->job_rejected_reason       = $request->rejectedReason;
             $allocatedJob->save();
 
-            $this->makeJobTicketRejected($allocatedJob->job_allocation_id);
+            $this->makeJobTicketRejected($allocatedJob->job_allocation_id,$request->rejectedReason);
 
             $jobsToAbandoned = JobSteps::where('job_allocation_id',$allocatedJob->job_allocation_id)
             ->where('step_iteration_num','>',$allocatedJob->step_iteration_num)
@@ -733,12 +733,13 @@ class JobController extends Controller
         }
     }
 
-    public function makeJobTicketRejected($jobAllocationId){
+    public function makeJobTicketRejected($jobAllocationId,$rejectedReason){
         DB::table('clients_has_taskflows')
         ->where('job_allocation_id', $jobAllocationId)
         ->update([
             'job_ticket_status' => 'REJECT',
             'job_ticket_rejected_at' => date('Y-m-d H:i:s'),
+            'Job_ticket_rejected_reason' => $rejectedReason,
         ]);
     }
 
