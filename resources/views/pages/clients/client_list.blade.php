@@ -290,7 +290,7 @@
                         if(full.status == '0'){
                           return `
                                 <a class="btn btn-sm btn-light-danger" disabled="disabled">
-                                    Deleted form the System
+                                    Deleted from the System
                                 </a>
                           `  ;
                         }else{
