@@ -176,6 +176,7 @@
                                     @enderror
                                 </div>
 
+                                @if(request()->session()->get('userType') == 'SYSTEM-ADMIN')
                                 <div class="col-lg-6 form-group">
                                     <label class="form-label col-form-label">Activate User </label>
                                     <br>
@@ -186,6 +187,7 @@
                                         </label>
                                     </span>
                                 </div>
+                                @endif
                                 
                             </div>
                         </div>  

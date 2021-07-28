@@ -95,7 +95,7 @@ class RegisterController extends Controller
     }
 
     public function editUser(Request $request,$userId){
-        
+        // dd($request->user_status);
         DB::beginTransaction();
         try{
             $this->validateEditUserForm($request,$userId);
@@ -180,8 +180,10 @@ class RegisterController extends Controller
         $user->username             = Str::upper($request->user_name);
         $user->email                = Str::lower($request->email);
         $user->password             = Hash::make($request->password);
-        $user->user_is_verified     = isset($request->user_status) ? 1 : 0;
-        $user->user_is_system_admin = 0;
+        if($request->user_status != null){
+            $user->user_is_verified     = isset($request->user_status) ? 1 : 0;
+        }
+        $user->user_is_system_admin = ($request->user_type_select == 1) ? 1 : 0;
     }
     
     private function saveEditUserDetailsWithoutImg(User $user, Request $request)
@@ -196,7 +198,9 @@ class RegisterController extends Controller
         $user->user_nic             = Str::upper($request->user_nic);
         $user->username             = Str::upper($request->user_name);
         $user->email                = Str::lower($request->email);
+        if($request->user_status != null){
         $user->user_is_verified     = isset($request->user_status) ? 1 : 0;
+        }
         $user->user_is_system_admin = ($request->user_type_select == 1) ? 1 : 0;
     }
 
